@@ -7,11 +7,8 @@
 	<style type="text/css">
 
 	::selection{ background-color: #E13300; color: white; }
-iiiii
 	::moz-selection{ background-color: #E13300; color: white; }
 	::webkit-selection{ background-color: #E13300; color: white; }
-	
-	684684684684
 
 	body {
 		background-color: #fff;
@@ -83,7 +80,7 @@ iiiii
 
 		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
 	</div>
-	
+
 	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
 </div>
 

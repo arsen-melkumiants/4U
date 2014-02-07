@@ -1,6 +1,14 @@
 add_constants.php
 database.php
 
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
+
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+
 
 #################
 ## Eclipse
