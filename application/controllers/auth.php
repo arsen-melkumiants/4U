@@ -2,10 +2,6 @@
 
 class Auth extends CI_Controller {
 
-	public $ADMIN_FOLDER = 'admin/'; 
-	
-	public $VIEW_URL = '';
-	
 	function __construct()
 	{
 		parent::__construct();
@@ -23,16 +19,6 @@ class Auth extends CI_Controller {
 
 		$this->lang->load('auth');
 		$this->load->helper('language');
-		
-		if($this->ion_auth->logged_in()){
-			$this->load->model($this->ADMIN_FOLDER.'admin_control_menu_model');
-			$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
-		}
-		
-		
-		
-		$this->data['title'] = '4U :: ';
-		
 	}
 
 	//redirect if needed, otherwise display the user list
@@ -51,7 +37,7 @@ class Auth extends CI_Controller {
 		}
 		else
 		{
-			/*//set the flash data error message if there is one
+			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
 			//list the users
@@ -61,34 +47,18 @@ class Auth extends CI_Controller {
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
 
-			$this->_render_page('auth/index', $this->data);*/
-			redirect('/', 'refresh');
+			$this->_render_page('auth/index', $this->data);
 		}
 	}
 
 	//log the user in
 	function login()
 	{
-		if ($this->ion_auth->logged_in()){
-			redirect('/', 'refresh');
-		}
 		$this->data['title'] = "Login";
 
 		//validate form input
-		$this->load->library('form_creator');
-		$this->form_creator
-			->text('identity', array('placeholder' => 'Логин или Email', 'valid_rules' => 'required', 'icon' => 'user'))
-			->password('password', array('placeholder' => 'Пароль', 'valid_rules' => 'required', 'icon' => 'key'))
-			->btn(array('value' => $this->lang->line('login_submit_btn'), 'class' => 'btn-primary btn-block'));
-		
-		//Here for checking right login
-		if($this->session->flashdata('access_denied')){
-			$this->form_creator->form_data[0]['params']['error'] = 'error';
-			$this->form_creator->form_data[1]['params']['error'] = 'error';
-			set_alert($this->session->flashdata('message'), false, 'danger');
-		}
-		
-		$this->data['center_block'] = $this->form_creator->create(array('title' => 'Авторизация', 'class' => 'login_block', 'btn_offset' => 0));
+		$this->form_validation->set_rules('identity', 'Identity', 'required');
+		$this->form_validation->set_rules('password', 'Password', 'required');
 
 		if ($this->form_validation->run() == true)
 		{
@@ -108,8 +78,6 @@ class Auth extends CI_Controller {
 				//if the login was un-successful
 				//redirect them back to the login page
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				$this->session->set_flashdata('access_denied', true);
-				
 				redirect('auth/login', 'refresh'); //use redirects instead of loading views for compatibility with MY_Controller libraries
 			}
 		}
@@ -118,10 +86,18 @@ class Auth extends CI_Controller {
 			//the user is not logging in so display the login page
 			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			
-			$this->_render_page('header', $this->data);
-			$this->_render_page('s_page', $this->data);
-			$this->_render_page('footer', $this->data);
+
+			$this->data['identity'] = array('name' => 'identity',
+				'id' => 'identity',
+				'type' => 'text',
+				'value' => $this->form_validation->set_value('identity'),
+			);
+			$this->data['password'] = array('name' => 'password',
+				'id' => 'password',
+				'type' => 'password',
+			);
+
+			$this->_render_page('auth/login', $this->data);
 		}
 	}
 
@@ -209,45 +185,33 @@ class Auth extends CI_Controller {
 	//forgot password
 	function forgot_password()
 	{
-		$this->load->library('form_creator');
-		$this->form_creator
-			->text('email', array('placeholder' => 'Email', 'valid_rules' => 'required|valid_email', 'icon' => 'envelope'))
-			->btn('send', array('value' => $this->lang->line('forgot_password_submit_btn'), 'class' => 'btn-primary'));
-		
-		//Here for checking right login
-		if($this->session->flashdata('access_denied')){
-			$this->form_creator->form_data['email']['params']['error'] = 'error';
-		}
-		
-		$this->data['identity_label'] = ($this->config->item('identity', 'ion_auth') == 'username' ) ? $this->lang->line('forgot_password_username_identity_label') : $this->lang->line('forgot_password_email_identity_label');
-		
-		$this->data['center_block'] = $this->form_creator->create(array(
-			'title' => $this->lang->line('forgot_password_heading'), 
-			'info' => sprintf($this->lang->line('forgot_password_subheading'), $this->data['identity_label']), 
-			'class' => 'login_block'	
-		));
-		
-		echo validation_errors();
-		
+		$this->form_validation->set_rules('email', $this->lang->line('forgot_password_validation_email_label'), 'required');
 		if ($this->form_validation->run() == false)
 		{
+			//setup the input
+			$this->data['email'] = array('name' => 'email',
+				'id' => 'email',
+			);
+
+			if ( $this->config->item('identity', 'ion_auth') == 'username' ){
+				$this->data['identity_label'] = $this->lang->line('forgot_password_username_identity_label');
+			}
+			else
+			{
+				$this->data['identity_label'] = $this->lang->line('forgot_password_email_identity_label');
+			}
+
 			//set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			//$this->_render_page('auth/forgot_password', $this->data);
-			$this->_render_page('header', $this->data);
-			$this->_render_page('s_page', $this->data);
-			$this->_render_page('footer', $this->data);
+			$this->_render_page('auth/forgot_password', $this->data);
 		}
 		else
 		{
 			// get identity for that email
-			$config_tables = $this->config->item('tables', 'ion_auth');
-			$identity = $this->db->where('email', $this->input->post('email'))->limit('1')->get($config_tables['users'])->row();
-
+            $identity = $this->ion_auth->where('email', strtolower($this->input->post('email')))->users()->row();
             if(empty($identity)) {
                 $this->ion_auth->set_message('forgot_password_email_not_found');
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
-				//$this->session->set_flashdata('access_denied', true);
                 redirect("auth/forgot_password", 'refresh');
             }
             
@@ -438,7 +402,7 @@ class Auth extends CI_Controller {
 		//validate form input
 		$this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required|xss_clean');
 		$this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email');
+		$this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[users.email]');
 		$this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'required|xss_clean');
 		$this->form_validation->set_rules('company', $this->lang->line('create_user_validation_company_label'), 'required|xss_clean');
 		$this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
@@ -447,7 +411,7 @@ class Auth extends CI_Controller {
 		if ($this->form_validation->run() == true)
 		{
 			$username = strtolower($this->input->post('first_name')) . ' ' . strtolower($this->input->post('last_name'));
-			$email    = $this->input->post('email');
+			$email    = strtolower($this->input->post('email'));
 			$password = $this->input->post('password');
 
 			$additional_data = array(
@@ -520,40 +484,29 @@ class Auth extends CI_Controller {
 	//edit a user
 	function edit_user($id)
 	{
-		$this->data['header'] = 'Редактирование доступа';
-		$this->data['header_descr'] = 'Редактирование настроек и доступа администратора';
-		$this->data['title'] = $this->data['header'];
+		$this->data['title'] = "Edit User";
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
 			redirect('auth', 'refresh');
 		}
-		
-		set_alert($this->session->flashdata('success'), false, 'success');
-		set_alert($this->session->flashdata('message'), false, 'success');
 
 		$user = $this->ion_auth->user($id)->row();
 		$groups=$this->ion_auth->groups()->result_array();
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
 		//validate form input
-		$this->load->library('form_creator');
-		$this->form_creator
-			->text('first_name', array('value' => $user->first_name, 'label' => $this->lang->line('edit_user_fname_label'), 'valid_rules' => 'required|xss_clean'))
-			->text('last_name', array('value' => $user->last_name, 'label' => $this->lang->line('edit_user_lname_label'), 'valid_rules' => 'required|xss_clean'))
-			->text('phone', array('value' => $user->phone, 'label' => $this->lang->line('edit_user_phone_label'), 'valid_rules' => 'required|xss_clean'))
-			->text('company', array('value' => $user->company, 'label' => $this->lang->line('edit_user_company_label'), 'valid_rules' => 'required|xss_clean'))
-			->separator()
-			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
-			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));
-			
+		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required|xss_clean');
+		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required|xss_clean');
+		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required|xss_clean');
+		$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'required|xss_clean');
+		$this->form_validation->set_rules('groups', $this->lang->line('edit_user_validation_groups_label'), 'xss_clean');
 
 		if (isset($_POST) && !empty($_POST))
 		{
 			// do we have a valid request?
 			if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id'))
 			{
-				
 				show_error($this->lang->line('error_csrf'));
 			}
 
@@ -582,12 +535,7 @@ class Auth extends CI_Controller {
 			{
 				$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 				$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
-				$this->form_validation->run();
-				set_alert(form_error('password'), false, 'danger');
-				$this->form_creator->form_data[5]['params']['error'] = form_error('password');
-				set_alert(form_error('password_confirm'), false, 'danger');
-				$this->form_creator->form_data[6]['params']['error'] = form_error('password_confirm');
-				
+
 				$data['password'] = $this->input->post('password');
 			}
 
@@ -597,17 +545,13 @@ class Auth extends CI_Controller {
 
 				//check to see if we are creating the user
 				//redirect them back to the admin page
-				$this->session->set_flashdata('success', "Данные успешно сохранены");
-				redirect(current_url(), 'refresh');
+				$this->session->set_flashdata('message', "User Saved");
+				redirect("auth", 'refresh');
 			}
 		}
 
 		//display the edit user form
 		$this->data['csrf'] = $this->_get_csrf_nonce();
-		$this->form_creator
-			->hidden(key($this->data['csrf']), $this->data['csrf'][key($this->data['csrf'])])
-			->hidden('id', $id);
-		
 
 		//set the flash data error message if there is one
 		$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
@@ -617,14 +561,42 @@ class Auth extends CI_Controller {
 		$this->data['groups'] = $groups;
 		$this->data['currentGroups'] = $currentGroups;
 
-		
-		$this->data['center_block'] = $this->form_creator
-			->btn(array('value' => 'Изменить', 'offset' => 3))
-			->create();
-		
-		$this->_render_page('header', $this->data);
-		$this->_render_page('s_page', $this->data);
-		$this->_render_page('footer', $this->data);
+		$this->data['first_name'] = array(
+			'name'  => 'first_name',
+			'id'    => 'first_name',
+			'type'  => 'text',
+			'value' => $this->form_validation->set_value('first_name', $user->first_name),
+		);
+		$this->data['last_name'] = array(
+			'name'  => 'last_name',
+			'id'    => 'last_name',
+			'type'  => 'text',
+			'value' => $this->form_validation->set_value('last_name', $user->last_name),
+		);
+		$this->data['company'] = array(
+			'name'  => 'company',
+			'id'    => 'company',
+			'type'  => 'text',
+			'value' => $this->form_validation->set_value('company', $user->company),
+		);
+		$this->data['phone'] = array(
+			'name'  => 'phone',
+			'id'    => 'phone',
+			'type'  => 'text',
+			'value' => $this->form_validation->set_value('phone', $user->phone),
+		);
+		$this->data['password'] = array(
+			'name' => 'password',
+			'id'   => 'password',
+			'type' => 'password'
+		);
+		$this->data['password_confirm'] = array(
+			'name' => 'password_confirm',
+			'id'   => 'password_confirm',
+			'type' => 'password'
+		);
+
+		$this->_render_page('auth/edit_user', $this->data);
 	}
 
 	// create a new group
