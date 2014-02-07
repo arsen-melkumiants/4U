@@ -1,0 +1,14 @@
+body {position: relative;padding-top: 50px;}
+.login_block{width: 300px;margin: 0 auto;padding: 25px;border: 1px solid #ccc;border-radius: 4px;margin-top: 130px;}
+.login_block .input-group-addon i.icon-user{padding: 1px;}
+.form_group .input-group {margin-bottom: 0px;}
+
+.main_block{margin-top: 10px;padding-bottom: 50px;}
+.header_block{padding-bottom: 30px;}
+
+.alert {padding: 8px 15px;margin-bottom: 15px;}
+
+.active_block a{color: #333;}
+.active_block a:hover{text-decoration: none;}
+
+.datetimepicker{z-index: 1500 !important;}
