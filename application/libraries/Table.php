@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Table_creator {
+class Table {
 
 	public $table_data = array();
 

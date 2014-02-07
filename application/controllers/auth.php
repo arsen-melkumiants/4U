@@ -37,17 +37,7 @@ class Auth extends CI_Controller {
 		}
 		else
 		{
-			//set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
-			//list the users
-			$this->data['users'] = $this->ion_auth->users()->result();
-			foreach ($this->data['users'] as $k => $user)
-			{
-				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
-			}
-
-			$this->_render_page('auth/index', $this->data);
+			redirect('/', 'refresh');
 		}
 	}
 
@@ -56,36 +46,34 @@ class Auth extends CI_Controller {
 	{
 		$this->data['title'] = "Login";
 
-		//validate form input
 		$this->form_validation->set_rules('identity', 'Identity', 'required');
 		$this->form_validation->set_rules('password', 'Password', 'required');
 
+		$this->load->library('form');
+		$this->form
+			->text('identity', array('placeholder' => 'Логин или Email', 'valid_rules' => 'required', 'icon' => 'user'))
+			->password('password', array('placeholder' => 'Пароль', 'valid_rules' => 'required', 'icon' => 'key'))
+			->btn(array('value' => $this->lang->line('login_submit_btn'), 'class' => 'btn-primary btn-block'));
+
+		$this->data['center_block'] = $this->form->create(array('title' => 'Авторизация', 'class' => 'login_block', 'btn_offset' => 0));
+
 		if ($this->form_validation->run() == true)
 		{
-			//check to see if the user is logging in
-			//check for "remember me"
 			$remember = (bool) $this->input->post('remember');
 
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember))
 			{
-				//if the login is successful
-				//redirect them back to the home page
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 				redirect('/', 'refresh');
 			}
 			else
 			{
-				//if the login was un-successful
-				//redirect them back to the login page
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect('auth/login', 'refresh'); //use redirects instead of loading views for compatibility with MY_Controller libraries
+				redirect('auth/login', 'refresh');
 			}
 		}
 		else
 		{
-			//the user is not logging in so display the login page
-			//set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
 			$this->data['identity'] = array('name' => 'identity',
 				'id' => 'identity',
@@ -97,7 +85,11 @@ class Auth extends CI_Controller {
 				'type' => 'password',
 			);
 
-			$this->_render_page('auth/login', $this->data);
+			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			
+			$this->_render_page('header', $this->data);
+			$this->_render_page('s_page', $this->data);
+			$this->_render_page('footer', $this->data);
 		}
 	}
 
