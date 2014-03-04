@@ -2,38 +2,39 @@
 
 class Admin_control_panel extends CI_Controller {
 
-	public $ADMIN_FOLDER = 'admin/'; 
-	
-	public $VIEW_URL = '';
-	
-	function __construct(){
+	public $admin_folder = 'admin/'; 
+
+	public $admin_url = '4U/';
+
+	public $view_folder = '';
+
+	function __construct() {
 		parent::__construct();
 		$this->load->library('ion_auth');
-		if (!$this->ion_auth->logged_in()){
-			redirect('auth/login', 'refresh');
+		if (!$this->ion_auth->logged_in()) {
+			redirect($this->admin_url.'auth/login', 'refresh');
 		}
-		
-		$this->load->model($this->ADMIN_FOLDER.'admin_control_menu_model');
+
+		$this->load->model($this->admin_folder.'admin_control_menu_model');
 		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
-		
+
 		$this->data['title'] = '4U :: ';
 	}
-	
-	function index(){
+
+	function index() {
 		$this->data['title'] .= 'Админ-панель';
 		$this->load->view('header', $this->data);
 		$this->load->view('s_page', $this->data);
 		$this->load->view('footer', $this->data);
 	}
-	
-	public function global_settings()
-	{
-		$this->data['header'] = 'Настройки сайта';
+
+	public function global_settings() {
+		$this->data['header']       = 'Настройки сайта';
 		$this->data['header_descr'] = 'Глобальные настройки сайта';
-		$this->data['title'] = $this->data['header'];
-		
+		$this->data['title']        = $this->data['header'];
+
 		set_alert($this->session->flashdata('success'), false, 'success');
-		
+
 		$this->load->library('form_creator');
 		$this->data['center_block'] = $this->form_creator
 			->text('SITE_NAME', array('value' => (defined('SITE_NAME') ? SITE_NAME : ''), 'valid_rules' => 'required|trim|xss_clean',  'label' => 'Название сайта'))
@@ -44,17 +45,17 @@ class Admin_control_panel extends CI_Controller {
 			->text('BALLS_IN_BOX', array('value' => (defined('BALLS_IN_BOX') ? BALLS_IN_BOX : ''), 'valid_rules' => 'required|trim|xss_clean|is_natural', 'label' => 'Количество шаров в упаковке', 'width' => '2'))
 			->btn(array('offset' => 3, 'value' => 'Изменить'))
 			->create();
-		
-		if ($this->form_validation->run() == FALSE){
-			
-			$this->load->view($this->VIEW_URL.'header', $this->data);
-			$this->load->view($this->VIEW_URL.'s_page', $this->data);
-			$this->load->view($this->VIEW_URL.'footer', $this->data);
+
+		if ($this->form_validation->run() == FALSE) {
+
+			$this->load->view($this->view_folder.'header', $this->data);
+			$this->load->view($this->view_folder.'s_page', $this->data);
+			$this->load->view($this->view_folder.'footer', $this->data);
 		} else {
 			$data = $this->input->post();
 			$add_sets = '';
-			foreach($data as $key => $row){
-				if(strtolower($key) == 'submit'){
+			foreach($data as $key => $row) {
+				if(strtolower($key) == 'submit') {
 					continue;
 				}
 				$add_sets .= 'define(\''.$key.'\', \''.$row.'\');'."\n";
@@ -64,6 +65,7 @@ class Admin_control_panel extends CI_Controller {
 			write_file('./application/config/add_constants.php', $main_sets, 'w+');
 			$this->session->set_flashdata('success', 'Данные успешно обновлены');
 			redirect(current_url(),'refresh');
+
 		}
 	}
 }

@@ -38,12 +38,18 @@
 |
 */
 
-$route['default_controller'] = 'admin_control_panel';
-$route['global_settings'] = 'admin_control_panel/global_settings';
-$route['change_access'] = 'auth/edit_user/1';
-$route['logout'] = 'auth/logout';
+#Admin routes
+$admin_folder = 'admin/';
+$admin_url = '4U/';
 
-$route['manage_(:any)'] = 'admin_manage_$1';
+$route[$admin_url.'global_settings'] = $admin_folder.'admin_control_panel/global_settings';
+$route[$admin_url.'change_access'] = $admin_folder.'auth/edit_user/1';
+$route[$admin_url.'logout'] = $admin_folder.'auth/logout';
+$route[$admin_url.'manage_(:any)'] = $admin_folder.'admin_manage_$1';
+$route[$admin_url.'(:any)'] = $admin_folder.'$1';
+
+
+$route['default_controller'] = $admin_folder.'admin_control_panel';
 
 $route['404_override'] = '';
 

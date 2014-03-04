@@ -1,8 +1,7 @@
 <?php 
 class MY_Loader extends CI_Loader {
 
-    function __construct()
-    {
+    function __construct() {
         parent::__construct();
     }
 	
