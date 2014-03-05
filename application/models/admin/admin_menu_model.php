@@ -10,20 +10,17 @@ class Admin_menu_model extends CI_Model
 		$this->load->database();
 	}
 	
-	function get_menu_info($name = false){
-		if($name){
-			return $this->db->where('name',$name)->get('menu_names');
-		}else{
-			return false;
-		}
-	}
-	
-	function get_all_menu($id){
-		return $this->db->where('parent_menu', $id)->order_by('order','asc')->get('menu_items');
+	function get_menu_items($name){
+		return $this->db->select('m.name as menu_name, m.ru_name, i.*')
+			->from('menu_names as m')
+			->join('menu_items as i', 'm.id = i.menu_id')
+			->where('m.name', $name)
+			->get()
+			->result_array();
 	}
 	
 	function get_one_item_menu($menu_id, $item_id){
-		return $this->db->where(array('parent_menu' => $menu_id, 'id' => $item_id))->get('menu_items');
+		return $this->db->where('id', $item_id)->get('menu_items')->row_array();
 	}
 	
 	function get_menu_tree($all_branch, $id = 0, $padding = '', $url = ''){
