@@ -36,9 +36,10 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
-if (!file_exists('add_constants.php')) {
-	file_put_contents('add_constants.php', '');
+$add_constants = 'application/config/add_constants.php';
+if (!file_exists($add_constants)) {
+	file_put_contents($add_constants, '');
 }
-include_once 'add_constants.php';
+include_once $add_constants;
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
