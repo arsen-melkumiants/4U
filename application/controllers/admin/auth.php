@@ -47,17 +47,14 @@ class Auth extends CI_Controller {
 
 		if ($this->form_validation->run() == true) {
 			$remember = (bool) $this->input->post('remember');
-
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 				redirect(ADM_URL, 'refresh');
 			} else {
-				$this->session->set_flashdata('message', $this->ion_auth->errors());
+				$this->session->set_flashdata('danger', $this->ion_auth->errors());
 				redirect(ADM_URL.'auth/login', 'refresh');
 			}
 		} else {
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
 			$this->_render_page('header', $this->data);
 			$this->_render_page('s_page', $this->data);
 			$this->_render_page('footer', $this->data);
@@ -69,11 +66,9 @@ class Auth extends CI_Controller {
 	{
 		$this->data['title'] = "Logout";
 
-		//log the user out
 		$logout = $this->ion_auth->logout();
 
-		//redirect them to the login page
-		$this->session->set_flashdata('message', $this->ion_auth->messages());
+		$this->session->set_flashdata('success', $this->ion_auth->messages());
 		redirect(ADM_URL.'auth/login', 'refresh');
 	}
 
