@@ -42,6 +42,7 @@
 $admin_folder = 'admin/';
 $admin_url = '4U/';
 
+$route['4U'] = $admin_folder.'admin_control_panel';
 $route[$admin_url.'global_settings'] = $admin_folder.'admin_control_panel/global_settings';
 $route[$admin_url.'change_access'] = $admin_folder.'auth/edit_user/1';
 $route[$admin_url.'logout'] = $admin_folder.'auth/logout';

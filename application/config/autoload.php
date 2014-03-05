@@ -64,7 +64,7 @@ $autoload['libraries'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('alert_system');
+$autoload['helper'] = array('alert_system', 'url');
 
 
 /*

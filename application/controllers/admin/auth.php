@@ -2,12 +2,7 @@
 
 class Auth extends CI_Controller {
 
-	public $admin_url = '4U/';
-
-	public $admin_folder = 'admin/';
-
-	function __construct()
-	{
+	function __construct() {
 		parent::__construct();
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
@@ -22,16 +17,19 @@ class Auth extends CI_Controller {
 
 		$this->lang->load('auth');
 		$this->load->helper('language');
+		
+		set_alert($this->session->flashdata('success'), false, 'success');
+		set_alert($this->session->flashdata('danger'), false, 'danger');
 	}
 
 	//redirect if needed, otherwise display the user list
 	function index() {
 		if (!$this->ion_auth->logged_in()) {
-			redirect($this->admin_url.'auth/login', 'refresh');
+			redirect(ADM_URL.'auth/login', 'refresh');
 		} elseif (!$this->ion_auth->is_admin())	{
 			return show_error('You must be an administrator to view this page.');
 		} else {
-			redirect($this->admin_url, 'refresh');
+			redirect(ADM_URL, 'refresh');
 		}
 	}
 
@@ -52,13 +50,12 @@ class Auth extends CI_Controller {
 
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
-				redirect('/', 'refresh');
+				redirect(ADM_URL, 'refresh');
 			} else {
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect($this->admin_url.'auth/login', 'refresh');
+				redirect(ADM_URL.'auth/login', 'refresh');
 			}
 		} else {
-
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
 			$this->_render_page('header', $this->data);
@@ -77,7 +74,7 @@ class Auth extends CI_Controller {
 
 		//redirect them to the login page
 		$this->session->set_flashdata('message', $this->ion_auth->messages());
-		redirect($this->admin_url.'auth/login', 'refresh');
+		redirect(ADM_URL.'auth/login', 'refresh');
 	}
 
 	//change password
@@ -89,7 +86,7 @@ class Auth extends CI_Controller {
 
 		if (!$this->ion_auth->logged_in())
 		{
-			redirect($this->admin_url.'auth/login', 'refresh');
+			redirect(ADM_URL.'auth/login', 'refresh');
 		}
 
 		$user = $this->ion_auth->user()->row();
@@ -126,7 +123,7 @@ class Auth extends CI_Controller {
 			);
 
 			//render
-			$this->_render_page($this->admin_folder.'auth/change_password', $this->data);
+			$this->_render_page(ADM_FOLDER.'auth/change_password', $this->data);
 		}
 		else
 		{
@@ -143,7 +140,7 @@ class Auth extends CI_Controller {
 			else
 			{
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect($this->admin_url.'auth/change_password', 'refresh');
+				redirect(ADM_URL.'auth/change_password', 'refresh');
 			}
 		}
 	}
@@ -169,7 +166,7 @@ class Auth extends CI_Controller {
 
 			//set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			$this->_render_page($this->admin_folder.'auth/forgot_password', $this->data);
+			$this->_render_page(ADM_FOLDER.'auth/forgot_password', $this->data);
 		}
 		else
 		{
@@ -245,7 +242,7 @@ class Auth extends CI_Controller {
 				$this->data['code'] = $code;
 
 				//render
-				$this->_render_page($this->admin_folder.'auth/reset_password', $this->data);
+				$this->_render_page(ADM_FOLDER.'auth/reset_password', $this->data);
 			}
 			else
 			{
@@ -275,7 +272,7 @@ class Auth extends CI_Controller {
 					else
 					{
 						$this->session->set_flashdata('message', $this->ion_auth->errors());
-						redirect($this->admin_url.'auth/reset_password/' . $code, 'refresh');
+						redirect(ADM_URL.'auth/reset_password/' . $code, 'refresh');
 					}
 				}
 			}
@@ -330,7 +327,7 @@ class Auth extends CI_Controller {
 			$this->data['csrf'] = $this->_get_csrf_nonce();
 			$this->data['user'] = $this->ion_auth->user($id)->row();
 
-			$this->_render_page($this->admin_folder.'auth/deactivate_user', $this->data);
+			$this->_render_page(ADM_FOLDER.'auth/deactivate_user', $this->data);
 		}
 		else
 		{
@@ -351,7 +348,7 @@ class Auth extends CI_Controller {
 			}
 
 			//redirect them back to the auth page
-			redirect($this->admin_url.'auth', 'refresh');
+			redirect(ADM_URL.'auth', 'refresh');
 		}
 	}
 
@@ -362,7 +359,7 @@ class Auth extends CI_Controller {
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
-			redirect($this->admin_url.'auth', 'refresh');
+			redirect(ADM_URL.'auth', 'refresh');
 		}
 
 		//validate form input
@@ -443,7 +440,7 @@ class Auth extends CI_Controller {
 				'value' => $this->form_validation->set_value('password_confirm'),
 			);
 
-			$this->_render_page($this->admin_folder.'auth/create_user', $this->data);
+			$this->_render_page(ADM_FOLDER.'auth/create_user', $this->data);
 		}
 	}
 
@@ -454,7 +451,7 @@ class Auth extends CI_Controller {
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
-			redirect($this->admin_url.'auth', 'refresh');
+			redirect(ADM_URL.'auth', 'refresh');
 		}
 
 		$user = $this->ion_auth->user($id)->row();
@@ -562,7 +559,7 @@ class Auth extends CI_Controller {
 			'type' => 'password'
 		);
 
-		$this->_render_page($this->admin_folder.'auth/edit_user', $this->data);
+		$this->_render_page(ADM_FOLDER.'auth/edit_user', $this->data);
 	}
 
 	// create a new group
@@ -572,7 +569,7 @@ class Auth extends CI_Controller {
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
-			redirect($this->admin_url.'auth', 'refresh');
+			redirect(ADM_URL.'auth', 'refresh');
 		}
 
 		//validate form input
@@ -609,7 +606,7 @@ class Auth extends CI_Controller {
 				'value' => $this->form_validation->set_value('description'),
 			);
 
-			$this->_render_page($this->admin_folder.'auth/create_group', $this->data);
+			$this->_render_page(ADM_FOLDER.'auth/create_group', $this->data);
 		}
 	}
 
@@ -619,14 +616,14 @@ class Auth extends CI_Controller {
 		// bail if no group id given
 		if(!$id || empty($id))
 		{
-			redirect($this->admin_url.'auth', 'refresh');
+			redirect(ADM_URL.'auth', 'refresh');
 		}
 
 		$this->data['title'] = $this->lang->line('edit_group_title');
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
-			redirect($this->admin_url.'auth', 'refresh');
+			redirect(ADM_URL.'auth', 'refresh');
 		}
 
 		$group = $this->ion_auth->group($id)->row();
@@ -672,7 +669,7 @@ class Auth extends CI_Controller {
 			'value' => $this->form_validation->set_value('group_description', $group->description),
 		);
 
-		$this->_render_page($this->admin_folder.'auth/edit_group', $this->data);
+		$this->_render_page(ADM_FOLDER.'auth/edit_group', $this->data);
 	}
 
 

@@ -11,23 +11,23 @@ class Admin_control_menu_model extends CI_Model
 		
 		$this->menus = array(
 			'top' => array(
-				'Сайт'					=> array(
-					'global_settings'		=> 'Глобальные настройки',
-					'change_access'		    => 'Смена доступа в админ-панель',
-					'logout'				=> 'Выйти',
+				'Сайт'                         => array(
+					'global_settings'          => 'Глобальные настройки',
+					'change_access'            => 'Смена доступа в админ-панель',
+					'logout'                   => 'Выйти',
 				),
-				'Группы'				=> array(
-					'manage_game/add'			=> 'Новая группа',
-					'manage_game/all/future'		=> 'Будущие группы',
-					'manage_game/all/past'			=> 'Прошлые группы',
-					'manage_game/all/notice'		=> 'Напоминания',
-					'manage_game/calendar'		=> 'Календарь',
+				'Группы'                       => array(
+					'manage_game/add'          => 'Новая группа',
+					'manage_game/all/future'   => 'Будущие группы',
+					'manage_game/all/past'     => 'Прошлые группы',
+					'manage_game/all/notice'   => 'Напоминания',
+					'manage_game/calendar'     => 'Календарь',
 				),
-				'Склад'				=> array(
-					'manage_store/all_equip'		=> 'Список снаряжения',
-					'manage_store/add_equip'		=> 'Добавить снаряжение',
-					'0'                             => '',
-					'manage_store/balls_store'		=> 'Склад шаров',
+				'Склад'                        => array(
+					'manage_store/all_equip'   => 'Список снаряжения',
+					'manage_store/add_equip'   => 'Добавить снаряжение',
+					'0'                        => '',
+					'manage_store/balls_store' => 'Склад шаров',
 				),
 				/*'Меню'				=> array(
 					'manage_menu/upper'				=> 'Верхнее меню',
@@ -107,7 +107,7 @@ class Admin_control_menu_model extends CI_Model
 				'<ul class="dropdown-menu">';
 				foreach($items as $link => $subname){
 					if(!empty($subname)){
-						$html .= '<li><a href="/'.$link.'">'.$subname.'</a></li>';
+						$html .= '<li><a href="'.site_url(ADM_URL.$link).'">'.$subname.'</a></li>';
 					}else{
 						$html .= '<li class="divider"></li>';
 					}
