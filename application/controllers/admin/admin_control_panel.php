@@ -6,7 +6,7 @@ class Admin_control_panel extends CI_Controller {
 		parent::__construct();
 		$this->load->library('ion_auth');
 		if (!$this->ion_auth->logged_in()) {
-			redirect($this->admin_url.'auth/login', 'refresh');
+			redirect(ADM_URL.'auth/login', 'refresh');
 		}
 
 		$this->load->model(ADM_FOLDER.'admin_control_menu_model');

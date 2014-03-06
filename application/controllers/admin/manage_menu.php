@@ -13,7 +13,7 @@ class Manage_menu extends CI_Controller {
 		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
 
 		$this->data['title'] = '4U :: ';
-		
+
 		$this->load->model(ADM_FOLDER.'admin_menu_model');
 
 		set_alert($this->session->flashdata('success'), false, 'success');
@@ -23,21 +23,29 @@ class Manage_menu extends CI_Controller {
 	public function index() {
 		show_404();
 		$this->data['title'] .= 'Админ-панель';
-		$this->load->view('header', $this->data);
-		$this->load->view('s_page', $this->data);
-		$this->load->view('footer', $this->data);
+		$this->load->view(ADM_FOLDER.'header', $this->data);
+		$this->load->view(ADM_FOLDER.'s_page', $this->data);
+		$this->load->view(ADM_FOLDER.'footer', $this->data);
 	}
 
 	public function menu($name = false) {
-		$this->data['title'] .= 'Админ-панель';
+		if ($this->input->is_ajax_request() && !empty($_POST['tree'])) {
+			$this->admin_menu_model->update_menu_tree($_POST['tree'], $name);
+			exit;
+		}
 		$menu_items = $this->admin_menu_model->get_menu_items($name);
 		if (empty($menu_items)) {
 			show_404();
 		}
-		print_r($menu_items);
-		$this->load->view('header', $this->data);
-		$this->load->view('s_page', $this->data);
-		$this->load->view('footer', $this->data);
+
+		$this->data['header'] = '"'.$menu_items[0]['ru_name'].'" меню';
+		$this->data['title'] .= $this->data['header'];
+		$this->data['header_descr'] = 'Список пунктов меню';
+		$this->data['center_block'] = $this->admin_menu_model->get_menu_tree($menu_items);
+
+		$this->load->view(ADM_FOLDER.'header', $this->data);
+		$this->load->view(ADM_FOLDER.'s_page', $this->data);
+		$this->load->view(ADM_FOLDER.'footer', $this->data);
 	}
 
 	public function add() {
@@ -57,12 +65,12 @@ class Manage_menu extends CI_Controller {
 
 		if ($this->form_validation->run() == FALSE) {
 			if (!empty($_GET['ajax'])) {
-				$output = $this->load->view($this->VIEW_URL.'ajax', '', true);
+				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
 				echo $output;
 			} else {
-				$this->load->view($this->VIEW_URL.'header', $this->data);
-				$this->load->view($this->VIEW_URL.'s_page', $this->data);
-				$this->load->view($this->VIEW_URL.'footer', $this->data);
+				$this->load->view(ADM_FOLDER.'header', $this->data);
+				$this->load->view(ADM_FOLDER.'s_page', $this->data);
+				$this->load->view(ADM_FOLDER.'footer', $this->data);
 			}
 		} else {
 			$data = $this->input->post();
@@ -108,12 +116,12 @@ class Manage_menu extends CI_Controller {
 
 		if ($this->form_validation->run() == FALSE) {
 			if (!empty($_GET['ajax'])) {
-				$output = $this->load->view($this->VIEW_URL.'ajax', '', true);
+				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
 				echo $output;
 			} else {
-				$this->load->view($this->VIEW_URL.'header', $this->data);
-				$this->load->view($this->VIEW_URL.'s_page', $this->data);
-				$this->load->view($this->VIEW_URL.'footer', $this->data);
+				$this->load->view(ADM_FOLDER.'header', $this->data);
+				$this->load->view(ADM_FOLDER.'s_page', $this->data);
+				$this->load->view(ADM_FOLDER.'footer', $this->data);
 			}
 		} else {
 			$data = $this->input->post();
@@ -171,7 +179,7 @@ class Manage_menu extends CI_Controller {
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
 				->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
 				->create(array('action' => current_url(), 'btn_offset' => 4));
-			echo $this->load->view($this->VIEW_URL.'ajax', '', true);
+			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 		}
 	}
 
@@ -209,9 +217,9 @@ class Manage_menu extends CI_Controller {
 		}
 		$this->data['center_block'] = $this->table_creator->create($game_data);
 
-		$this->load->view($this->VIEW_URL.'header', $this->data);
-		$this->load->view($this->VIEW_URL.'s_page', $this->data);
-		$this->load->view($this->VIEW_URL.'footer', $this->data);
+		$this->load->view(ADM_FOLDER.'header', $this->data);
+		$this->load->view(ADM_FOLDER.'s_page', $this->data);
+		$this->load->view(ADM_FOLDER.'footer', $this->data);
 	}
 
 }
