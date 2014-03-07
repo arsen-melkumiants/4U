@@ -68,7 +68,7 @@ class Manage_menu extends CI_Controller {
 			->create(array('action' => current_url()));
 
 		if ($this->form_validation->run() == FALSE) {
-			if (!empty($_GET['ajax'])) {
+			if ($this->input->is_ajax_request()) {
 				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
 				echo $output;
 			} else {
@@ -79,10 +79,9 @@ class Manage_menu extends CI_Controller {
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
-			$data['time'] = strtotime($data['time']);
 			$this->db->insert('games', $data); 
 			$this->session->set_flashdata('success', 'Данные успешно добавлены');
-			if (!empty($_GET['ajax'])) {
+			if ($this->input->is_ajax_request()) {
 				echo 'refresh';
 			} else {
 				redirect($this->MAIN_SEGMENT.'all/future', 'refresh');
@@ -157,44 +156,4 @@ class Manage_menu extends CI_Controller {
 			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 		}
 	}
-
-	public function all($type = 'future') {
-		if ($type == 'notice') {
-			$this->data['header'] = 'Напоминания';
-			$this->data['header_descr'] = 'Незакрытые события-игры';
-		} elseif ($type == 'past') {
-			$this->data['header'] = 'Прошлые группы';
-			$this->data['header_descr'] = 'Запланированные события-игры';
-		} else {
-			$this->data['header'] = 'Будущие группы';
-			$this->data['header_descr'] = 'Запланированные события-игры';
-		}
-		$this->data['title'] = $this->data['header'];
-
-		$this->load->model('admin/admin_game_model');
-		$game_data = $this->admin_game_model->get_games($type);
-
-		$this->load->library('table_creator');
-		$this->table_creator
-			->text('id', array('title' => 'Номер'))
-			->text('name', array('title' => 'Имя'))
-			->text('phone', array('title' => 'Контактный телефон'))
-			->text('gamers_number', array('title' => 'Количество игроков'))
-			->text('balls_number', array('title' => 'Количество шаров'))
-			->date('time', array('title' => 'Дата события'))
-			->text('status', array('title' => 'Статус', 'extra' => $this->STATUS, 'func' => function($row, $params = false) {
-				return '<span class="label label-'.$params['extra'][$row['status']]['class'].'">'.$params['extra'][$row['status']]['name'].'</span>';
-			}))
-				->edit(array('link' => $this->MAIN_SEGMENT.'edit/%d'))
-				->delete(array('link' => $this->MAIN_SEGMENT.'delete/%d', 'modal' => 1));
-		if ($type == 'past') {
-			$this->table_creator->text('clear_total', array('title' => 'Чистая прибыль'));
-		}
-		$this->data['center_block'] = $this->table_creator->create($game_data);
-
-		$this->load->view(ADM_FOLDER.'header', $this->data);
-		$this->load->view(ADM_FOLDER.'s_page', $this->data);
-		$this->load->view(ADM_FOLDER.'footer', $this->data);
-	}
-
 }

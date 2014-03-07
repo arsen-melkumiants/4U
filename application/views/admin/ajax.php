@@ -33,4 +33,4 @@ $(function(){
 		$('#ajaxModal').removeData('bs.modal')
 	});
 });
-</script>  
+</script>
