@@ -1,7 +1,9 @@
 body {position: relative;padding-top: 50px;}
+button{outline: none;}
 .login_block{width: 300px;margin: 0 auto;padding: 25px;border: 1px solid #ccc;border-radius: 4px;margin-top: 130px;}
 .login_block .input-group-addon i.icon-user{padding: 1px;}
 .form_group .input-group {margin-bottom: 0px;}
+.input-group[class*=col-] {padding-left: 15px;padding-right: 15px;}
 
 .main_block{margin-top: 10px;padding-bottom: 50px;}
 .header_block{padding-bottom: 30px;}
@@ -67,23 +69,6 @@ body {position: relative;padding-top: 50px;}
  *   */
 
 .nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
-
-#nestable-menu { padding: 0; margin: 20px 0; }
-
-#nestable-output,
-#nestable2-output { width: 100%; height: 7em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
-
-#nestable2 .dd-handle {
-	color: #fff;
-	border: 1px solid #999;
-	background: #bbb;
-	background: -webkit-linear-gradient(top, #bbb 0%, #999 100%);
-	background:    -moz-linear-gradient(top, #bbb 0%, #999 100%);
-	background:         linear-gradient(top, #bbb 0%, #999 100%);
-}
-#nestable2 .dd-handle:hover { background: #bbb; }
-#nestable2 .dd-item > button:before { color: #fff; }
-
 @media only screen and (min-width: 700px) {
 
 	.dd { float: left; width: 80%; }
@@ -107,6 +92,8 @@ body {position: relative;padding-top: 50px;}
 	box-sizing: border-box; -moz-box-sizing: border-box;
 }
 .dd3-content:hover { color: #2ea8e5; background: #fff; }
+.dd3-content a {float: right; margin: 0 5px 0 0;}
+.dd3-content a:hover {text-decoration: none;}
 
 .dd-dragel > .dd3-item > .dd3-content { margin: 0; }
 

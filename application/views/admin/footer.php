@@ -18,6 +18,10 @@ $(function(){
 });
 </script>
 	
-	<div class="modal fade" id="ajaxModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+	<div class="modal fade" id="ajaxModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			  <div class="modal-content"></div>
+		</div>
+	</div>
 	</body>
 </html>

@@ -21,29 +21,23 @@ class Admin_menu_model extends CI_Model
 			->result_array();
 	}
 
-	function get_one_item_menu($item_id) {
+	function get_one_menu_item($item_id) {
 		return $this->db->where('id', $item_id)->get('menu_items')->row_array();
 	}
 
-	function get_menu_tree($all_branch, $id = 0, $padding = '', $url = '') {
+	function get_menu_tree($all_branch, $id = 0, $url = '') {
 		$text = !$id ? '<div class="dd tree_struct">' : '';
 		$text .= '<ol class="dd-list">';
 		$num = 1;
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$text .= '<li class="dd-item dd3-item" data-id="'.$item['id'].'">
-					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name'].'</div>';
+					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name'].'
+					<a data-toggle="modal" href="#delete_popup" data-name="'.$item['name'].'" data-href="'.$url.'/'.$item['id'].'/delete.html" class="del_event" title="Удалить"><i class="icon-trash"></i></a>
+					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/edit').'" title="Редактировать"><i class="icon-pencil"></i></a>
+				</div>';
 				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
 				$text .= '</li>';
-			/*	$text .= '<div class="row show-grid">
-					<div class="span5"><span class="label label-info">'.($num++).'</span><span class="item_name"> '.$item['name'].'</span></div>
-					<div class="span2 hover">
-					<a href="'.$url.'/'.$item['id'].'/edit.html" title="Редактировать"><i class="icon-pencil"></i></a>
-					<a data-toggle="modal" href="#delete_popup" data-name="'.$item['name'].'" data-href="'.$url.'/'.$item['id'].'/delete.html" class="del_event" title="Удалить"><i class="icon-trash"></i></a> 
-					</div>
-			</div>';*/
-
-
 			}
 		}
 		$text .= '</ol>';
@@ -123,19 +117,8 @@ class Admin_menu_model extends CI_Model
 		$this->db->insert('menu_items', $info); 
 	}
 
-	function update_menu_item($new_info, $old_info, $menu_id){
-		if($new_info['parent_id'] == $old_info->parent_id){
-			$this->db->where('id',$old_info->id)->update('menu_items', $new_info);
-		}else{
-			$data = $this->db->where(array('parent_id' => $new_info['parent_id'], 'parent_menu' => $menu_id))->order_by('order','desc')->get('menu_items')->row();
-			if(empty($data)){
-				$new_info['order'] = 1;
-				$this->db->where('id',$old_info->id)->update('menu_items', $new_info);
-			}else{
-				$new_info['order'] = $data->order + 1;
-				$this->db->where('id',$old_info->id)->update('menu_items', $new_info);
-			}
-		}
+	function update_menu_item($info, $id){
+		$this->db->where('id', $id)->update('menu_items', $info);
 	}
 
 }
