@@ -94,7 +94,7 @@ class Manage_menu extends CI_Controller {
 			show_404();
 		}
 		$menu_info = $this->admin_menu_model->get_one_menu_item($id);
-		
+
 		if (empty($menu_info)) {
 			show_404();
 		}
