@@ -53,23 +53,34 @@ class Manage_menu extends CI_Controller {
 	}
 
 	public function add() {
-		$this->data['header'] = 'Создание группы';
-		$this->data['header_descr'] = 'Планирование события-игры';
-		$this->data['title'] = $this->data['header'];
+		$this->data['header']        = 'Создание меню';
+		$this->data['header_descr']  = 'Создание пункта меню';
+		$this->data['title']        .= $this->data['header'];
 
-		$this->load->library('form_creator');
-		$this->data['center_block'] = $this->form_creator
-			->text('name', array('valid_rules' => 'required|trim|xss_clean',  'label' => 'Имя'))
-			->text('phone', array('valid_rules' => 'required|trim|xss_clean', 'label' => 'Контактный телефон'))
-			->text('gamers_number', array('valid_rules' => 'required|trim|is_natural', 'label' => 'Количество игроков', 'width' => 1))
-			->text('balls_number', array('valid_rules' => 'required|trim|is_natural', 'label' => 'Количество шаров(по 100шт)', 'width' => 1))
-			->date('time', array('value' => (isset($_GET['time']) && intval($_GET['time']) ? intval($_GET['time']) : ''), 'valid_rules' => 'required|trim', 'label' => 'Дата события', 'readonly' => 1))
-			->btn(array('value' => 'Создать'))
+		if(!empty($_POST)){
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
+			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
+		}
+
+		$this->load->library('form');
+		$this->data['center_block'] = $this->form
+			->text('name', array(
+				'value'       => $menu_info['name'],
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Имя',
+			))
+			->text('alias', array(
+				'value'       => $menu_info['alias'],
+				'valid_rules' => 'required|trim|xss_clean|is_unique[menu_items.alias]',
+				'label'       => 'Ссылка',
+			))
+			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
 
 		if ($this->form_validation->run() == FALSE) {
 			if ($this->input->is_ajax_request()) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
+				//TODO check ajax in core view
+				$output = $this->load->view(ADM_FOLDER.'ajax', $this->data, true);
 				echo $output;
 			} else {
 				$this->load->view(ADM_FOLDER.'header', $this->data);
@@ -79,7 +90,7 @@ class Manage_menu extends CI_Controller {
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
-			$this->db->insert('games', $data); 
+			$this->admin_menu_model->add_menu_item($data, $id);
 			$this->session->set_flashdata('success', 'Данные успешно добавлены');
 			if ($this->input->is_ajax_request()) {
 				echo 'refresh';
@@ -99,13 +110,27 @@ class Manage_menu extends CI_Controller {
 			show_404();
 		}
 
-		$this->data['header'] = 'Редактирование "'.$menu_info['name'].'"';
-		$this->data['header_descr'] = 'Редактирование пункта меню';
-		$this->data['title'] .= $this->data['header'];
+		$this->data['header']        = 'Редактирование "'.$menu_info['name'].'"';
+		$this->data['header_descr']  = 'Редактирование пункта меню';
+		$this->data['title']        .= $this->data['header'];
+
+		if(!empty($_POST)){
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $menu_info['name'];
+			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
+		}
 
 		$this->load->library('form');
 		$this->data['center_block'] = $this->form
-			->text('name', array('value' => $menu_info['name'], 'valid_rules' => 'required|trim|xss_clean',  'label' => 'Имя'))
+			->text('name', array(
+				'value'       => $menu_info['name'],
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Имя',
+			))
+			->text('alias', array(
+				'value'       => $menu_info['alias'],
+				'valid_rules' => 'required|trim|xss_clean|is_unique_without[menu_items.alias.'.$id.']',
+				'label'       => 'Ссылка',
+			))
 			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
 
