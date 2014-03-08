@@ -15,6 +15,7 @@ $(function(){
 		var fields = $(this).closest('form').serializeArray();
 		fields.push({ name: this.name, value: this.value });
 		if(this.name == 'cancel'){
+			$('#ajaxModal').modal('hide');
 			return false;
 		}
 		$.post(action, fields, function(data){
