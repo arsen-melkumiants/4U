@@ -1,5 +1,5 @@
 body {position: relative;padding-top: 50px;}
-button{outline: none;}
+button{outline: none !important;}
 .login_block{width: 300px;margin: 0 auto;padding: 25px;border: 1px solid #ccc;border-radius: 4px;margin-top: 130px;}
 .login_block .input-group-addon i.icon-user{padding: 1px;}
 .form_group .input-group {margin-bottom: 0px;}
