@@ -14,7 +14,53 @@ var update_tree_struct = function(e) {
 };
 $(function(){
 	$('a').tooltip();
+
+
 	$('.tree_struct').nestable().on('change', update_tree_struct);
+	$('.tree_btn_expand').on('click', function(e) {
+		$('.dd').nestable('expandAll');
+	});
+	$('.tree_btn_collapse').on('click', function(e) {
+		$('.dd').nestable('collapseAll');
+	});
+});
+
+$(function(){
+	$(document).on('click', '.modal-body form button', function() {
+		var form = $('.modal-dialog').find('form');
+		var action = form.attr('action');
+		//var fields = $(":input").serializeArray();
+		var fields = $(this).closest('form').serializeArray();
+		fields.push({ name: this.name, value: this.value });
+		if(this.name == 'cancel'){
+			$('#ajaxModal').modal('hide');
+			return false;
+		}
+		$.post(action, fields, function(data){
+			data = $.trim(data);
+			if(data == 'refresh') {
+				window.location.reload(true);
+			} else if(data == 'close') {
+				$('#ajaxModal').modal('hide');
+			} else {
+				$('#ajaxModal .modal-content').html(data);
+			}
+		});
+		return false;
+	});
+	$(document).bind('hidden.bs.modal', function () {
+		$('#ajaxModal').removeData('bs.modal')
+	});
+
+	$(document).on('loaded.bs.modal', function (e) {
+		var result = $.trim(e.target.innerText);
+		if(result == 'refresh'){
+			window.location.reload(true);
+		}else if(result == 'close'){
+			$('#ajaxModal').hide().modal('hide');
+		}
+	});
+
 });
 </script>
 	

@@ -47,6 +47,7 @@ $route[$admin_url.'global_settings'] = $admin_folder.'admin_control_panel/global
 $route[$admin_url.'change_access'] = $admin_folder.'auth/edit_user/1';
 $route[$admin_url.'logout'] = $admin_folder.'auth/logout';
 $route[$admin_url.'manage_menu/(:num)/(:any)'] = $admin_folder.'manage_menu/$2/$1';
+$route[$admin_url.'manage_menu/(:any)/add'] = $admin_folder.'manage_menu/add/$1';
 $route[$admin_url.'manage_menu/(:any)'] = $admin_folder.'manage_menu/menu/$1';
 
 #General admin routes

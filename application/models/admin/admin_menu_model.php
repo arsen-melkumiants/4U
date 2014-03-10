@@ -1,12 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Admin_menu_model extends CI_Model
-{
+class Admin_menu_model extends CI_Model {
 	var $menus = array();
 
 	function __construct() {
 		parent::__construct();
 		$this->load->database();
+	}
+
+	function get_menu_name($id) {
+		$data = $this->db->where('id', $id)->get('menu_names')->row_array();
+		return $data['name'];
+	}
+
+	function get_menu_info($name) {
+		return $this->db->where('name', $name)->get('menu_names')->row_array();
 	}
 
 	function get_menu_items($menu_name = false) {
@@ -25,26 +33,32 @@ class Admin_menu_model extends CI_Model
 		return $this->db->where('id', $item_id)->get('menu_items')->row_array();
 	}
 
-	function get_menu_tree($all_branch, $id = 0, $url = '') {
-		$text = !$id ? '<div class="dd tree_struct">' : '';
+	function get_menu_tree($all_branch, $id = 0, $url = '', $menu_name = false) {
+		$text = !$id ? '
+			<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$menu_name.'/add').'" class="btn btn-primary"> Добавить</a>
+			<button class="tree_btn_collapse btn btn-info" type="button"><i class="icon-minus"></i></button>
+			<button class="tree_btn_expand btn btn-info" type="button"><i class="icon-plus"></i></button>
+			<br />
+			<div class="dd tree_struct">' : '';
 		$text .= '<ol class="dd-list">';
-		$num = 1;
+		$num = 0;
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$text .= '<li class="dd-item dd3-item" data-id="'.$item['id'].'">
 					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name'].'
-					<a data-toggle="modal" href="#delete_popup" data-name="'.$item['name'].'" data-href="'.$url.'/'.$item['id'].'/delete.html" class="del_event" title="Удалить"><i class="icon-trash"></i></a>
+					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/delete').'" title="Удалить"><i class="icon-trash"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/edit').'" title="Редактировать"><i class="icon-pencil"></i></a>
-				</div>';
-				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
+					</div>';
+				$text .= $this->get_menu_tree($all_branch, $item['id'], $url, $menu_name);
 				$text .= '</li>';
+				$num++;
 			}
 		}
 		$text .= '</ol>';
 		if(!$id) {
 			$text .= '</div>';
 		}
-		return $text;
+		return $num ? $text : false;
 	}
 
 	function destruct_menu_tree($tree_array = false, $parent_id = 0) {
@@ -111,9 +125,7 @@ class Admin_menu_model extends CI_Model
 		return true;
 	}
 
-	function add_menu_item($info, $menu_id){
-		$order = $this->db->where(array('parent_id' => $info['parent_id'], 'parent_menu' => $menu_id))->order_by('order','desc')->get('menu_items')->row();
-		$info['order'] = !empty($order) ? $order->order+1 : 1;
+	function add_menu_item($info){
 		$this->db->insert('menu_items', $info); 
 	}
 

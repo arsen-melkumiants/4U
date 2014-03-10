@@ -1,6 +1,15 @@
 <?php
-function get_human_time($date)
-{	
+
+function custom_404() {
+	$CI =& get_instance();
+	if ($CI->input->is_ajax_request()) {
+		echo 'refresh';
+		exit;
+	}
+	show_404();
+}
+
+function get_human_time($date) {
 	$time = date("Ymd",time())-date("Ymd", ($date));
 	if($time == 0){
 		echo 'Cегодня, в '.date("H:i",$date);
@@ -56,42 +65,42 @@ function pagination($total = false, $per_page = false, $size = 5){
 	}
 	$cur_page = empty($_GET['page']) ? 1 : $_GET['page'];
 	echo '<div class="pagination">
-	  <ul>';
-	  	if($cur_page < 2){
-			echo '<li class="active"><a>Первая</a></li>';
-			echo '<li class="active"><a><</a></li>';
-		}else{
-			echo '<li><a href="?page=1">Первая</a></li>';
-			echo '<li><a href="?page='.($cur_page-1).'"><</a></li>';
-		}
-		
-			if($cur_page >= $size - floor($size / 2) && ($pages - $cur_page) >= ceil($size / 2)){
-				$start_off =  $cur_page - floor($size / 2);
-			}elseif(($pages - $cur_page) < ceil($size / 2)){
-				$start_off = $pages - $size + 1;
-				$start_off = $start_off < 1 ? 1 : $start_off;
+		<ul>';
+	if($cur_page < 2){
+		echo '<li class="active"><a>Первая</a></li>';
+		echo '<li class="active"><a><</a></li>';
+	}else{
+		echo '<li><a href="?page=1">Первая</a></li>';
+		echo '<li><a href="?page='.($cur_page-1).'"><</a></li>';
+	}
+
+	if($cur_page >= $size - floor($size / 2) && ($pages - $cur_page) >= ceil($size / 2)){
+		$start_off =  $cur_page - floor($size / 2);
+	}elseif(($pages - $cur_page) < ceil($size / 2)){
+		$start_off = $pages - $size + 1;
+		$start_off = $start_off < 1 ? 1 : $start_off;
+	}else{
+		$start_off = 1;
+	}
+	$n = 0;
+	for($i = $start_off;$i <= $pages;$i++){
+		if($n == $size){break;}
+			if($i == $cur_page){
+				echo '<li class="active"><a>'.$i.'</a></li>';
 			}else{
-				$start_off = 1;
-			}
-			$n = 0;
-			for($i = $start_off;$i <= $pages;$i++){
-				if($n == $size){break;}
-				if($i == $cur_page){
-					echo '<li class="active"><a>'.$i.'</a></li>';
-				}else{
-					echo '<li><a href="?page='.$i.'">'.$i.'</a></li>';
-				}
-				
-			$n++;
+				echo '<li><a href="?page='.$i.'">'.$i.'</a></li>';
 			}
 
-		if($cur_page >= $pages){
-	  		echo '<li class="active"><a>></a></li>';
-			echo '<li class="active"><a>Последняя</a></li>';
-		}else{
-			echo '<li><a href="?page='.($cur_page+1).'">></a></li>';
-			echo '<li><a href="?page='.$pages.'">Последняя</a></li>';
-		}
+		$n++;
+	}
+
+	if($cur_page >= $pages){
+		echo '<li class="active"><a>></a></li>';
+		echo '<li class="active"><a>Последняя</a></li>';
+	}else{
+		echo '<li><a href="?page='.($cur_page+1).'">></a></li>';
+		echo '<li><a href="?page='.$pages.'">Последняя</a></li>';
+	}
 	echo '</ul>
-	</div>';
+		</div>';
 }
