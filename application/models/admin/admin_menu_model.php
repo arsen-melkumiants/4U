@@ -58,7 +58,7 @@ class Admin_menu_model extends CI_Model {
 		if(!$id) {
 			$text .= '</div>';
 		}
-		return $num ? $text : false;
+		return $num ? $text : ($id ? false : $text);
 	}
 
 	function destruct_menu_tree($tree_array = false, $parent_id = 0) {
