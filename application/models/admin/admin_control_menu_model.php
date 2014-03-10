@@ -11,38 +11,35 @@ class Admin_control_menu_model extends CI_Model
 		
 		$this->menus = array(
 			'top' => array(
-				'Сайт'                            => array(
-					'global_settings'             => 'Глобальные настройки',
-					'change_access'               => 'Смена доступа в админ-панель',
-					'logout'                      => 'Выйти',
+				'Сайт'                        => array(
+					'global_settings'         => 'Глобальные настройки',
+					'change_access'           => 'Смена доступа в админ-панель',
+					'logout'                  => 'Выйти',
 				),
-				'Меню'                            => array(
-					'manage_menu/upper'           => 'Верхнее меню',
-                    'manage_menu/lower'           => 'Нижнее меню',
+				'Меню'                        => array(
+					'manage_menu/upper'       => 'Верхнее меню',
+					'manage_menu/lower'       => 'Нижнее меню',
 				),
-				'Контент'                         => array(
-					'manage_content/page/all'     => 'Статические страницы',
-					'manage_content/page/add'     => 'Добавить страницу',
-					'1'                           => '',
-                    'manage_partner/all'          => 'Список партнёров',
-					'manage_content/news/all'     => 'Новости',
-					'manage_content/news/add'     => 'Добавить новость',
-					'manage_content/news_cat/all' => 'Категории новостей',
+				'Контент'                     => array(
+					'manage_content'          => 'Список контента',
+					'manage_content/add'      => 'Добавить контент',
+					'1'                       => '',
+					'manage_content/category' => 'Категории контента',
 				),
-                'Магазин'                         => array(
-                    'manage_category/all'         => 'Список категорий',
-                    '1'                           => '',
-                    'manage_product/all'          => 'Список товаров',
-                    'manage_product/special'      => 'Специальные товары',
-                    '2'                           => '',
-                    'manage_order/all'            => 'Список заказов',
-                    'manage_order/settings'       => 'Настройки заказов',
-                    '3'                           => '',
-                    'manage_callback/all'         => 'Обратные звонки'
-                ),
-                'manage_users/user/all'           => 'Пользователи',
-				'extra'                           => 'Дополнительно',
-				'developers'                      => 'О разработчиках',
+				'Магазин'                     => array(
+					'manage_category/all'     => 'Список категорий',
+					'1'                       => '',
+					'manage_product/all'      => 'Список товаров',
+					'manage_product/special'  => 'Специальные товары',
+					'2'                       => '',
+					'manage_order/all'        => 'Список заказов',
+					'manage_order/settings'   => 'Настройки заказов',
+					'3'                       => '',
+					'manage_callback/all'     => 'Обратные звонки'
+				),
+				'manage_users/user/all'       => 'Пользователи',
+				'extra'                       => 'Дополнительно',
+				'developers'                  => 'О разработчиках',
 			),
 		);
 		

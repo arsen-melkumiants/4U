@@ -73,11 +73,20 @@ class Table {
 	}
 
 	public function create($rows_data = false, $table_params = false) {
-		if (empty($this->table_data) ) {
+		if (empty($this->table_data)) {
 			return false;
 		}
 
-		if (empty($rows_data)) {
+		if (is_callable($rows_data)) {
+			$CI =& get_instance();
+			$CI->load->database();
+			$rows_data = $rows_data($CI);
+			if (empty($rows_data)) {
+				return false;
+			}
+		}
+
+		if (empty($rows_data) || is_string($rows_data)) {
 			return $html = '<div class="alert alert-info">Записи отсутствуют</div>';
 		}
 
