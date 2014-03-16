@@ -2,13 +2,17 @@
 
 class Form {
 
-	public $form_data = array();
+	public $form_data        = array();
 
-	public $btn_data = array();
+	public $btn_data         = array();
 
-	public $grid_type = 'col-md';
+	public $grid_type        = 'col-md';
 
-	public $ajax_mode = false;
+	public $ajax_mode        = false;
+
+	public $switch_editor    = false;
+
+	public $is_editor_loaded = false;
 
 	public function __construct($grid_type = false) {
 		$this->grid_type = $grid_type ? $grid_type : $this->grid_type;
@@ -206,13 +210,21 @@ class Form {
 	}
 
 	public function textarea($name = false, $params = false) {
+		$this->switch_editor = true;
+		$params['class'] = 'ckeditor';
+		$params['width'] = 9;
 		$this->input($name, $params, 'textarea');
 		return $this;
 	}
 
 	public function create($params = false) {
-
 		$html = '';
+
+		if ($this->switch_editor && file_exists(FCPATH.'dist/ckeditor/ckeditor.js') && !$this->is_editor_loaded) {
+			$this->is_editor_loaded = true;
+			$html .= '<script src="/dist/ckeditor/ckeditor.js"></script>';
+		}
+
 		$params['method'] = !empty($params['method']) ? $params['method'] : 'post';
 		$params['class'] = !empty($params['class']) ? ' class="'.$params['class'].'" ' : '';
 
@@ -254,8 +266,8 @@ class Form {
 		$html .= '</div>'.PHP_EOL.'</form>'.PHP_EOL;
 		$this->form_data = array();
 		$this->btn_data = array();
-		return $html;
 
+		return $html;
 	}
 
 	public function clear() {

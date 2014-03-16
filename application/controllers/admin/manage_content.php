@@ -54,8 +54,8 @@ class Manage_content extends CI_Controller {
 			->date('add_date', array(
 				'title' => 'Дата создания'
 			))
-			->edit(array('link' => $this->MAIN_URL.'edit_equip/%d'))
-			->delete(array('link' => $this->MAIN_URL.'delete_equip/%d', 'modal' => 1))
+			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
+			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1))
 			->create(function($CI) {
 				return $CI->admin_content_model->get_all_content();
 			});
@@ -66,13 +66,8 @@ class Manage_content extends CI_Controller {
 	}
 
 	public function add() {
-		$content_info = $this->admin_content_model->get_content_categories();
-		if (empty($content_info)) {
-			custom_404();
-		}
-
-		$this->data['header']        = 'Создание меню';
-		$this->data['header_descr']  = 'Создание пункта меню';
+		$this->data['header']        = 'Добавления контента';
+		$this->data['header_descr']  = 'Создание статической страницы';
 		$this->data['title']        .= $this->data['header'];
 
 		if(!empty($_POST)){
@@ -80,18 +75,7 @@ class Manage_content extends CI_Controller {
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
-		$this->load->library('form');
-		$this->data['center_block'] = $this->form
-			->text('name', array(
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
-			))
-			->text('alias', array(
-				'valid_rules' => 'required|trim|xss_clean|is_unique[menu_items.alias]',
-				'label'       => 'Ссылка',
-			))
-			->btn(array('value' => 'Добавить'))
-			->create(array('action' => current_url()));
+		$this->data['center_block'] = $this->edit_form();
 
 		if ($this->form_validation->run() == FALSE) {
 			if ($this->IS_AJAX) {
@@ -104,9 +88,8 @@ class Manage_content extends CI_Controller {
 			}
 		} else {
 			$data = $this->input->post();
-			$data['menu_id'] = $menu_info['id'];
 			unset($data['submit']);
-			$this->admin_menu_model->add_menu_item($data);
+			$this->admin_menu_model->add_content($data);
 			$this->session->set_flashdata('success', 'Данные успешно добавлены');
 			if ($this->IS_AJAX) {
 				echo 'refresh';
@@ -120,35 +103,22 @@ class Manage_content extends CI_Controller {
 		if (empty($id)) {
 			custom_404();
 		}
-		$menu_info = $this->admin_menu_model->get_one_menu_item($id);
+		$content_info = $this->admin_content_model->get_content_info($id);
 
-		if (empty($menu_info)) {
+		if (empty($content_info )) {
 			custom_404();
 		}
 
-		$this->data['header']        = 'Редактирование "'.$menu_info['name'].'"';
-		$this->data['header_descr']  = 'Редактирование пункта меню';
+		$this->data['header']        = 'Редактирование "'.$content_info['name'].'"';
+		$this->data['header_descr']  = 'Редактирование контента';
 		$this->data['title']        .= $this->data['header'];
 
 		if(!empty($_POST)){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $menu_info['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $content_info['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
-		$this->load->library('form');
-		$this->data['center_block'] = $this->form
-			->text('name', array(
-				'value'       => $menu_info['name'],
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
-			))
-			->text('alias', array(
-				'value'       => $menu_info['alias'],
-				'valid_rules' => 'required|trim|xss_clean|is_unique_without[menu_items.alias.'.$id.']',
-				'label'       => 'Ссылка',
-			))
-			->btn(array('value' => 'Изменить'))
-			->create(array('action' => current_url()));
+		$this->data['center_block'] = $this->edit_form($content_info, $id);
 
 		if ($this->form_validation->run() == FALSE) {
 			if ($this->IS_AJAX) {
@@ -162,7 +132,7 @@ class Manage_content extends CI_Controller {
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
-			$menu_info = $this->admin_menu_model->update_menu_item($data, $id);
+			$content_info = $this->admin_content_model->update_content($data, $id);
 			$this->session->set_flashdata('success', 'Данные успешно обновлены');
 			if ($this->IS_AJAX) {
 				echo 'refresh';
@@ -170,6 +140,43 @@ class Manage_content extends CI_Controller {
 				redirect(current_url(), 'refresh');
 			}
 		}
+	}
+
+	private function edit_form($content_info = false, $id = false) {
+		$this->load->library('form');
+		return $this->form
+			->text('name', array(
+				'value'       => $content_info['name'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Имя',
+			))
+			->text('alias', array(
+				'value'       => $content_info['alias'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean|'.(!$id ? 'is_unique[content.alias]' : 'is_unique_without[content.alias.'.$id.']'),
+				'label'       => 'Ссылка',
+			))
+			->textarea('content', array(
+				'value'       => $content_info['content'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Текст',
+			))
+			->text('keywords', array(
+				'value'       => $content_info['keywords'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Ключевые слова',
+			))
+			->text('title', array(
+				'value'       => $content_info['title'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Заголовок страницы',
+			))
+			->text('description', array(
+				'value'       => $content_info['description'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Описание',
+			))
+			->btn(array('value' => empty($id) ? 'Добавить' : 'Изменить'))
+			->create(array('action' => current_url()));
 	}
 
 	public function delete($id = false) {

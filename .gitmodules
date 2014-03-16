@@ -1,0 +1,4 @@
+[submodule "dist/ckeditor"]
+	path = dist/ckeditor
+	url = git://github.com/ckeditor/ckeditor-releases.git
+	branch = master

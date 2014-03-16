@@ -2,13 +2,13 @@
 
 class Table {
 
-	public $table_data  = array();
+	public $table_data    = array();
 
-	public $active_data = array();
+	public $active_data   = array();
 
-	public $grid_type   = 'col-md';
+	public $grid_type     = 'col-md';
 
-	public $limit_page  = 5;
+	public $limit_page    = 15;
 
 	public function __construct($grid_type = false) {
 		$this->grid_type = $grid_type ? $grid_type : $this->grid_type;
