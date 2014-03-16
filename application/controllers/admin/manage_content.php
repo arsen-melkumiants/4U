@@ -43,7 +43,7 @@ class Manage_content extends CI_Controller {
 			->text('cat_id', array(
 				'title' => 'Статус',
 				'extra' => $content_categories ,
-			   	'func'  => function($row, $params) {
+				'func'  => function($row, $params) {
 					if (isset($params['extra'][$row['cat_id']]['name'])) {
 						return '<span class="label label-info">'.$params['extra'][$row['cat_id']]['name'].'</span>';
 					} else {
@@ -57,7 +57,7 @@ class Manage_content extends CI_Controller {
 			->edit(array('link' => $this->MAIN_URL.'edit_equip/%d'))
 			->delete(array('link' => $this->MAIN_URL.'delete_equip/%d', 'modal' => 1))
 			->create(function($CI) {
-				return $CI->db->get('content')->result_array();
+				return $CI->admin_content_model->get_all_content();
 			});
 
 		$this->load->view(ADM_FOLDER.'header', $this->data);
@@ -66,8 +66,8 @@ class Manage_content extends CI_Controller {
 	}
 
 	public function add() {
-		$menu_info = $this->admin_menu_model->get_menu_info($name);
-		if (empty($menu_info)) {
+		$content_info = $this->admin_content_model->get_content_categories();
+		if (empty($content_info)) {
 			custom_404();
 		}
 

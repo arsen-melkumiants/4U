@@ -2,11 +2,13 @@
 
 class Table {
 
-	public $table_data = array();
+	public $table_data  = array();
 
 	public $active_data = array();
 
-	public $grid_type = 'col-md';
+	public $grid_type   = 'col-md';
+
+	public $limit_page  = 5;
 
 	public function __construct($grid_type = false) {
 		$this->grid_type = $grid_type ? $grid_type : $this->grid_type;
@@ -46,7 +48,7 @@ class Table {
 		$params['class'] = 'class="'.(!empty($params['class']) ? $params['class']: 'btn-default').'"';
 		$params['icon'] = !empty($params['icon']) ? '<i class="icon-'.$params['icon'].'"></i> ' : '';
 		$params['title'] = !empty($params['title']) ? ' title="'.$params['title'].'"' : '';
-		$params['link'] = !empty($params['link']) ? $params['link'] : '#';
+		$params['link'] = !empty($params['link']) ? site_url($params['link']) : '#';
 		$params['modal'] = !empty($params['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
 
 		$this->active_data[] = array(
@@ -78,11 +80,11 @@ class Table {
 		}
 
 		if (is_callable($rows_data)) {
-			$CI =& get_instance();
-			$CI->load->database();
-			$rows_data = $rows_data($CI);
-			if (empty($rows_data)) {
+			$sql_result = $this->sql_construct($rows_data);
+			if (empty($sql_result['items'])) {
 				return false;
+			} else {
+				$rows_data = $sql_result['items'];
 			}
 		}
 
@@ -138,6 +140,10 @@ class Table {
 
 		$html .= '</table>';
 
+		if(!empty($sql_result['pages'])){
+			$html .= $sql_result['pages'];
+		}
+
 		$this->table_data = array();
 		return $html;
 
@@ -147,5 +153,77 @@ class Table {
 		$this->table_data = array();
 		$this->active_data = array();
 		return $this;
+	}
+
+	public function sql_construct($sql) {
+		$CI =& get_instance();
+		$CI->load->database();
+		$limit = !empty($table_params['limit']) ? $table_params['limit'] : $this->limit_page;
+		if (intval($limit)) {
+			$sql_all = $sql($CI);
+			if (isset($sql_all->conn_id)) {
+				$result['pages'] = $this->pagination($sql_all->num_rows(), $limit);
+			}
+			$offset = isset($_GET['page']) && intval($_GET['page']) > 1 ? (intval($_GET['page']) - 1) * $limit : 0;
+			$CI->db->limit($limit, $offset);
+		}
+
+		$sql = $sql($CI);
+		$result['items'] = is_string($sql) ? $CI->query($sql)->result_array() : $sql->result_array();
+
+		return $result;
+	}
+
+	function pagination($total = false, $per_page = false, $size = 5){
+		if (!$total || !$per_page) {
+			return false;
+		}
+		$pages = ceil($total/$per_page);
+		if ($pages < 2) {
+			return false;
+		}
+		$cur_page = empty($_GET['page']) ? 1 : $_GET['page'];
+		$text = '<ul class="pagination">';
+		if ($cur_page < 2) {
+			$text .= '<li class="disabled"><a>«</a></li>';
+			$text .= '<li class="disabled"><a>‹</a></li>';
+		} else {
+			$text .= '<li><a href="?page=1">«</a></li>';
+			$text .= '<li><a href="?page='.($cur_page-1).'">‹</a></li>';
+		}
+
+		if ($cur_page >= $size - floor($size / 2) && ($pages - $cur_page) >= ceil($size / 2)) {
+			$start_off =  $cur_page - floor($size / 2);
+		} elseif (($pages - $cur_page) < ceil($size / 2)) {
+			$start_off = $pages - $size + 1;
+			$start_off = $start_off < 1 ? 1 : $start_off;
+		} else {
+			$start_off = 1;
+		}
+		$n = 0;
+		for ($i = $start_off;$i <= $pages;$i++) {
+			if ($n == $size) { 
+				break;
+			}
+			
+			if ($i == $cur_page) {
+				$text .= '<li class="active"><a>'.$i.'</a></li>';
+			} else {
+				$text .= '<li><a href="?page='.$i.'">'.$i.'</a></li>';
+			}
+
+			$n++;
+		}
+
+		if($cur_page >= $pages){
+			$text .= '<li class="disabled"><a>›</a></li>';
+			$text .= '<li class="disabled"><a>»</a></li>';
+		}else{
+			$text .= '<li><a href="?page='.($cur_page+1).'">›</a></li>';
+			$text .= '<li><a href="?page='.$pages.'">»</a></li>';
+		}
+		$text .= '</ul>';
+
+		return $text;
 	}
 }
