@@ -143,6 +143,8 @@ class Manage_content extends CI_Controller {
 	}
 
 	private function edit_form($content_info = false, $id = false) {
+		$content_categories = $this->admin_content_model->get_content_categories();
+		array_unshift($content_categories, array('id' => 0, 'name' => 'Без категории'));
 		$this->load->library('form');
 		return $this->form
 			->text('name', array(
@@ -155,6 +157,13 @@ class Manage_content extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean|'.(!$id ? 'is_unique[content.alias]' : 'is_unique_without[content.alias.'.$id.']'),
 				'label'       => 'Ссылка',
 			))
+			->select('cat_id', array(
+				'value'       => $content_info['cat_id'] ?: false,
+				'valid_rules' => 'trim|xss_clean',
+				'label'       => 'Категория',
+				'options'     => $content_categories,
+				'search'      => true,
+			))
 			->textarea('content', array(
 				'value'       => $content_info['content'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
@@ -162,17 +171,17 @@ class Manage_content extends CI_Controller {
 			))
 			->text('keywords', array(
 				'value'       => $content_info['keywords'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean',
+				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Ключевые слова',
 			))
 			->text('title', array(
 				'value'       => $content_info['title'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean',
+				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Заголовок страницы',
 			))
 			->text('description', array(
 				'value'       => $content_info['description'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean',
+				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Описание',
 			))
 			->btn(array('value' => empty($id) ? 'Добавить' : 'Изменить'))

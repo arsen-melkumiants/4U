@@ -1,4 +1,29 @@
 <?php
+function after_load($type, $url = false) {
+
+	$type_list = array(
+		'css' => '<link rel="stylesheet" type="text/css" href="$url" />',
+		'js'  => '<script src="$url"></script>',
+	);
+
+	if (!in_array($type, array_keys($type_list))) {
+		return false;
+	}
+
+	if (!empty($url)) {
+		$GLOBALS['after_load'][$type][] = $url;
+		return true;
+	}
+	if (!empty($GLOBALS['after_load'][$type])) {
+		$result = '';
+		foreach ($GLOBALS['after_load'][$type] as $item) {
+			$result .= str_replace('$url', $item, $type_list[$type]);
+		}
+		return $result;
+	}
+
+	return false;
+}
 
 function custom_404() {
 	$CI =& get_instance();

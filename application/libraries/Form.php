@@ -2,17 +2,17 @@
 
 class Form {
 
-	public $form_data        = array();
+	public $form_data         = array();
 
-	public $btn_data         = array();
+	public $btn_data          = array();
 
-	public $grid_type        = 'col-md';
+	public $grid_type         = 'col-md';
 
-	public $ajax_mode        = false;
+	public $ajax_mode         = false;
 
-	public $switch_editor    = false;
-
-	public $is_editor_loaded = false;
+	public $load_editor       = false;
+	
+	public $load_selectpicker = false;
 
 	public function __construct($grid_type = false) {
 		$this->grid_type = $grid_type ? $grid_type : $this->grid_type;
@@ -36,7 +36,7 @@ class Form {
 			if (empty($data[$name])) {
 				continue;
 			}
-			$attrs .= ' '.$name.'="'.$data[$name].'"';
+			$attrs .= ' '.$name.'="'.trim($data[$name]).'"';
 		}
 		return $attrs;
 	}
@@ -88,13 +88,23 @@ class Form {
 		//radio-buttons
 		$input = '';
 		if ($type == 'radio') {
-			if (is_array($params['inputs'])) {
+			if (isset($params['inputs']) && is_array($params['inputs'])) {
 				foreach ($params['inputs'] as $value => $info) {
 					$info['checked'] = !empty($params['value']) && $params['value'] == $value ? ' checked="checked"' : '';
 					$input .= '<label class="radio-inline">'.PHP_EOL;
 					$input .= '<input type="radio" name="'.$name.'" value="'.$value.'"'.$info['checked'].'> '.$info['name'].PHP_EOL;
 					$input .= '</label>'.PHP_EOL;
 				}
+			}
+		} elseif ($type == 'select') {
+			if (isset($params['options']) && is_array($params['options'])) {
+				$attrs_list = array('class','name', 'data-live-search');
+				$input .= '<select '.$this->attributes($attrs_list, $params).'>';
+				foreach ($params['options'] as $value => $info) {
+					$info['selected'] = !empty($params['value']) && $params['value'] == $value ? ' selected="selected"' : '';
+					$input .= '<option value="'.$info['id'].'"'.$info['selected'].'>'.$info['name'].'</option>'.PHP_EOL;
+				}
+				$input .= '</select>';
 			}
 		}elseif ($type == 'textarea') {
 			$attrs_list = array('class','name','readonly','rows');
@@ -210,19 +220,41 @@ class Form {
 	}
 
 	public function textarea($name = false, $params = false) {
-		$this->switch_editor = true;
+		if (!$this->load_editor) {
+			$this->load_editor = true;
+		}
 		$params['class'] = 'ckeditor';
 		$params['width'] = 9;
 		$this->input($name, $params, 'textarea');
 		return $this;
 	}
 
+	public function select($name = false, $params = false) {
+		if (!empty($params['search'])) {
+			$params['data-live-search'] = 'true';
+			$params['class'] = (!empty($params['class']) ? $params['class'].' ' : '').'selectpicker';
+			if (!$this->load_selectpicker) {
+				$this->load_selectpicker = true;
+			}
+		}
+		$this->input($name, $params, 'select');
+		return $this;
+	}
+
 	public function create($params = false) {
 		$html = '';
+		
+		//js editor for textarea
+		if (file_exists(FCPATH.'dist/ckeditor/ckeditor.js') && $this->load_editor && $this->load_editor !== 'exists') {
+			$this->load_editor = 'exists';
+			after_load('js', '/dist/ckeditor/ckeditor.js');
+		}
 
-		if ($this->switch_editor && file_exists(FCPATH.'dist/ckeditor/ckeditor.js') && !$this->is_editor_loaded) {
-			$this->is_editor_loaded = true;
-			$html .= '<script src="/dist/ckeditor/ckeditor.js"></script>';
+		//selector
+		if (file_exists(FCPATH.'dist/bs-select/bootstrap-select.js') && $this->load_selectpicker && $this->load_selectpicker !== 'exists') {
+			$this->load_selectpicker = 'exists';
+			after_load('js',  '/dist/bs-select/bootstrap-select.js');
+			after_load('css', '/dist/bs-select/bootstrap-select.min.css');
 		}
 
 		$params['method'] = !empty($params['method']) ? $params['method'] : 'post';

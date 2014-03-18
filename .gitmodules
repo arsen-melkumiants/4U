@@ -2,3 +2,7 @@
 	path = dist/ckeditor
 	url = git://github.com/ckeditor/ckeditor-releases.git
 	branch = master
+[submodule "dist/bs-select"]
+	path = dist/bs-select
+	url = git@github.com:silviomoreto/bootstrap-select.git
+	branch = master
