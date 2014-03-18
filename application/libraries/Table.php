@@ -6,6 +6,10 @@ class Table {
 
 	public $active_data   = array();
 
+	public $header_data   = array();
+
+	public $footer_data   = array();
+
 	public $grid_type     = 'col-md';
 
 	public $limit_page    = 15;
@@ -44,17 +48,29 @@ class Table {
 	}
 
 	public function btn($params = false) {
-		$params['name'] = !empty($params['name']) ? ucfirst($params['name']) : '';
-		$params['class'] = 'class="'.(!empty($params['class']) ? $params['class']: 'btn-default').'"';
-		$params['icon'] = !empty($params['icon']) ? '<i class="icon-'.$params['icon'].'"></i> ' : '';
+		$params['name']  = !empty($params['name']) ? ucfirst($params['name']) : '';
+		$params['class'] = 'class="'.(!empty($params['class']) ? $params['class']: (!empty($params['name']) ? 'btn btn-primary' : '')).'"';
+		$params['icon']  = !empty($params['icon']) ? '<i class="icon-'.$params['icon'].'"></i> ' : '';
 		$params['title'] = !empty($params['title']) ? ' title="'.$params['title'].'"' : '';
-		$params['link'] = !empty($params['link']) ? site_url($params['link']) : '#';
+		$params['link']  = !empty($params['link']) ? site_url($params['link']) : '#';
 		$params['modal'] = !empty($params['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
 
-		$this->active_data[] = array(
-			'html' => '<a href="'.$params['link'].'" '.$params['class'].$params['title'].$params['modal'].'>'.$params['icon'].$params['name'].'</a>',
+		$result = array(
+			'html'   => '<a href="'.$params['link'].'" '.$params['class'].$params['title'].$params['modal'].'>'.$params['icon'].$params['name'].'</a>',
 			'params' => $params
 		);
+
+		if (empty($params['header']) && empty($params['footer'])) {
+			$this->active_data[] = $result;
+		} else {
+			if (!empty($params['header'])) {
+				$this->header_data[] = $result;
+			}
+
+			if (!empty($params['footer'])) {
+				$this->footer_data[] = $result;
+			}
+		}
 
 		return $this;
 	}
@@ -78,23 +94,31 @@ class Table {
 		if (empty($this->table_data)) {
 			return false;
 		}
+		$html = '';
 
 		if (is_callable($rows_data)) {
-			$sql_result = $this->sql_construct($rows_data);
+			$sql_result = $this->sql_construct($rows_data, $table_params);
 			if (empty($sql_result['items'])) {
-				return false;
+				$rows_data = false;
 			} else {
 				$rows_data = $sql_result['items'];
 			}
 		}
 
+		if (!empty($this->header_data)) {
+			foreach ($this->header_data as $item) {
+				$html .= $item['html'];
+			}
+			$html .= '<br /><br />';
+		}
+
 		if (empty($rows_data) || is_string($rows_data)) {
-			return $html = '<div class="alert alert-info">Записи отсутствуют</div>';
+			return $html .= '<div class="alert alert-info">Записи отсутствуют</div>';
 		}
 
 		$table_params['class'] = !empty($table_params['class']) ? $table_params['class'] : 'table table-bordered table-hover';
 
-		$html = '<table class="'.$table_params['class'].'">'."\n";
+		$html .= '<table class="'.$table_params['class'].'">'."\n";
 		$html .= '<tr>'."\n";
 
 		foreach ((array)$this->table_data as $item) {
@@ -140,22 +164,30 @@ class Table {
 
 		$html .= '</table>';
 
-		if(!empty($sql_result['pages'])){
+		if (!empty($sql_result['pages'])) {
 			$html .= $sql_result['pages'];
 		}
 
-		$this->table_data = array();
+		if (!empty($this->footer_data)) {
+			foreach ($this->footer_data as $item) {
+				$html .= $item['html'];
+			}
+		}
+
+		$this->clear();
 		return $html;
 
 	}
 
 	public function clear() {
-		$this->table_data = array();
+		$this->table_data  = array();
 		$this->active_data = array();
+		$this->header_data = array();
+		$this->footer_data = array();
 		return $this;
 	}
 
-	public function sql_construct($sql) {
+	public function sql_construct($sql, $table_params = false) {
 		$CI =& get_instance();
 		$CI->load->database();
 		$limit = !empty($table_params['limit']) ? $table_params['limit'] : $this->limit_page;
@@ -205,7 +237,7 @@ class Table {
 			if ($n == $size) { 
 				break;
 			}
-			
+
 			if ($i == $cur_page) {
 				$text .= '<li class="active"><a>'.$i.'</a></li>';
 			} else {
@@ -222,7 +254,7 @@ class Table {
 			$text .= '<li><a href="?page='.($cur_page+1).'">›</a></li>';
 			$text .= '<li><a href="?page='.$pages.'">»</a></li>';
 		}
-		$text .= '</ul>';
+		$text .= '</ul><br />';
 
 		return $text;
 	}
