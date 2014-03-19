@@ -36,7 +36,7 @@ class Manage_content extends CI_Controller {
 			'header_descr' => 'Редактирование категории контента',
 		),
 		'delete_category'  => array(
-			'header'       => 'Удаление контента "%name"',
+			'header'       => 'Удаление категории "%name"',
 			'header_descr' => false,
 		),
 	);
@@ -52,8 +52,6 @@ class Manage_content extends CI_Controller {
 		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
 		$this->load->model(ADM_FOLDER.'admin_content_model');
 		
-		$this->data['title'] = '4U :: ';
-
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
 		$this->IS_AJAX = $this->input->is_ajax_request();
 		

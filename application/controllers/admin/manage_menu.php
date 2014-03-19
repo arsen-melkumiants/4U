@@ -39,8 +39,6 @@ class Manage_menu extends CI_Controller {
 		$this->load->model(ADM_FOLDER.'admin_control_menu_model');
 		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
 		$this->load->model(ADM_FOLDER.'admin_menu_model');
-		
-		$this->data['title'] = '4U :: ';
 
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
 		$this->IS_AJAX = $this->input->is_ajax_request();

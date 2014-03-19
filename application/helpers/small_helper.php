@@ -29,7 +29,7 @@ function set_header_info($data = false) {
 	}
 
 	$CI->data = array_merge($CI->data, $CI->PAGE_INFO[$method]);
-	$CI->data['title'] .= $CI->data['header'];
+	$CI->data['title'] = '4U :: '.$CI->data['header'];
 }
 
 function after_load($type, $url = false) {
