@@ -24,10 +24,10 @@ class Admin_control_menu_model extends CI_Model
 					'manage_content'          => 'Список контента',
 					'manage_content/add'      => 'Добавить контент',
 					'1'                       => '',
-					'manage_content/category' => 'Категории контента',
+					'manage_content/categories' => 'Категории контента',
 				),
 				'Магазин'                     => array(
-					'manage_category/all'     => 'Список категорий',
+					'manage_category'         => 'Список категорий',
 					'1'                       => '',
 					'manage_product/all'      => 'Список товаров',
 					'manage_product/special'  => 'Специальные товары',

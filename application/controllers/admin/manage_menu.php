@@ -64,6 +64,7 @@ class Manage_menu extends CI_Controller {
 		if (empty($menu_items)) {
 			custom_404();
 		}
+		set_header_info($menu_items[0]);
 
 		$this->data['center_block']  = $this->admin_menu_model->get_menu_tree($menu_items, 0, $this->MAIN_URL, $name);
 

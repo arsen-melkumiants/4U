@@ -23,7 +23,7 @@ class Manage_content extends CI_Controller {
 			'header'       => 'Удаление контента "%name"',
 			'header_descr' => false,
 		),
-		'category'         => array(
+		'categories'         => array(
 			'header'       => 'Список категорий',
 			'header_descr' => 'Список категорий контента',
 		),
@@ -91,7 +91,6 @@ class Manage_content extends CI_Controller {
 				'link' => $this->MAIN_URL.'add',
 				'name' => 'Добавить',
 				'header' => true,
-				'footer' => true,
 			))
 			->create(function($CI) {
 				return $CI->admin_content_model->get_all_content();
@@ -247,7 +246,7 @@ class Manage_content extends CI_Controller {
 		$this->delete($id, 'category');
 	}
 
-	function category() {
+	function categories() {
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
 			->text('name', array(
@@ -257,13 +256,13 @@ class Manage_content extends CI_Controller {
 			->text('alias', array(
 				'title' => 'Ссылка',
 			))
-			->edit(array('link' => $this->MAIN_URL.'edit_category/%d'))
-			->delete(array('link' => $this->MAIN_URL.'delete_category/%d', 'modal' => 1))
+			->edit(array('link' => $this->MAIN_URL.'edit_category/%d', 'modal' => true))
+			->delete(array('link' => $this->MAIN_URL.'delete_category/%d', 'modal' => true))
 			->btn(array(
 				'link'   => $this->MAIN_URL.'add_category',
 				'name'   => 'Добавить',
 				'header' => true,
-				'footer' => true,
+				'modal'  => true,
 			))
 			->create(function($CI) {
 				return $CI->admin_content_model->get_content_categories(true);
@@ -323,7 +322,7 @@ class Manage_content extends CI_Controller {
 			if ($this->IS_AJAX) {
 				echo 'refresh';
 			} else {
-				redirect($this->MAIN_URL.'category', 'refresh');
+				redirect($this->MAIN_URL.'categories', 'refresh');
 			}
 		}
 	}
