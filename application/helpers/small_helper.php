@@ -1,6 +1,38 @@
 <?php
-function after_load($type, $url = false) {
+function load_admin_views() {
+	$CI =& get_instance();
+	if ($CI->IS_AJAX) {
+		$output = $CI->load->view(ADM_FOLDER.'ajax', '', true);
+		echo $output;
+	} else {
+		$CI->load->view(ADM_FOLDER.'header', $CI->data);
+		$CI->load->view(ADM_FOLDER.'s_page', $CI->data);
+		$CI->load->view(ADM_FOLDER.'footer', $CI->data);
+	}
+}
 
+function set_header_info($data = false) {
+	$CI =& get_instance();
+	$method = $CI->router->fetch_method();
+	if (!isset($CI->PAGE_INFO[$method])) {
+		return false;
+	}
+
+	if (!empty($data) && is_array($data)) {
+		foreach ($data as $key => $item) {
+			$data['%'.$key] = $item;
+			unset($data[$key]);
+		}
+
+		$CI->PAGE_INFO[$method]['header'] = str_replace(array_keys($data), array_values($data), $CI->PAGE_INFO[$method]['header']);
+		$CI->PAGE_INFO[$method]['header_descr'] = str_replace(array_keys($data), array_values($data), $CI->PAGE_INFO[$method]['header_descr']);
+	}
+
+	$CI->data = array_merge($CI->data, $CI->PAGE_INFO[$method]);
+	$CI->data['title'] .= $CI->data['header'];
+}
+
+function after_load($type, $url = false) {
 	$type_list = array(
 		'css' => '<link rel="stylesheet" type="text/css" href="$url" />',
 		'js'  => '<script src="$url"></script>',

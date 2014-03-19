@@ -6,6 +6,41 @@ class Manage_content extends CI_Controller {
 
 	public $IS_AJAX = false;
 
+	public $PAGE_INFO = array(
+		'index'            => array(
+			'header'       => 'Контент',
+			'header_descr' => 'Список статических страниц',
+		),
+		'add'              => array(
+			'header'       => 'Добавления контента',
+			'header_descr' => 'Создание статической страницы',
+		),
+		'edit'             => array(
+			'header'       => 'Редактирование "%name"',
+			'header_descr' => 'Редактирование контента',
+		),
+		'delete'           => array(
+			'header'       => 'Удаление контента "%name"',
+			'header_descr' => false,
+		),
+		'category'         => array(
+			'header'       => 'Список категорий',
+			'header_descr' => 'Список категорий контента',
+		),
+		'add_category'     => array(
+			'header'       => 'Добавления категории',
+			'header_descr' => 'Создание категории для статических страницы',
+		),
+		'edit_category'    => array(
+			'header'       => 'Редактирование "%name"',
+			'header_descr' => 'Редактирование категории контента',
+		),
+		'delete_category'  => array(
+			'header'       => 'Удаление контента "%name"',
+			'header_descr' => false,
+		),
+	);
+
 	function __construct() {
 		parent::__construct();
 		$this->load->library('ion_auth');
@@ -15,23 +50,19 @@ class Manage_content extends CI_Controller {
 
 		$this->load->model(ADM_FOLDER.'admin_control_menu_model');
 		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
-
-		$this->data['title'] = '4U :: ';
-
 		$this->load->model(ADM_FOLDER.'admin_content_model');
-
-		set_alert($this->session->flashdata('success'), false, 'success');
-		set_alert($this->session->flashdata('danger'), false, 'danger');
+		
+		$this->data['title'] = '4U :: ';
 
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
 		$this->IS_AJAX = $this->input->is_ajax_request();
+		
+		set_alert($this->session->flashdata('success'), false, 'success');
+		set_alert($this->session->flashdata('danger'), false, 'danger');
+		set_header_info();
 	}
 
 	public function index() {
-		$this->data['header']        = 'Контент';
-		$this->data['title']        .= $this->data['header'];
-		$this->data['header_descr']  = 'Список статических страниц';
-
 		$content_categories = $this->admin_content_model->get_content_categories();
 
 		$this->load->library('table');
@@ -50,7 +81,7 @@ class Manage_content extends CI_Controller {
 						return '<span class="label label-warning">Отсутствует</span>';
 					}
 				}
-			))
+		))
 			->date('add_date', array(
 				'title' => 'Дата создания'
 			))
@@ -66,16 +97,10 @@ class Manage_content extends CI_Controller {
 				return $CI->admin_content_model->get_all_content();
 			});
 
-		$this->load->view(ADM_FOLDER.'header', $this->data);
-		$this->load->view(ADM_FOLDER.'s_page', $this->data);
-		$this->load->view(ADM_FOLDER.'footer', $this->data);
+		load_admin_views();
 	}
 
 	public function add() {
-		$this->data['header']        = 'Добавления контента';
-		$this->data['header_descr']  = 'Создание статической страницы';
-		$this->data['title']        .= $this->data['header'];
-
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
@@ -84,14 +109,7 @@ class Manage_content extends CI_Controller {
 		$this->data['center_block'] = $this->edit_form();
 
 		if ($this->form_validation->run() == FALSE) {
-			if ($this->IS_AJAX) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', $this->data, true);
-				echo $output;
-			} else {
-				$this->load->view(ADM_FOLDER.'header', $this->data);
-				$this->load->view(ADM_FOLDER.'s_page', $this->data);
-				$this->load->view(ADM_FOLDER.'footer', $this->data);
-			}
+			load_admin_views();
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
@@ -115,27 +133,17 @@ class Manage_content extends CI_Controller {
 		if (empty($content_info )) {
 			custom_404();
 		}
-
-		$this->data['header']        = 'Редактирование "'.$content_info['name'].'"';
-		$this->data['header_descr']  = 'Редактирование контента';
-		$this->data['title']        .= $this->data['header'];
+		set_header_info($content_info);
 
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $content_info['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
-		$this->data['center_block'] = $this->edit_form($content_info, $id);
+		$this->data['center_block'] = $this->edit_form($content_info);
 
 		if ($this->form_validation->run() == FALSE) {
-			if ($this->IS_AJAX) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
-				echo $output;
-			} else {
-				$this->load->view(ADM_FOLDER.'header', $this->data);
-				$this->load->view(ADM_FOLDER.'s_page', $this->data);
-				$this->load->view(ADM_FOLDER.'footer', $this->data);
-			}
+			load_admin_views();
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
@@ -149,7 +157,7 @@ class Manage_content extends CI_Controller {
 		}
 	}
 
-	private function edit_form($content_info = false, $id = false) {
+	private function edit_form($content_info = false) {
 		$content_categories = $this->admin_content_model->get_content_categories();
 		array_unshift($content_categories, array('id' => 0, 'name' => 'Без категории'));
 		$this->load->library('form');
@@ -161,7 +169,7 @@ class Manage_content extends CI_Controller {
 			))
 			->text('alias', array(
 				'value'       => $content_info['alias'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|'.(!$id ? 'is_unique[content.alias]' : 'is_unique_without[content.alias.'.$id.']'),
+				'valid_rules' => 'required|trim|xss_clean|'.(!$content_info['id'] ? 'is_unique[content.alias]' : 'is_unique_without[content.alias.'.$content_info['id'].']'),
 				'label'       => 'Ссылка',
 			))
 			->select('cat_id', array(
@@ -195,21 +203,29 @@ class Manage_content extends CI_Controller {
 			->create(array('action' => current_url()));
 	}
 
-	public function delete($id = false) {
+	public function delete($id = false, $type = false) {
 		if (empty($id)) {
 			custom_404();
 		}
-		$content_info = $this->admin_content_model->get_content_info($id);
+		
+		if ($type == 'category') {
+			$get_method    = 'get_content_category_info';
+			$delete_method = 'delete_content_category';
+		} else {
+			$get_method    = 'get_content_info';
+			$delete_method = 'delete_content';
+		}
+
+		$content_info = $this->admin_content_model->$get_method($id);
 
 		if (empty($content_info)) {
 			custom_404();
 		}
-
-		$this->data['header'] = 'Удаление контента "'.$content_info['name'].'"';
+		set_header_info($content_info);
 
 		if ($this->IS_AJAX) {
 			if (isset($_POST['delete'])) {
-				$this->admin_content_model->delete_content($id);
+				$this->admin_content_model->$delete_method($id);
 				$this->session->set_flashdata('danger', 'Данные успешно удалены');
 				echo 'refresh';
 			} else {
@@ -221,17 +237,17 @@ class Manage_content extends CI_Controller {
 				echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 			}
 		} else {
-			$this->admin_content_model->delete_content($id);
+			$this->admin_content_model->$delete_method($id);
 			$this->session->set_flashdata('danger', 'Данные успешно удалены');
 			redirect($this->MAIN_URL, 'refresh');
 		}
 	}
 
-	function category() {
-		$this->data['header']        = 'Список категорий';
-		$this->data['title']        .= $this->data['header'];
-		$this->data['header_descr']  = 'Список категорий контента';
+	function delete_category($id) {
+		$this->delete($id, 'category');
+	}
 
+	function category() {
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
 			->text('name', array(
@@ -253,9 +269,7 @@ class Manage_content extends CI_Controller {
 				return $CI->admin_content_model->get_content_categories(true);
 			});
 
-		$this->load->view(ADM_FOLDER.'header', $this->data);
-		$this->load->view(ADM_FOLDER.'s_page', $this->data);
-		$this->load->view(ADM_FOLDER.'footer', $this->data);
+		load_admin_views();
 	}
 
 	public function edit_category($id = false) {
@@ -267,27 +281,17 @@ class Manage_content extends CI_Controller {
 		if (empty($category_info)) {
 			custom_404();
 		}
-
-		$this->data['header']        = 'Редактирование "'.$category_info['name'].'"';
-		$this->data['header_descr']  = 'Редактирование категории контента';
-		$this->data['title']        .= $this->data['header'];
+		set_header_info($category_info);
 
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $category_info['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
-		$this->data['center_block'] = $this->edit_category_form($category_info, $id);
+		$this->data['center_block'] = $this->edit_category_form($category_info);
 
 		if ($this->form_validation->run() == FALSE) {
-			if ($this->IS_AJAX) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
-				echo $output;
-			} else {
-				$this->load->view(ADM_FOLDER.'header', $this->data);
-				$this->load->view(ADM_FOLDER.'s_page', $this->data);
-				$this->load->view(ADM_FOLDER.'footer', $this->data);
-			}
+			load_admin_views();
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
@@ -302,10 +306,6 @@ class Manage_content extends CI_Controller {
 	}
 
 	public function add_category() {
-		$this->data['header']        = 'Добавления категории';
-		$this->data['header_descr']  = 'Создание категории для статических страницы';
-		$this->data['title']        .= $this->data['header'];
-
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
@@ -314,14 +314,7 @@ class Manage_content extends CI_Controller {
 		$this->data['center_block'] = $this->edit_category_form();
 
 		if ($this->form_validation->run() == FALSE) {
-			if ($this->IS_AJAX) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', $this->data, true);
-				echo $output;
-			} else {
-				$this->load->view(ADM_FOLDER.'header', $this->data);
-				$this->load->view(ADM_FOLDER.'s_page', $this->data);
-				$this->load->view(ADM_FOLDER.'footer', $this->data);
-			}
+			load_admin_views();
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
@@ -335,7 +328,7 @@ class Manage_content extends CI_Controller {
 		}
 	}
 
-	private function edit_category_form($category_info = false, $id = false) {
+	private function edit_category_form($category_info = false) {
 		$this->load->library('form');
 		return $this->form
 			->text('name', array(
@@ -345,7 +338,7 @@ class Manage_content extends CI_Controller {
 			))
 			->text('alias', array(
 				'value'       => $category_info['alias'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|'.(!$id ? 'is_unique[content_categories.alias]' : 'is_unique_without[content_categories.alias.'.$id.']'),
+				'valid_rules' => 'required|trim|xss_clean|'.(!$category_info['id'] ? 'is_unique[content_categories.alias]' : 'is_unique_without[content_categories.alias.'.$category_info['id'].']'),
 				'label'       => 'Ссылка',
 			))
 			->btn(array('value' => empty($id) ? 'Добавить' : 'Изменить'))

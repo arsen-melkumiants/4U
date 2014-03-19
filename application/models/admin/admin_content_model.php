@@ -49,5 +49,9 @@ class Admin_content_model extends CI_Model {
 	function update_content_category($info, $id) {
 		$this->db->where('id', $id)->update('content_categories', $info);
 	}
+	
+	function delete_content_category($id) {
+		$this->db->where('id', $id)->delete('content_categories');
+	}
 
 }

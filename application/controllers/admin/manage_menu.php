@@ -6,6 +6,29 @@ class Manage_menu extends CI_Controller {
 
 	public $IS_AJAX = false;
 
+	public $PAGE_INFO = array(
+		'index'            => array(
+			'header'       => 'Меню',
+			'header_descr' => false,
+		),
+		'menu'             => array(
+			'header'       => '"%ru_name" меню',
+			'header_descr' => 'Список пунктов меню',
+		),
+		'add'              => array(
+			'header'       => 'Добавление меню',
+			'header_descr' => 'Добавление пункта меню',
+		),
+		'edit'             => array(
+			'header'       => 'Редактирование "%name"',
+			'header_descr' => 'Редактирование пункта меню',
+		),
+		'delete'           => array(
+			'header'       => 'Удаление пункта меню "%name"',
+			'header_descr' => false,
+		),
+	);
+
 	function __construct() {
 		parent::__construct();
 		$this->load->library('ion_auth');
@@ -15,24 +38,21 @@ class Manage_menu extends CI_Controller {
 
 		$this->load->model(ADM_FOLDER.'admin_control_menu_model');
 		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
-
-		$this->data['title'] = '4U :: ';
-
 		$this->load->model(ADM_FOLDER.'admin_menu_model');
-
-		set_alert($this->session->flashdata('success'), false, 'success');
-		set_alert($this->session->flashdata('danger'), false, 'danger');
+		
+		$this->data['title'] = '4U :: ';
 
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
 		$this->IS_AJAX = $this->input->is_ajax_request();
+	
+		set_alert($this->session->flashdata('success'), false, 'success');
+		set_alert($this->session->flashdata('danger'), false, 'danger');
+		set_header_info();
 	}
 
 	public function index() {
 		custom_404();
-		$this->data['title'] .= 'Админ-панель';
-		$this->load->view(ADM_FOLDER.'header', $this->data);
-		$this->load->view(ADM_FOLDER.'s_page', $this->data);
-		$this->load->view(ADM_FOLDER.'footer', $this->data);
+		load_admin_views();
 	}
 
 	public function menu($name = false) {
@@ -45,53 +65,26 @@ class Manage_menu extends CI_Controller {
 			custom_404();
 		}
 
-		$this->data['header']        = '"'.$menu_items[0]['ru_name'].'" меню';
-		$this->data['title']        .= $this->data['header'];
-		$this->data['header_descr']  = 'Список пунктов меню';
 		$this->data['center_block']  = $this->admin_menu_model->get_menu_tree($menu_items, 0, $this->MAIN_URL, $name);
 
-		$this->load->view(ADM_FOLDER.'header', $this->data);
-		$this->load->view(ADM_FOLDER.'s_page', $this->data);
-		$this->load->view(ADM_FOLDER.'footer', $this->data);
+		load_admin_views();
 	}
 
-	public function add($name) {
+	public function add($name = false) {
 		$menu_info = $this->admin_menu_model->get_menu_info($name);
 		if (empty($menu_info)) {
 			custom_404();
 		}
-
-		$this->data['header']        = 'Создание меню';
-		$this->data['header_descr']  = 'Создание пункта меню';
-		$this->data['title']        .= $this->data['header'];
 
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
-		$this->load->library('form');
-		$this->data['center_block'] = $this->form
-			->text('name', array(
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
-			))
-			->text('alias', array(
-				'valid_rules' => 'required|trim|xss_clean|is_unique[menu_items.alias]',
-				'label'       => 'Ссылка',
-			))
-			->btn(array('value' => 'Добавить'))
-			->create(array('action' => current_url()));
+		$this->data['center_block'] = $this->edit_form();
 
 		if ($this->form_validation->run() == FALSE) {
-			if ($this->IS_AJAX) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', $this->data, true);
-				echo $output;
-			} else {
-				$this->load->view(ADM_FOLDER.'header', $this->data);
-				$this->load->view(ADM_FOLDER.'s_page', $this->data);
-				$this->load->view(ADM_FOLDER.'footer', $this->data);
-			}
+			load_admin_views();
 		} else {
 			$data = $this->input->post();
 			$data['menu_id'] = $menu_info['id'];
@@ -115,40 +108,17 @@ class Manage_menu extends CI_Controller {
 		if (empty($menu_info)) {
 			custom_404();
 		}
-
-		$this->data['header']        = 'Редактирование "'.$menu_info['name'].'"';
-		$this->data['header_descr']  = 'Редактирование пункта меню';
-		$this->data['title']        .= $this->data['header'];
+		set_header_info($menu_info);
 
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $menu_info['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
-		$this->load->library('form');
-		$this->data['center_block'] = $this->form
-			->text('name', array(
-				'value'       => $menu_info['name'],
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
-			))
-			->text('alias', array(
-				'value'       => $menu_info['alias'],
-				'valid_rules' => 'required|trim|xss_clean|is_unique_without[menu_items.alias.'.$id.']',
-				'label'       => 'Ссылка',
-			))
-			->btn(array('value' => 'Изменить'))
-			->create(array('action' => current_url()));
+		$this->data['center_block'] = $this->edit_form($menu_info);
 
 		if ($this->form_validation->run() == FALSE) {
-			if ($this->IS_AJAX) {
-				$output = $this->load->view(ADM_FOLDER.'ajax', '', true);
-				echo $output;
-			} else {
-				$this->load->view(ADM_FOLDER.'header', $this->data);
-				$this->load->view(ADM_FOLDER.'s_page', $this->data);
-				$this->load->view(ADM_FOLDER.'footer', $this->data);
-			}
+			load_admin_views();
 		} else {
 			$data = $this->input->post();
 			unset($data['submit']);
@@ -171,8 +141,7 @@ class Manage_menu extends CI_Controller {
 		if (empty($menu_info)) {
 			custom_404();
 		}
-
-		$this->data['header'] = 'Удаление пункта меню "'.$menu_info['name'].'"';
+		set_header_info($menu_info);
 
 		if ($this->IS_AJAX) {
 			if (isset($_POST['delete'])) {
@@ -193,5 +162,22 @@ class Manage_menu extends CI_Controller {
 			$menu_name = $this->admin_menu_model->get_menu_name($menu_info['menu_id']);
 			redirect(($menu_name ? $this->MAIN_URL.$menu_name : ADM_URL), 'refresh');
 		}
+	}
+	
+	private function edit_form($menu_info = false) {
+		$this->load->library('form');
+		return $this->form
+			->text('name', array(
+				'value'       => $menu_info['name'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Имя',
+			))
+			->text('alias', array(
+				'value'       => $menu_info['alias'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean|'.(!$menu_info['id'] ? 'is_unique[menu_items.alias]' : 'is_unique_without[menu_items.alias.'.$menu_info['id'].']'),
+				'label'       => 'Ссылка',
+			))
+			->btn(array('value' => 'Изменить'))
+			->create(array('action' => current_url()));
 	}
 }
