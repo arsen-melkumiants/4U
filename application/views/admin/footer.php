@@ -7,7 +7,6 @@
 	<?php echo after_load('css');?>
 	<?php echo after_load('js');?>
 
-
 <script>
 var update_tree_struct = function(e) {
 	var tree = $('.tree_struct').nestable('serialize');
@@ -28,20 +27,18 @@ $(function(){
 	$('.tree_btn_collapse').on('click', function(e) {
 		$('.dd').nestable('collapseAll');
 	});
-});
 
-$(function(){
-	$(document).on('click', '.modal-body form button', function() {
+	$(document).on('click', '.modal-body form button[type="submit"]', function() {
 		var form = $('.modal-dialog').find('form');
 		var action = form.attr('action');
 		//var fields = $(":input").serializeArray();
 		var fields = $(this).closest('form').serializeArray();
 		fields.push({ name: this.name, value: this.value });
-		if(this.name == 'cancel'){
+		if (this.name == 'cancel'){
 			$('#ajaxModal').modal('hide');
 			return false;
 		}
-		$.post(action, fields, function(data){
+		$.post(action, fields, function(data) {
 			data = $.trim(data);
 			if(data == 'refresh') {
 				window.location.reload(true);
@@ -59,16 +56,18 @@ $(function(){
 
 	$(document).on('loaded.bs.modal', function (e) {
 		var result = $.trim(e.target.innerText);
-		if(result == 'refresh'){
+		if(result == 'refresh') {
 			window.location.reload(true);
-		}else if(result == 'close'){
+		} else if(result == 'close') {
 			$('#ajaxModal').hide().modal('hide');
 		}
+		if (typeof $().selectpicker === 'function') {
+			$('.selectpicker').selectpicker('render');
+		}	
 	});
 
 });
 </script>
-	
 	<div class="modal fade" id="ajaxModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			  <div class="modal-content"></div>

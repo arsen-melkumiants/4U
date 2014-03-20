@@ -29,6 +29,11 @@ class Manage_menu extends CI_Controller {
 		),
 	);
 
+	public $TYPES = array(
+		'content'         => 'Контент',
+		'shop_categories' => 'Категории товаров',
+	);
+
 	function __construct() {
 		parent::__construct();
 		$this->load->library('ion_auth');
@@ -164,19 +169,44 @@ class Manage_menu extends CI_Controller {
 	}
 	
 	private function edit_form($menu_info = false) {
+		$this->data['select_contents'] = $this->admin_menu_model->get_content_list();
+		$menu_type = !empty($_POST['type']) ? $_POST['type'] : (!empty($menu_info['type']) ? $menu_info['type'] : false);
 		$this->load->library('form');
-		return $this->form
+		$html = $this->form
 			->text('name', array(
-				'value'       => $menu_info['name'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
+				'value'         => $menu_info['name'] ?: false,
+				'valid_rules'   => 'required|trim|xss_clean',
+				'label'         => 'Имя',
 			))
 			->text('alias', array(
-				'value'       => $menu_info['alias'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|'.(!$menu_info['id'] ? 'is_unique[menu_items.alias]' : 'is_unique_without[menu_items.alias.'.$menu_info['id'].']'),
-				'label'       => 'Ссылка',
+				'value'         => $menu_info['alias'] ?: false,
+				'valid_rules'   => 'required|trim|xss_clean|'.(!$menu_info['id'] ? 'is_unique[menu_items.alias]' : 'is_unique_without[menu_items.alias.'.$menu_info['id'].']'),
+				'label'         => 'Ссылка',
+			))
+			->select('type', array(
+				'value'         => $menu_info['type'] ?: false,
+				'valid_rules'   => 'trim|xss_clean',
+				'label'         => 'Тип меню',
+				'options'       => $this->TYPES,
+				'search'        => true,
+				'class'         => 'type_menu_list',
+			))
+			->select('item_id', array(
+				'value'         => $menu_info['item_id'] ?: false,
+				'valid_rules'   => 'trim|xss_clean',
+				'label'         => 'Список',
+				'options'       => isset($this->data['select_contents'][$menu_type]) ? $this->data['select_contents'][$menu_type] : $this->data['select_contents'][$menu_type]['content'],
+				'search'        => true,
+				'class'         => 'items_list',
 			))
 			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
+
+		$html .= $this->load->view(ADM_FOLDER.'menu_js', $this->data, true);
+		return $html;
+	}
+
+	function get_select_by_type() {
+		return 'done';
 	}
 }

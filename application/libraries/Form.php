@@ -40,14 +40,27 @@ class Form {
 		}
 		return $attrs;
 	}
+	
+	public function func($func = false, $params = false) {
+		if (empty($func) || empty($params)) {
+			return $this;
+		}
+		
+		$this->form_data[] = array(
+			'form'   => $func,
+			'params' => $params,
+		);
+		
+		return $this;
+	}
 
 	public function input($name = false, $params = false, $type = "text") {
 		if (empty($name)) {
 			return $this;
 		}
 
-		$params['name'] = $name;
-		$params['type'] = $type;
+		$params['name']  = $name;
+		$params['type']  = $type;
 		$params['value'] = isset($params['value']) ? $params['value'] : '';
 		$params['label'] = !empty($params['label']) ? $params['label'] : '';
 
@@ -101,8 +114,14 @@ class Form {
 				$attrs_list = array('class','name', 'data-live-search');
 				$input .= '<select '.$this->attributes($attrs_list, $params).'>';
 				foreach ($params['options'] as $value => $info) {
-					$info['selected'] = !empty($params['value']) && $params['value'] == $value ? ' selected="selected"' : '';
-					$input .= '<option value="'.$info['id'].'"'.$info['selected'].'>'.$info['name'].'</option>'.PHP_EOL;
+					if (is_array($info)) {
+						$select_name = $info['name'];
+						$value = $info['id'];
+					} else {
+						$select_name = $info;
+					}
+					$selected = !empty($params['value']) && $params['value'] == $value ? ' selected="selected"' : '';
+					$input .= '<option value="'.$value.'"'.$selected.'>'.$select_name.'</option>'.PHP_EOL;
 				}
 				$input .= '</select>';
 			}
@@ -270,9 +289,11 @@ class Form {
 		$html .= !empty($params['title']) ? '<h3>'.$params['title'].'</h3>'.PHP_EOL : '';
 		$html .= !empty($params['info']) ? '<p>'.$params['info'].'</p>'.PHP_EOL : '';
 		foreach ($this->form_data as $item) {
-			if ($item['params']['type'] == 'hidden') {
+			if (is_callable($item['form'])) {
+				$html .= $item['form']($item['params']);
+			} elseif ($item['params']['type'] == 'hidden') {
 				$html .= $item['form'].PHP_EOL;
-			}else{
+			} else {
 				$item['params']['id'] = !empty($item['params']['id']) ? ' id="'.$item['params']['id'].'"' : '';
 				$html .= '<div class="form-group'.(!empty($item['params']['error']) ? ' has-error' : '').'"'.$item['params']['id'].'>'.PHP_EOL.
 					$item['form'].PHP_EOL.
@@ -296,14 +317,14 @@ class Form {
 		}
 
 		$html .= '</div>'.PHP_EOL.'</form>'.PHP_EOL;
-		$this->form_data = array();
-		$this->btn_data = array();
+		$this->clear();
 
 		return $html;
 	}
 
 	public function clear() {
 		$this->form_data = array();
+		$this->btn_data = array();
 		return $this;
 	}
 }
