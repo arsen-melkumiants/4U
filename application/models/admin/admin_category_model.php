@@ -107,12 +107,4 @@ class Admin_category_model extends CI_Model {
 		return true;
 	}
 
-	function add_category($info){
-		$this->db->insert('shop_categories', $info); 
-	}
-
-	function update_category($info, $id){
-		$this->db->where('id', $id)->update('shop_categories', $info);
-	}
-
 }

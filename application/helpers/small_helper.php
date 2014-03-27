@@ -1,14 +1,47 @@
 <?php
 function load_admin_views() {
 	$CI =& get_instance();
-	if ($CI->IS_AJAX) {
-		$output = $CI->load->view(ADM_FOLDER.'ajax', '', true);
-		echo $output;
-	} else {
-		$CI->load->view(ADM_FOLDER.'header', $CI->data);
-		$CI->load->view(ADM_FOLDER.'s_page', $CI->data);
-		$CI->load->view(ADM_FOLDER.'footer', $CI->data);
+	if (empty($CI->admin_methods)) {
+		$CI->load->library('admin_methods');
 	}
+	
+	$CI->admin_methods->load_admin_views();
+}
+
+function admin_constructor() {
+	$CI =& get_instance();
+	if (empty($CI->admin_methods)) {
+		$CI->load->library('admin_methods');
+	}
+	
+	$CI->admin_methods->admin_constructor();
+}
+
+function add_method($table = false, $except_fields = false, $add_data = false) {
+	$CI =& get_instance();
+	if (empty($CI->admin_methods)) {
+		$CI->load->library('admin_methods');
+	}
+	
+	$CI->admin_methods->add_method($table, $except_fields, $add_data);
+}
+
+function edit_method($table = false, $id = false, $except_fields = false, $add_data = false) {
+	$CI =& get_instance();
+	if (empty($CI->admin_methods)) {
+		$CI->load->library('admin_methods');
+	}
+	
+	$CI->admin_methods->edit_method($table, $id, $except_fields, $add_data);
+}
+
+function delete_method($table = false, $id = false) {
+	$CI =& get_instance();
+	if (empty($CI->admin_methods)) {
+		$CI->load->library('admin_methods');
+	}
+	
+	$CI->admin_methods->delete_method($table, $id);
 }
 
 function set_header_info($data = false) {

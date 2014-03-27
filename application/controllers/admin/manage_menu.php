@@ -41,16 +41,9 @@ class Manage_menu extends CI_Controller {
 			redirect(ADM_URL.'auth/login');
 		}
 
-		$this->load->model(ADM_FOLDER.'admin_control_menu_model');
-		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
 		$this->load->model(ADM_FOLDER.'admin_menu_model');
-
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
-		$this->IS_AJAX = $this->input->is_ajax_request();
-	
-		set_alert($this->session->flashdata('success'), false, 'success');
-		set_alert($this->session->flashdata('danger'), false, 'danger');
-		set_header_info();
+		admin_constructor();
 	}
 
 	public function index() {
@@ -90,16 +83,7 @@ class Manage_menu extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			$data = $this->input->post();
-			$data['menu_id'] = $menu_info['id'];
-			unset($data['submit']);
-			$this->admin_menu_model->add_menu_item($data);
-			$this->session->set_flashdata('success', 'Данные успешно добавлены');
-			if ($this->IS_AJAX) {
-				echo 'refresh';
-			} else {
-				redirect($this->MAIN_URL.$name, 'refresh');
-			}
+			add_method('menu_items', array('add_date'));
 		}
 	}
 
@@ -124,15 +108,7 @@ class Manage_menu extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			$data = $this->input->post();
-			unset($data['submit']);
-			$menu_info = $this->admin_menu_model->update_menu_item($data, $id);
-			$this->session->set_flashdata('success', 'Данные успешно обновлены');
-			if ($this->IS_AJAX) {
-				echo 'refresh';
-			} else {
-				redirect(current_url(), 'refresh');
-			}
+			edit_method('menu_items', $id, array('add_date'));
 		}
 	}
 

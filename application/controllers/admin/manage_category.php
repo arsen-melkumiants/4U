@@ -32,16 +32,9 @@ class Manage_category extends CI_Controller {
 			redirect(ADM_URL.'auth/login');
 		}
 
-		$this->load->model(ADM_FOLDER.'admin_control_menu_model');
-		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
 		$this->load->model(ADM_FOLDER.'admin_category_model');
-
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
-		$this->IS_AJAX = $this->input->is_ajax_request();
-
-		set_alert($this->session->flashdata('success'), false, 'success');
-		set_alert($this->session->flashdata('danger'), false, 'danger');
-		set_header_info();
+		admin_constructor();
 	}
 
 	public function index() {
@@ -70,15 +63,7 @@ class Manage_category extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			$data = $this->input->post();
-			unset($data['submit']);
-			$this->admin_category_model->add_category($data);
-			$this->session->set_flashdata('success', 'Данные успешно добавлены');
-			if ($this->IS_AJAX) {
-				echo 'refresh';
-			} else {
-				redirect($this->MAIN_URL.$name, 'refresh');
-			}
+			add_method('shop_categories', array('add_date'));
 		}
 	}
 
@@ -103,15 +88,7 @@ class Manage_category extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			$data = $this->input->post();
-			unset($data['submit']);
-			$category_info = $this->admin_category_model->update_category($data, $id);
-			$this->session->set_flashdata('success', 'Данные успешно обновлены');
-			if ($this->IS_AJAX) {
-				echo 'refresh';
-			} else {
-				redirect(current_url(), 'refresh');
-			}
+			edit_method('shop_categories', $id, array('add_date'));
 		}
 	}
 
@@ -126,24 +103,7 @@ class Manage_category extends CI_Controller {
 		}
 		set_header_info($category_info);
 
-		if ($this->IS_AJAX) {
-			if (isset($_POST['delete'])) {
-				$this->admin_category_model->delete_category($id);
-				$this->session->set_flashdata('danger', 'Данные успешно удалены');
-				echo 'refresh';
-			} else {
-				$this->load->library('form');
-				$this->data['center_block'] = $this->form
-					->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
-					->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
-					->create(array('action' => current_url(), 'btn_offset' => 4));
-				echo $this->load->view(ADM_FOLDER.'ajax', '', true);
-			}
-		} else {
-			$this->admin_category_model->delete_category($id);
-			$this->session->set_flashdata('danger', 'Данные успешно удалены');
-			redirect($this->MAIN_URL, 'refresh');
-		}
+		delete_method('shop_categories', $id);
 	}
 	
 	private function edit_form($category_info = false) {

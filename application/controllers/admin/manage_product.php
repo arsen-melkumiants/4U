@@ -32,16 +32,9 @@ class Manage_product extends CI_Controller {
 			redirect(ADM_URL.'auth/login');
 		}
 
-		$this->load->model(ADM_FOLDER.'admin_control_menu_model');
-		$this->data['top_menu'] = $this->admin_control_menu_model->get_control_menu('top');
 		$this->load->model(ADM_FOLDER.'admin_product_model');
-		
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
-		$this->IS_AJAX = $this->input->is_ajax_request();
-		
-		set_alert($this->session->flashdata('success'), false, 'success');
-		set_alert($this->session->flashdata('danger'), false, 'danger');
-		set_header_info();
+		admin_constructor();
 	}
 
 	public function index() {
@@ -87,16 +80,7 @@ class Manage_product extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			$data = $this->input->post();
-			unset($data['submit']);
-			$data['add_date'] = time();
-			$this->admin_product_model->add_product($data);
-			$this->session->set_flashdata('success', 'Данные успешно добавлены');
-			if ($this->IS_AJAX) {
-				echo 'refresh';
-			} else {
-				redirect($this->MAIN_URL, 'refresh');
-			}
+			add_method('shop_products');
 		}
 	}
 
@@ -116,15 +100,7 @@ class Manage_product extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			$data = $this->input->post();
-			unset($data['submit']);
-			$product_info = $this->admin_product_model->update_product($data, $id);
-			$this->session->set_flashdata('success', 'Данные успешно обновлены');
-			if ($this->IS_AJAX) {
-				echo 'refresh';
-			} else {
-				redirect(current_url(), 'refresh');
-			}
+			edit_method('shop_products', $id);
 		}
 	}
 
@@ -186,24 +162,7 @@ class Manage_product extends CI_Controller {
 		}
 		set_header_info($product_info);
 
-		if ($this->IS_AJAX) {
-			if (isset($_POST['delete'])) {
-				$this->admin_product_model->delete_product($id);
-				$this->session->set_flashdata('danger', 'Данные успешно удалены');
-				echo 'refresh';
-			} else {
-				$this->load->library('form');
-				$this->data['center_block'] = $this->form
-					->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
-					->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
-					->create(array('action' => current_url(), 'btn_offset' => 4));
-				echo $this->load->view(ADM_FOLDER.'ajax', '', true);
-			}
-		} else {
-			$this->admin_product_model->delete_product($id);
-			$this->session->set_flashdata('danger', 'Данные успешно удалены');
-			redirect($this->MAIN_URL, 'refresh');
-		}
+		delete_method('shop_products', $id);
 	}
 
 }

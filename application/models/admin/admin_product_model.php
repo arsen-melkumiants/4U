@@ -15,19 +15,15 @@ class Admin_product_model extends CI_Model {
 		return $this->db->where('id', $id)->get('shop_products')->row_array();
 	}
 
-	function add_product($info) {
-		$this->db->insert('shop_products', $info);
-	}
-
-	function update_product($info, $id) {
-		$this->db->where('id', $id)->update('shop_products', $info);
-	}
-
-	function delete_product($id) {
-		$this->db->where('id', $id)->delete('shop_products');
-	}
-
 	function get_product_categories() {
-		return $this->db->get('shop_categories')->result_array();
+		$categories = $this->db->get('shop_categories')->result_array();
+		if (empty($categories)) {
+			return false;
+		}
+		foreach ($categories as $item) {
+			$result[$item['id']] = $item;
+		}
+
+		return $result;
 	}
 }

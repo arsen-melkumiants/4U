@@ -125,14 +125,6 @@ class Admin_menu_model extends CI_Model {
 		return true;
 	}
 
-	function add_menu_item($info){
-		$this->db->insert('menu_items', $info); 
-	}
-
-	function update_menu_item($info, $id){
-		$this->db->where('id', $id)->update('menu_items', $info);
-	}
-
 	function get_content_list() {
 		$list = array(
 			'content'         => $this->db->select('id, name')->get('content')->result_array(),
