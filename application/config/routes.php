@@ -54,8 +54,8 @@ $route[$admin_url.'manage_menu/(:any)'] = $admin_folder.'manage_menu/menu/$1';
 $route[$admin_url.'manage_(:any)'] = $admin_folder.'manage_$1';
 $route[$admin_url.'(:any)'] = $admin_folder.'$1';
 
-
-$route['default_controller'] = $admin_folder.'admin_control_panel';
+#User routes
+$route['default_controller'] = 'main';
 
 $route['404_override'] = '';
 
