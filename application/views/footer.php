@@ -13,15 +13,6 @@
 					$('.selectpicker').selectpicker();
 				}	
 
-
-				$('.tree_struct').nestable().on('change', update_tree_struct);
-				$('.tree_btn_expand').on('click', function(e) {
-					$('.dd').nestable('expandAll');
-				});
-				$('.tree_btn_collapse').on('click', function(e) {
-					$('.dd').nestable('collapseAll');
-				});
-
 				$(document).on('click', '.modal-body form button[type="submit"]', function() {
 					var form = $('.modal-dialog').find('form');
 					var action = form.attr('action');
