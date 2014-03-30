@@ -30,7 +30,12 @@ class Admin_menu_model extends CI_Model {
 	}
 
 	function get_one_menu_item($item_id) {
-		return $this->db->where('id', $item_id)->get('menu_items')->row_array();
+		return $this->db->select('m.name as menu_name, m.ru_name, i.*')
+			->from('menu_items as i')
+			->join('menu_names as m', 'm.id = i.menu_id', 'left')
+			->where('i.id', $item_id)
+			->get()
+			->row_array();
 	}
 
 	function get_menu_tree($all_branch, $id = 0, $url = '', $menu_name = false) {
@@ -44,8 +49,16 @@ class Admin_menu_model extends CI_Model {
 		$num = 0;
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] && $item['parent_id'] == $id) {
+				if ($item['status']) {
+					$title = 'Опубликовано';
+					$icon = 'eye-open';
+				} else {
+					$title = 'Неопубликовано';
+					$icon = 'eye-close';
+				}
 				$text .= '<li class="dd-item dd3-item" data-id="'.$item['id'].'">
 					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name'].'
+					<a href="'.site_url($url.$item['id'].'/active').'" title="'.$title.'"><i class="icon-'.$icon.'"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/delete').'" title="Удалить"><i class="icon-trash"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/edit').'" title="Редактировать"><i class="icon-pencil"></i></a>
 					</div>';

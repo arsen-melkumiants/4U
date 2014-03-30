@@ -30,17 +30,19 @@ class Admin_methods {
 		set_header_info();
 	}
 
-	public function add_method($table = false, $except_fields = false, $add_data = false) {
+	public function add_method($table = false, $data = false) {
 		if (!empty($table)) {
-			$data = !empty($add_data) ? array_merge($data, $this->CI->input->post()) : $this->CI->input->post();
+			$info = !empty($data['add_data']) ? array_merge($data['add_data'], $this->CI->input->post()) : $this->CI->input->post();
 			unset($data['submit']);
 			$data['add_date'] = time();
-			if (!empty($except_fields) && is_array($except_fields)) {
-				foreach ($except_fields as $field) {
+			if (!empty($data['except_fields']) && is_array($data['except_fields'])) {
+				foreach ($data['except_fields'] as $field) {
 					unset($data[$field]);
 				}
 			}
-			$this->CI->db->insert($table, $data);
+
+			unset($data['add_data'], $data['except_fields']);
+			$this->CI->db->insert($table, $info);
 			$this->CI->session->set_flashdata('success', 'Данные успешно добавлены');
 		}
 		if ($this->CI->IS_AJAX) {
@@ -50,16 +52,18 @@ class Admin_methods {
 		}
 	}
 
-	public function edit_method($table = false, $id = false, $except_fields = false, $add_data = false) {
-		if (!empty($table) && !empty($id)) {
-			$data = !empty($add_data) ? array_merge($data, $this->CI->input->post()) : $this->CI->input->post();
+	public function edit_method($table = false, $data = false) {
+		if (!empty($table) && !empty($data['id'])) {
+			$info = !empty($data['add_data']) ? array_merge($data['add_data'], $this->CI->input->post()) : $this->CI->input->post();
 			unset($data['submit']);
-			if (!empty($except_fields) && is_array($except_fields)) {
-				foreach ($except_fields as $field) {
+			if (!empty($data['except_fields']) && is_array($data['except_fields'])) {
+				foreach ($data['except_fields'] as $field) {
 					unset($data[$field]);
 				}
 			}
-			$this->CI->db->where('id', $id)->update($table, $data);
+
+			unset($data['add_data'], $data['except_fields']);
+			$this->CI->db->where('id', $data['id'])->update($table, $info);
 			$this->CI->session->set_flashdata('success', 'Данные успешно обновлены');
 		}
 
@@ -70,11 +74,19 @@ class Admin_methods {
 		}
 	}
 
-	public function delete_method($table = false, $id = false) {
+	public function delete_method($table = false, $data = false) {
+		if (empty($table) || empty($data['id'])) {
+			if ($this->CI->IS_AJAX) {
+				echo 'refresh';
+			} else {
+				redirect($this->CI->MAIN_URL, 'refresh');
+			}
+		}
+
 		if ($this->CI->IS_AJAX) {
 			if (isset($_POST['delete'])) {
-				$this->CI->db->where('id', $id)->delete($table);
-				$this->CI->session->set_flashdata('danger', 'Данные успешно удалены');
+				$this->CI->db->where('id', $data['id'])->delete($table);
+				$this->CI->session->set_flashdata('danger', 'Удаление успешно выполено');
 				echo 'refresh';
 			} else {
 				$this->CI->load->library('form');
@@ -85,9 +97,20 @@ class Admin_methods {
 				echo $this->CI->load->view(ADM_FOLDER.'ajax', '', true);
 			}
 		} else {
-			$this->CI->db->where('id', $id)->delete($table);
-			$this->CI->session->set_flashdata('danger', 'Данные успешно удалены');
+			$this->CI->db->where('id', $data['id'])->delete($table);
+			$this->CI->session->set_flashdata('danger', 'Удаление успешно выполено');
 			redirect($this->CI->MAIN_URL, 'refresh');
 		}
+	}
+
+	public function active_method($table = false, $data = false) {
+		if (!empty($table) && !empty($data['id'])) {
+			$status = isset($data['status']) ? $data['status'] : 1;
+			$status = abs($status - 1);
+			$this->CI->db->where('id', $data['id'])->update($table, array('status' => $status));
+			$this->CI->session->set_flashdata('success', 'Данные успешно обновлены');
+		}
+
+		redirect($this->CI->MAIN_URL, 'refresh');
 	}
 }

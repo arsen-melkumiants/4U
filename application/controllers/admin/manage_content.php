@@ -5,6 +5,8 @@ class Manage_content extends CI_Controller {
 	public $MAIN_URL = '';
 
 	public $IS_AJAX = false;
+	
+	public $DB_TABLE = 'content';
 
 	public $PAGE_INFO = array(
 		'index'            => array(
@@ -78,6 +80,7 @@ class Manage_content extends CI_Controller {
 			))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
 			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1))
+			->active(array('link' => $this->MAIN_URL.'active/%d'))
 			->btn(array(
 				'link' => $this->MAIN_URL.'add',
 				'name' => 'Добавить',
@@ -101,7 +104,7 @@ class Manage_content extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			add_method('content');
+			admin_method('add', $this->DB_TABLE);
 		}
 	}
 
@@ -126,7 +129,7 @@ class Manage_content extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			edit_method('content', $id);
+			admin_method('edit', $this->DB_TABLE, array('id' => $id));
 		}
 	}
 
@@ -196,11 +199,25 @@ class Manage_content extends CI_Controller {
 		}
 		set_header_info($content_info);
 
-		delete_method($table, $id);
+		admin_method('delete', $table, $content_info);
 	}
 
-	function delete_category($id) {
+	public function delete_category($id) {
 		$this->delete($id, 'category');
+	}
+	
+	public function active($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+		
+		$content_info = $this->admin_content_model->get_content_info($id);
+
+		if (empty($content_info)) {
+			custom_404();
+		}
+		set_header_info($content_info);
+		admin_method('active', $this->DB_TABLE, $content_info);
 	}
 
 	function categories() {

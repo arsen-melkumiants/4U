@@ -47,18 +47,26 @@ class Table {
 		return $this;
 	}
 
-	public function btn($params = false) {
+	public function btn($params = false, $get_result = false) {
 		$params['name']  = !empty($params['name']) ? ucfirst($params['name']) : '';
 		$params['class'] = 'class="'.(!empty($params['class']) ? $params['class']: (!empty($params['name']) ? 'btn btn-primary' : '')).'"';
 		$params['icon']  = !empty($params['icon']) ? '<i class="icon-'.$params['icon'].'"></i> ' : '';
 		$params['title'] = !empty($params['title']) ? ' title="'.$params['title'].'"' : '';
-		$params['link']  = !empty($params['link']) ? site_url($params['link']) : '#';
+		$params['link']  = !empty($params['link']) ? (strpos($params['link'], 'http') === false ? site_url($params['link']) : $params['link']) : '#';
 		$params['modal'] = !empty($params['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
-
+		
 		$result = array(
 			'html'   => '<a href="'.$params['link'].'" '.$params['class'].$params['title'].$params['modal'].'>'.$params['icon'].$params['name'].'</a>',
 			'params' => $params
 		);
+
+		if (isset($params['func']) && is_callable($params['func'])) {
+			$result['func'] = $params['func'];
+		}
+		
+		if ($get_result) {
+			return $result;
+		}
 
 		if (empty($params['header']) && empty($params['footer'])) {
 			$this->active_data[] = $result;
@@ -86,6 +94,23 @@ class Table {
 		$params['title'] = !empty($params['title']) ? $params['title'] : 'Удалить';
 		$params['icon'] = isset($params['icon']) ? $params['icon'] : 'trash';
 		$params['class'] = isset($params['class']) ? $params['class'] : '';
+		$this->btn($params);
+		return $this;
+	}
+
+	public function active($params = false) {
+		$params['func'] = function($row, $params, $html, $that) {
+			if ($row['status']) {
+				$params['title'] = 'Опубликовано';
+				$params['icon'] = 'eye-open';
+			} else {
+				$params['title'] = 'Неопубликовано';
+				$params['icon'] = 'eye-close';
+			}
+
+			$btn = $that->btn($params, true);
+			return $btn['html'];
+		};
 		$this->btn($params);
 		return $this;
 	}
@@ -139,11 +164,11 @@ class Table {
 				if (!isset($row[$item['name']])) {
 					continue;
 				}
-				if (isset($item['params']['date'])) {
+				if (isset($item['params']['date']) && is_numeric($item['params']['date'])) {
 					$row[$item['name']] = date($item['params']['type'], $row[$item['name']]);
 				}
 
-				$row[$item['name']] = isset($item['params']['func']) ? $item['params']['func']($row, $item['params']) : $row[$item['name']];
+				$row[$item['name']] = isset($item['params']['func']) ? $item['params']['func']($row, $item['params'], $this) : $row[$item['name']];
 
 				$html .= '<td>'.$row[$item['name']].'</td>';
 			}
@@ -151,6 +176,9 @@ class Table {
 			if (!empty($this->active_data)) {
 				$html .= '<td class="active_block">';
 				foreach ($this->active_data as $item) {
+					if (isset($item['func']) && is_callable($item['func'])) {
+						$item['html'] = $item['func']($row, $item['params'], $item['html'], $this);
+					}
 					if (!empty($row['id'])) {
 						$html .= sprintf($item['html'], $row['id']);
 					}else{

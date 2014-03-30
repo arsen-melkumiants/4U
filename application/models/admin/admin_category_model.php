@@ -26,8 +26,16 @@ class Admin_category_model extends CI_Model {
 		$num = 0;
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] && $item['parent_id'] == $id) {
+				if ($item['status']) {
+					$title = 'Опубликовано';
+					$icon = 'eye-open';
+				} else {
+					$title = 'Неопубликовано';
+					$icon = 'eye-close';
+				}
 				$text .= '<li class="dd-item dd3-item" data-id="'.$item['id'].'">
 					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name'].'
+					<a href="'.site_url($url.'active/'.$item['id']).'" title="'.$title.'"><i class="icon-'.$icon.'"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.'delete/'.$item['id']).'" title="Удалить"><i class="icon-trash"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.'edit/'.$item['id']).'" title="Редактировать"><i class="icon-pencil"></i></a>
 					</div>';

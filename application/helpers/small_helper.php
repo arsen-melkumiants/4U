@@ -17,31 +17,13 @@ function admin_constructor() {
 	$CI->admin_methods->admin_constructor();
 }
 
-function add_method($table = false, $except_fields = false, $add_data = false) {
+function admin_method($type = false, $table = false, $data = false) {
 	$CI =& get_instance();
 	if (empty($CI->admin_methods)) {
 		$CI->load->library('admin_methods');
 	}
 	
-	$CI->admin_methods->add_method($table, $except_fields, $add_data);
-}
-
-function edit_method($table = false, $id = false, $except_fields = false, $add_data = false) {
-	$CI =& get_instance();
-	if (empty($CI->admin_methods)) {
-		$CI->load->library('admin_methods');
-	}
-	
-	$CI->admin_methods->edit_method($table, $id, $except_fields, $add_data);
-}
-
-function delete_method($table = false, $id = false) {
-	$CI =& get_instance();
-	if (empty($CI->admin_methods)) {
-		$CI->load->library('admin_methods');
-	}
-	
-	$CI->admin_methods->delete_method($table, $id);
+	$CI->admin_methods->{$type.'_method'}($table, $data);
 }
 
 function set_header_info($data = false) {

@@ -34,7 +34,7 @@ class Admin_control_menu_model extends CI_Model
 					'manage_order/all'          => 'Список заказов',
 					'manage_order/settings'     => 'Настройки заказов',
 					'3'                         => '',
-					'manage_callback/all'       => 'Обратные звонки'
+					'manage_currency'       => 'Список валют'
 				),
 				'manage_users/user/all'         => 'Пользователи',
 				'extra'                         => 'Дополнительно',

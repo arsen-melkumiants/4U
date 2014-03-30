@@ -5,6 +5,8 @@ class Manage_category extends CI_Controller {
 	public $MAIN_URL = '';
 
 	public $IS_AJAX = false;
+	
+	public $DB_TABLE = 'shop_categories';
 
 	public $PAGE_INFO = array(
 		'index'            => array(
@@ -63,7 +65,7 @@ class Manage_category extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			add_method('shop_categories', array('add_date'));
+			admin_method('add', $this->DB_TABLE, array('except_fields' => array('add_date')));
 		}
 	}
 
@@ -88,7 +90,7 @@ class Manage_category extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			edit_method('shop_categories', $id, array('add_date'));
+			admin_method('edit', $this->DB_TABLE, array('id' => $id));
 		}
 	}
 
@@ -103,7 +105,7 @@ class Manage_category extends CI_Controller {
 		}
 		set_header_info($category_info);
 
-		delete_method('shop_categories', $id);
+		admin_method('delete', $this->DB_TABLE, $category_info);
 	}
 	
 	private function edit_form($category_info = false) {
@@ -121,5 +123,20 @@ class Manage_category extends CI_Controller {
 			))
 			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
+	}
+	
+	public function active($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+		
+		$category_info = $this->admin_category_model->get_category_info($id);
+
+		if (empty($category_info)) {
+			custom_404();
+		}
+		set_header_info($category_info);
+
+		admin_method('active', $this->DB_TABLE, $category_info);
 	}
 }

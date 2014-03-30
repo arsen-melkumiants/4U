@@ -5,6 +5,8 @@ class Manage_product extends CI_Controller {
 	public $MAIN_URL = '';
 
 	public $IS_AJAX = false;
+	
+	public $DB_TABLE = 'shop_products';
 
 	public $PAGE_INFO = array(
 		'index'            => array(
@@ -80,7 +82,7 @@ class Manage_product extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			add_method('shop_products');
+			admin_method('add', $this->DB_TABLE);
 		}
 	}
 
@@ -100,7 +102,7 @@ class Manage_product extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			edit_method('shop_products', $id);
+			admin_method('edit', $this->DB_TABLE, array('id' => $id));
 		}
 	}
 
@@ -162,7 +164,22 @@ class Manage_product extends CI_Controller {
 		}
 		set_header_info($product_info);
 
-		delete_method('shop_products', $id);
+		admin_method('delete', $this->DB_TABLE, $product_info);
+	}
+	
+	public function active($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+		
+		$product_info = $this->admin_product_model->get_product_info($id);
+
+		if (empty($product_info)) {
+			custom_404();
+		}
+		set_header_info($product_info);
+
+		admin_method('active', $this->DB_TABLE, $product_info);
 	}
 
 }
