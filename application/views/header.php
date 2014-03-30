@@ -29,7 +29,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-3">
-						<a href="#" class="logo"></a>
+						<a href="/" class="logo"></a>
 					</div>
 					<div class="col-md-9">
 						<?php echo !empty($top_menu) ? $top_menu : '';?>
