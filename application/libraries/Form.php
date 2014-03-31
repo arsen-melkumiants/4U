@@ -246,7 +246,9 @@ class Form {
 		if (!$this->load_editor) {
 			$this->load_editor = true;
 		}
-		$params['class'] = 'ckeditor';
+		if (!$params['no_editor']) {
+			$params['class'] = !empty($params['class']) ? $params['class'].' ckeditor' : 'ckeditor';
+		}
 		$params['width'] = 9;
 		$this->input($name, $params, 'textarea');
 		return $this;

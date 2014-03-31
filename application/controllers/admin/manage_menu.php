@@ -78,6 +78,8 @@ class Manage_menu extends CI_Controller {
 		if(!empty($_POST)){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
+
+			$_POST['menu_id'] = $menu_info['id'];
 		}
 
 		$this->data['center_block'] = $this->edit_form();
@@ -179,6 +181,11 @@ class Manage_menu extends CI_Controller {
 				'value'       => $menu_info['modal'] ?: false,
 				'inputs'      => array('Нет', 'Да'),
 				'label'       => 'Всплывающим окном',
+			))
+			->text('custom', array(
+				'value'       => $menu_info['custom'] ?: false,
+				'valid_rules' => 'trim|xss_clean',
+				'label'       => 'Свободное поле',
 			))
 			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
