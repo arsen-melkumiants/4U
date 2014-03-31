@@ -32,15 +32,8 @@
 						<a href="/" class="logo"></a>
 					</div>
 					<div class="col-md-9">
-						<?php echo !empty($top_menu) ? $top_menu : '';?>
 						<div class="menu">
-							<ul>
-								<li><a href="#"><i class="c_icon_home"></i>Home</a></li>
-								<li><a href="#"><i class="c_icon_phone"></i>Contacts</a></li>
-								<li><a href="#"><i class="c_icon_key"></i>Sign in</a></li>
-								<li><a href="#"><i class="c_icon_add_user"></i>Sign up</a></li>
-								<li><a href="#"><i class="c_icon_basket"></i>Basket</a></li>
-							</ul>
+							<?php echo !empty($main_menu) ? $main_menu : '';?>
 							<div class="clear"></div>
 						</div>
 					</div>

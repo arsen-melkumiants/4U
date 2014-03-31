@@ -11,9 +11,9 @@
 <?php }?>
 <div class="row">
 <?php if(!empty($left_block)){?>
-	<div class="col-md-4"><?php echo $left_block;?></div>
-	<div class="col-md-8"><?php echo $center_block;?></div>
+	<div class="col-md-4 left_block"><?php echo $left_block;?></div>
+	<div class="col-md-8"><?php echo !empty($center_block) ? '<div class="center_block">'.$center_block.'</div>' : '';?></div>
 <?php }elseif(!empty($center_block)){?>
-	<div class="col-md-12"><?php echo $center_block;?></div>
+	<div class="col-md-12"><div class="center_block"><?php echo $center_block;?></div></div>
 <?php }?>
 </div>

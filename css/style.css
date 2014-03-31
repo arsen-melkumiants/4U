@@ -157,6 +157,7 @@ ul {padding-left: 0;}
 .footer_block .menu li:before {content: "/";color: #fff;margin-right: 10px;}
 .footer_block .menu li:first-child:before {content: "";}
 .footer_block .menu li a {color: #fff;}
+.footer_block .menu li i {display: none;}
 .footer_block .copyright {margin-top: 15px;}
 @media (max-width: 992px) {
 	.footer_block {position: relative;height: auto;}

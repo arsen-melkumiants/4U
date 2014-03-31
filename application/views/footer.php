@@ -62,13 +62,7 @@
 					</div>
 					<div class="col-md-9">
 						<div class="menu">
-							<ul>
-								<li><a href="#">Home</a></li>
-								<li><a href="#">Contacts</a></li>
-								<li><a href="#">Sign in</a></li>
-								<li><a href="#">Sign up</a></li>
-								<li><a href="#">Basket</a></li>
-							</ul>
+							<?php echo !empty($main_menu) ? $main_menu : '';?>
 							<div class="clear"></div>
 						</div>
 					</div>
