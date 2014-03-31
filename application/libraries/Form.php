@@ -103,9 +103,14 @@ class Form {
 		if ($type == 'radio') {
 			if (isset($params['inputs']) && is_array($params['inputs'])) {
 				foreach ($params['inputs'] as $value => $info) {
-					$info['checked'] = !empty($params['value']) && $params['value'] == $value ? ' checked="checked"' : '';
+					if (is_array($info)) {
+						$radio_name = $info['name'];
+					} else {
+						$radio_name = $info;
+					}
+					$radio_checked = isset($params['value']) && $params['value'] == $value ? ' checked="checked"' : '';
 					$input .= '<label class="radio-inline">'.PHP_EOL;
-					$input .= '<input type="radio" name="'.$name.'" value="'.$value.'"'.$info['checked'].'> '.$info['name'].PHP_EOL;
+					$input .= '<input type="radio" name="'.$name.'" value="'.$value.'"'.$radio_checked.'> '.$radio_name.PHP_EOL;
 					$input .= '</label>'.PHP_EOL;
 				}
 			}
@@ -120,7 +125,7 @@ class Form {
 					} else {
 						$select_name = $info;
 					}
-					$selected = !empty($params['value']) && $params['value'] == $value ? ' selected="selected"' : '';
+					$selected = isset($params['value']) && $params['value'] == $value ? ' selected="selected"' : '';
 					$input .= '<option value="'.$value.'"'.$selected.'>'.$select_name.'</option>'.PHP_EOL;
 				}
 				$input .= '</select>';
@@ -229,11 +234,10 @@ class Form {
 		return $this;
 	}
 
-	public function radio($name = false, $inputs = false, $params = false) {
-		if (empty($name) || empty($inputs)) {
+	public function radio($name = false, $params = false) {
+		if (empty($name) || empty($params['inputs'])) {
 			return $this;
 		}
-		$params['inputs'] = $inputs;
 		$this->input($name, $params, 'radio');
 		return $this;
 	}

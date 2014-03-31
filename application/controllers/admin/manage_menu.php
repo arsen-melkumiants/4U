@@ -150,30 +150,35 @@ class Manage_menu extends CI_Controller {
 		$this->load->library('form');
 		$html = $this->form
 			->text('name', array(
-				'value'         => $menu_info['name'] ?: false,
-				'valid_rules'   => 'required|trim|xss_clean',
-				'label'         => 'Имя',
+				'value'       => $menu_info['name'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Имя',
 			))
 			->text('alias', array(
-				'value'         => $menu_info['alias'] ?: false,
-				'valid_rules'   => 'required|trim|xss_clean|'.(!$menu_info['id'] ? 'is_unique[menu_items.alias]' : 'is_unique_without[menu_items.alias.'.$menu_info['id'].']'),
-				'label'         => 'Ссылка',
+				'value'       => $menu_info['alias'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean|'.(!$menu_info['id'] ? 'is_unique[menu_items.alias]' : 'is_unique_without[menu_items.alias.'.$menu_info['id'].']'),
+				'label'       => 'Ссылка',
 			))
 			->select('type', array(
-				'value'         => $menu_info['type'] ?: false,
-				'valid_rules'   => 'trim|xss_clean',
-				'label'         => 'Тип меню',
-				'options'       => $this->TYPES,
-				'search'        => true,
-				'class'         => 'type_menu_list',
+				'value'       => $menu_info['type'] ?: false,
+				'valid_rules' => 'trim|xss_clean',
+				'label'       => 'Тип меню',
+				'options'     => $this->TYPES,
+				'search'      => true,
+				'class'       => 'type_menu_list',
 			))
 			->select('item_id', array(
-				'value'         => $menu_info['item_id'] ?: false,
-				'valid_rules'   => 'trim|xss_clean',
-				'label'         => 'Список',
-				'options'       => isset($this->data['select_contents'][$menu_type]) ? $this->data['select_contents'][$menu_type] : $this->data['select_contents'][$menu_type]['content'],
-				'search'        => true,
-				'class'         => 'items_list',
+				'value'       => $menu_info['item_id'] ?: false,
+				'valid_rules' => 'trim|xss_clean',
+				'label'       => 'Список',
+				'options'     => isset($this->data['select_contents'][$menu_type]) ? $this->data['select_contents'][$menu_type] : $this->data['select_contents'][$menu_type]['content'],
+				'search'      => true,
+				'class'       => 'items_list',
+			))
+			->radio('modal', array(
+				'value'       => $menu_info['modal'] ?: false,
+				'inputs'      => array('Нет', 'Да'),
+				'label'       => 'Всплывающим окном',
 			))
 			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
