@@ -295,13 +295,14 @@ class Form {
 		$html .= !empty($params['title']) ? '<h3>'.$params['title'].'</h3>'.PHP_EOL : '';
 		$html .= !empty($params['info']) ? '<p>'.$params['info'].'</p>'.PHP_EOL : '';
 		foreach ($this->form_data as $item) {
+			$group_class = !empty($item['params']['group_class']) ? ' '.$item['params']['group_class'] : '';
 			if (is_callable($item['form'])) {
 				$html .= $item['form']($item['params']);
 			} elseif ($item['params']['type'] == 'hidden') {
 				$html .= $item['form'].PHP_EOL;
 			} else {
 				$item['params']['id'] = !empty($item['params']['id']) ? ' id="'.$item['params']['id'].'"' : '';
-				$html .= '<div class="form-group'.(!empty($item['params']['error']) ? ' has-error' : '').'"'.$item['params']['id'].'>'.PHP_EOL.
+				$html .= '<div class="form-group'.(!empty($item['params']['error']) ? ' has-error' : '').$group_class.'"'.$item['params']['id'].'>'.PHP_EOL.
 					$item['form'].PHP_EOL.
 					'</div>'.PHP_EOL;
 			}

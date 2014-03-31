@@ -34,6 +34,7 @@ class Manage_menu extends CI_Controller {
 	public $TYPES = array(
 		'content'         => 'Контент',
 		'shop_categories' => 'Категории товаров',
+		'external' 		  => 'Ссылка',
 	);
 
 	function __construct() {
@@ -168,16 +169,27 @@ class Manage_menu extends CI_Controller {
 				'options'     => $this->TYPES,
 				'search'      => true,
 				'class'       => 'type_menu_list',
-			))
-			->select('item_id', array(
+			));
+
+		if (isset($this->data['select_contents'][$menu_type])) {
+			$html = $html->select('item_id', array(
 				'value'       => $menu_info['item_id'] ?: false,
 				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Список',
 				'options'     => isset($this->data['select_contents'][$menu_type]) ? $this->data['select_contents'][$menu_type] : $this->data['select_contents'][$menu_type]['content'],
 				'search'      => true,
-				'class'       => 'items_list',
-			))
-			->radio('modal', array(
+				'group_class' => 'items_list',
+			));
+		} else {
+			$this->data['select_contents'][$menu_type] = $menu_info['item_id'] ?: false;
+			$html = $html->text('item_id', array(
+				'value'       => $menu_info['item_id'] ?: false,
+				'valid_rules' => 'trim|xss_clean',
+				'label'       => 'Список',
+				'group_class' => 'items_list',
+			));
+		}
+		$html = $html->radio('modal', array(
 				'value'       => $menu_info['modal'] ?: false,
 				'inputs'      => array('Нет', 'Да'),
 				'label'       => 'Всплывающим окном',
