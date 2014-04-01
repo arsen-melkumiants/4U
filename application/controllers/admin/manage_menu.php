@@ -172,7 +172,7 @@ class Manage_menu extends CI_Controller {
 				'class'       => 'type_menu_list',
 			));
 
-		if (isset($this->data['select_contents'][$menu_type])) {
+		if (isset($this->data['select_contents'][$menu_type]) && is_array($this->data['select_contents'][$menu_type])) {
 			$html = $html->select('item_id', array(
 				'value'       => $menu_info['item_id'] ?: false,
 				'valid_rules' => 'trim|xss_clean',
