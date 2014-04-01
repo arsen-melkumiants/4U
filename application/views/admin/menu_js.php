@@ -2,9 +2,6 @@
 $options = array();
 if (!empty($select_contents)) {
 	foreach ($select_contents as $key => $item) {
-		if (empty($item)) {
-			continue;
-		}
 		if (is_array($item)) {
 			$options[$key] = '';
 		} else {

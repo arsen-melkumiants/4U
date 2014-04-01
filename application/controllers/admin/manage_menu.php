@@ -149,6 +149,7 @@ class Manage_menu extends CI_Controller {
 
 	private function edit_form($menu_info = false) {
 		$this->data['select_contents'] = $this->admin_menu_model->get_content_list();
+		$this->data['select_contents']['external'] = $menu_info['item_id'];
 		$menu_type = !empty($_POST['type']) ? $_POST['type'] : (!empty($menu_info['type']) ? $menu_info['type'] : key($this->data['select_contents']));
 		$this->load->library('form');
 		$html = $this->form
