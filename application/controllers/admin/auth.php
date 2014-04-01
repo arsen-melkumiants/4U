@@ -55,9 +55,9 @@ class Auth extends CI_Controller {
 				redirect(ADM_URL.'auth/login', 'refresh');
 			}
 		} else {
-			$this->_render_page('header', $this->data);
-			$this->_render_page('s_page', $this->data);
-			$this->_render_page('footer', $this->data);
+			$this->_render_page(ADM_FOLDER.'header', $this->data);
+			$this->_render_page(ADM_FOLDER.'s_page', $this->data);
+			$this->_render_page(ADM_FOLDER.'footer', $this->data);
 		}
 	}
 
