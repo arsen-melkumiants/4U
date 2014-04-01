@@ -4,6 +4,9 @@ body{position: relative;min-height: 100%;margin:0;font-family: Verdana, Geneva, 
 h1 {font-size: 28px;color: #f27141;}
 hr {height: 3px;background: #f2916d;}
 input,
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
 button {outline: none;}
 ul {padding-left: 0;}
 .clear {clear: both;height: 0;overflow: hidden;}
