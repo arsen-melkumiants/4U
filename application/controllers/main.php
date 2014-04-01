@@ -15,9 +15,6 @@ class Main extends CI_Controller {
 	public function index() {
 		$this->data['title'] = 'Main_page';
 
-		
-		$this->load->view('header', $this->data);
-		$this->load->view('s_page', $this->data);
-		$this->load->view('footer', $this->data);
+		load_views();
 	}
 }

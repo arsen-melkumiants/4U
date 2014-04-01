@@ -1,5 +1,3 @@
-		</div>
-
 		<script src="/dist/js/jquery-1.10.2.min.js"></script>
 		<script src="/dist/js/bootstrap.min.js"></script>
 		<?php echo after_load('css');?>

@@ -1,4 +1,13 @@
 <?php
+function load_views() {
+	$CI =& get_instance();
+	if (empty($CI->admin_methods)) {
+		$CI->load->library('user_methods');
+	}
+	
+	$CI->user_methods->load_views();
+}
+
 function load_admin_views() {
 	$CI =& get_instance();
 	if (empty($CI->admin_methods)) {

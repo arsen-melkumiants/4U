@@ -45,8 +45,9 @@ class Menu_model extends CI_Model {
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$icon = !empty($item['custom']) ? '<i class="'.$item['custom'].'"></i>' : '';
+				$modal = !empty($item['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
 				$text .= '<li>';
-				$text .= '<a href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
+				$text .= '<a'.$modal.' href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
 				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
 				$text .= '</li>';
 				$num++;
