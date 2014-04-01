@@ -192,3 +192,15 @@ ul {padding-left: 0;}
 .form-horizontal .form-group label {text-align: left;color: #972d0d;font-weight: normal;padding-top: 3px;}
 .form-control {height: 24px;padding: 3px 9px;font-size: 12px;color: #817a7a;border: none;border-top: 1px solid #817a7a;border-radius: 6px;}
 .form-control:focus {border-color: #972d0d;outline: 0;-webkit-box-shadow: none;box-shadow: none;}
+
+
+.modal-content {border-radius: 0;}
+.modal-body {padding: 0;background: #ffc1ae;}
+.modal-content .custom_block {padding-top: 10px;margin-bottom: 0;padding-bottom: 30px;}
+.modal-content .custom_block .title {margin: 0 -14px 25px -14px;background: #f78765;border: 0;color: #fff;}
+.modal-content .custom_block .title * {color: #fff;}
+.modal-content .custom_block .title:before,
+.modal-content .custom_block .title:after {content: '';position: absolute;width: 14px;height: 5px;background: url(../img/title_corner_pop.png) 0px 0px;bottom: -5px;left: 0;}
+.modal-content .custom_block .title:after {left: auto;right: 0;background-position: -14px 0px;}
+.modal-content .close {position: absolute;font-weight: bold;font-size: 34px;z-index: 3;opacity: 0.3;filter: alpha(opacity=30);right: 20px;top: 24px;color: #000000;text-shadow: none;}
+.modal-content .close:hover {opacity: 0.5;filter: alpha(opacity=50);}

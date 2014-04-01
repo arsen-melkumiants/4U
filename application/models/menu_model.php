@@ -46,8 +46,13 @@ class Menu_model extends CI_Model {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$icon = !empty($item['custom']) ? '<i class="'.$item['custom'].'"></i>' : '';
 				$modal = !empty($item['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
+				if ($item['type'] == 'external') {
+					$link = $url.$item['item_id'];
+				} else {
+					$link = $url.$item['alias'];
+				}
 				$text .= '<li>';
-				$text .= '<a'.$modal.' href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
+				$text .= '<a'.$modal.' href="'.site_url($link).'">'.$icon.$item['name'].'</a>';
 				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
 				$text .= '</li>';
 				$num++;

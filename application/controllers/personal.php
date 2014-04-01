@@ -59,7 +59,7 @@ class Personal extends CI_Controller {
 				'value' => $this->lang->line('login_submit_btn'),
 			));
 
-		$this->data['center_block'] = $this->form->create();
+		$this->data['center_block'] = $this->form->create(array('action' => current_url()));
 		$this->data['center_block'] = $this->load->view('custom_block', $this->data, true);
 
 		if ($this->form_validation->run() == true) {
@@ -69,7 +69,7 @@ class Personal extends CI_Controller {
 				redirect('/', 'refresh');
 			} else {
 				$this->session->set_flashdata('danger', $this->ion_auth->errors());
-				redirect('personal/login', 'refresh');
+				load_views();	
 			}
 		} else {
 			load_views();	
