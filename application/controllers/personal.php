@@ -66,7 +66,7 @@ class Personal extends CI_Controller {
 			$remember = (bool) $this->input->post('remember');
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
-				redirect('/', 'refresh');
+				redirect('', 'refresh');
 			} else {
 				$this->session->set_flashdata('danger', $this->ion_auth->errors());
 				load_views();	
