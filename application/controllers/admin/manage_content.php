@@ -46,7 +46,7 @@ class Manage_content extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->library('ion_auth');
-		if (!$this->ion_auth->logged_in()) {
+		if (!$this->ion_auth->is_admin()) {
 			redirect(ADM_URL.'auth/login');
 		}
 

@@ -24,10 +24,9 @@ class Auth extends CI_Controller {
 
 	//redirect if needed, otherwise display the user list
 	function index() {
-		if (!$this->ion_auth->logged_in()) {
+		if (!$this->ion_auth->is_admin()) {
 			redirect(ADM_URL.'auth/login', 'refresh');
-		} elseif (!$this->ion_auth->is_admin())	{
-			return show_error('You must be an administrator to view this page.');
+			//return show_error('You must be an administrator to view this page.');
 		} else {
 			redirect(ADM_URL, 'refresh');
 		}
@@ -35,6 +34,10 @@ class Auth extends CI_Controller {
 
 	//log the user in
 	function login() {
+		if ($this->ion_auth->is_admin()) {
+			redirect(ADM_URL, 'refresh');
+		}
+
 		$this->data['title'] = "Login";
 
 		$this->load->library('form');
