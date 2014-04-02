@@ -15,8 +15,9 @@ class Form {
 	public $load_selectpicker = false;
 
 	public function __construct($grid_type = false) {
+		$CI =& get_instance();
 		$this->grid_type = $grid_type ? $grid_type : $this->grid_type;
-		$this->ajax_mode = isset($_GET['ajax']) ? true : false;
+		$this->ajax_mode = $CI->input->is_ajax_request();
 	}
 
 	public function __call($method, $arguments) {
@@ -71,10 +72,7 @@ class Form {
 			$CI->form_validation->set_rules($name, $field_name, $params['valid_rules']);
 			$CI->form_validation->run();
 			$params['value'] = $CI->form_validation->set_value($name, $params['value']);
-			$params['error'] = form_error($name);
-			if (function_exists('set_alert')) {
-				set_alert(form_error($name), false, 'danger');
-			}
+			$params['error'] = !empty($params['error']) ? $params['error'] : form_error($name);
 		}
 
 		$params['class'] = !empty($params['class']) ? 'form-control '.$params['class'] : 'form-control';
@@ -89,14 +87,20 @@ class Form {
 		}
 
 		if (empty($params['width'])) {
-			$params['width'] = !empty($params['label']) ? $this->grid_type.($this->ajax_mode ? '-7' : '-4') : $this->grid_type.'-12';
+			$params['width'] = !empty($params['label']) ? ($this->ajax_mode ? 6 : 4) : 12;
 		}else{
-			$params['width'] = $this->grid_type.'-'.($this->ajax_mode ? $params['width'] + 2 : $params['width']);
+			$params['width'] = ($this->ajax_mode && $params['width'] <= 10 ? $params['width'] + 2 : $params['width']);
 		}
 
-		//offset
-		$params['width'] = !empty($params['offset']) ? $params['width'].' '.$this->grid_type.'-offset-'.$params['offset'] : $params['width'] ;
+		if(empty($params['error_width'])) {
+			$params['error_width'] = !empty($params['label']) ? 12 - 3 - $params['width'] : 12 - $params['width'];
+			$params['error_width'] = $params['error_width'] > 2 ? $params['error_width'] : 12;
+		}
 
+		$params['width'] = $this->grid_type.'-'.$params['width'];
+
+		//offset
+		$params['width'] .= !empty($params['offset']) ? ' '.$this->grid_type.'-offset-'.$params['offset'] : '';
 
 		//radio-buttons
 		$input = '';
@@ -295,6 +299,14 @@ class Form {
 		$html .= !empty($params['title']) ? '<h3>'.$params['title'].'</h3>'.PHP_EOL : '';
 		$html .= !empty($params['info']) ? '<p>'.$params['info'].'</p>'.PHP_EOL : '';
 		foreach ($this->form_data as $item) {
+			//Set global alert
+			if (!empty($item['params']['error'])) {
+				if (empty($params['error_inline']) && function_exists('set_alert')) {
+					set_alert(form_error($item['params']['name']), false, 'danger');
+				} else {
+					$item['params']['error_html'] = '<div class="error text-danger '.$this->grid_type.'-'.$item['params']['error_width'].'">'.$item['params']['error'].'</div>';
+				}
+			}
 			$group_class = !empty($item['params']['group_class']) ? ' '.$item['params']['group_class'] : '';
 			if (is_callable($item['form'])) {
 				$html .= $item['form']($item['params']);
@@ -303,7 +315,7 @@ class Form {
 			} else {
 				$item['params']['id'] = !empty($item['params']['id']) ? ' id="'.$item['params']['id'].'"' : '';
 				$html .= '<div class="form-group'.(!empty($item['params']['error']) ? ' has-error' : '').$group_class.'"'.$item['params']['id'].'>'.PHP_EOL.
-					$item['form'].PHP_EOL.
+					$item['form'].(!empty($params['error_inline']) && !empty($item['params']['error']) ? $item['params']['error_html'] : '').PHP_EOL.
 					'</div>'.PHP_EOL;
 			}
 		}
