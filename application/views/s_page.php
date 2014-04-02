@@ -1,15 +1,16 @@
+<?php if (!empty($header)) {
+$center_block = '<div class="custom_block">
+	<div class="title">
+		<h2>'.$header.'</h2>
+	</div>
+		'.$center_block.'
+	<div class="clear"></div>
+</div>';
+}?>
 <div class="container main_block">
 	<div class="row">
 		<?php echo get_alerts();?>
 	</div>
-	<?php if(!empty($header)){?>
-	<div class="header_block">
-		<h1><?php echo $header?></h1>
-		<?php if(!empty($header_descr)){?>
-			<h5><?php echo $header_descr?></h5>
-		<?php }?>
-	</div>
-	<?php }?>
 	<div class="row">
 	<?php if(!empty($left_block)){?>
 		<div class="col-md-3 left_block">

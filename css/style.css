@@ -193,6 +193,7 @@ ul {padding-left: 0;}
 
 .form-horizontal {padding: 15px;}
 .form-horizontal .form-group label {text-align: left;color: #972d0d;font-weight: normal;padding-top: 3px;}
+.form-horizontal .form-group .error {padding-top: 3px;}
 .form-control {height: 24px;padding: 3px 9px;font-size: 12px;color: #817a7a;border: none;border-top: 1px solid #817a7a;border-radius: 6px;}
 .form-control:focus {border-color: #972d0d;outline: 0;-webkit-box-shadow: none;box-shadow: none;}
 

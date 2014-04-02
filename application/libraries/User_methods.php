@@ -11,7 +11,7 @@ class User_methods {
 
 	public function load_views() {
 		if ($this->CI->IS_AJAX) {
-			$output = $this->CI->load->view('ajax', '', true);
+			$output = $this->CI->load->view('ajax', $this->CI->data, true);
 			echo $output;
 		} else {
 			$this->CI->load->view('header', $this->CI->data);

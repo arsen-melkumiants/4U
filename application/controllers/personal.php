@@ -4,8 +4,11 @@ class Personal extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->library('ion_auth');
-		$this->load->library('form_validation');
+		$this->load->library(array(
+			'ion_auth',
+			'form',
+			'form_validation',
+		));
 		$this->load->helper('url');
 
 		// Load MongoDB library instead of native db driver if required
@@ -17,14 +20,14 @@ class Personal extends CI_Controller {
 
 		$this->lang->load('auth');
 		$this->load->helper('language');
-		
+
 		$this->load->model(array(
 			'menu_model',
 			'shop_model',
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->shop_model->get_categories();
-		
+
 		set_alert($this->session->flashdata('success'), false, 'success');
 		set_alert($this->session->flashdata('danger'), false, 'danger');
 	}
@@ -42,10 +45,8 @@ class Personal extends CI_Controller {
 
 	//log the user in
 	function login() {
-		$this->data['title'] = "Login";
-		$this->data['header'] = "Login";
+		$this->data['title'] = $this->data['header'] = "Login";
 
-		$this->load->library('form');
 		$this->form
 			->text('identity', array(
 				'label' => 'Логин или Email:',
@@ -59,19 +60,19 @@ class Personal extends CI_Controller {
 				'value' => $this->lang->line('login_submit_btn'),
 			));
 
-		$this->data['center_block'] = $this->form->create(array('action' => current_url()));
-		$this->data['center_block'] = $this->load->view('custom_block', $this->data, true);
-
 		if ($this->form_validation->run() == true) {
 			$remember = (bool) $this->input->post('remember');
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 				redirect('', 'refresh');
 			} else {
-				$this->session->set_flashdata('danger', $this->ion_auth->errors());
+				//$this->session->set_flashdata('danger', $this->ion_auth->errors());
+				$this->form->form_data[0]['params']['error'] = $this->ion_auth->errors();
+				$this->data['center_block'] = $this->form->create(array('action' => current_url(), 'error_inline' => 'true'));
 				load_views();	
 			}
 		} else {
+			$this->data['center_block'] = $this->form->create(array('action' => current_url(), 'error_inline' => 'true'));
 			load_views();	
 		}
 	}
@@ -363,26 +364,25 @@ class Personal extends CI_Controller {
 	}
 
 	//create a new user
-	function create_user()
+	function registration()
 	{
-		$this->data['title'] = "Create User";
+		$this->data['title'] = $this->data['header'] = "Create User";
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
 			redirect(ADM_URL.'auth', 'refresh');
 		}
 
-		//validate form input
-		$this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[users.email]');
-		$this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('company', $this->lang->line('create_user_validation_company_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-		$this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
+		$this->data['center_block'] = $this->form
+			->text('first_name', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_fname_label')))
+			->text('last_name', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_lname_label')))
+			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => $this->lang->line('create_user_validation_email_label')))
+			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_validation_password_label')))
+			->password('password_confirm', array('valid_rules' => 'required|matches[password]',  'label' => $this->lang->line('create_user_validation_password_confirm_label')))
+			->btn(array('value' => 'Регистрироваться'))
+			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
-		if ($this->form_validation->run() == true)
-		{
+		if ($this->form_validation->run() == true) {
 			$username = strtolower($this->input->post('first_name')) . ' ' . strtolower($this->input->post('last_name'));
 			$email    = strtolower($this->input->post('email'));
 			$password = $this->input->post('password');
@@ -394,63 +394,18 @@ class Personal extends CI_Controller {
 				'phone'      => $this->input->post('phone'),
 			);
 		}
-		if ($this->form_validation->run() == true && $this->ion_auth->register($username, $password, $email, $additional_data))
-		{
+
+		if ($this->form_validation->run() == true && $this->ion_auth->register($username, $password, $email, $additional_data)) {
 			//check to see if we are creating the user
 			//redirect them back to the admin page
 			$this->session->set_flashdata('message', $this->ion_auth->messages());
-			redirect("auth", 'refresh');
-		}
-		else
-		{
+			redirect("", 'refresh');
+		} else {
 			//display the create user form
 			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
-			$this->data['first_name'] = array(
-				'name'  => 'first_name',
-				'id'    => 'first_name',
-				'type'  => 'text',
-				'value' => $this->form_validation->set_value('first_name'),
-			);
-			$this->data['last_name'] = array(
-				'name'  => 'last_name',
-				'id'    => 'last_name',
-				'type'  => 'text',
-				'value' => $this->form_validation->set_value('last_name'),
-			);
-			$this->data['email'] = array(
-				'name'  => 'email',
-				'id'    => 'email',
-				'type'  => 'text',
-				'value' => $this->form_validation->set_value('email'),
-			);
-			$this->data['company'] = array(
-				'name'  => 'company',
-				'id'    => 'company',
-				'type'  => 'text',
-				'value' => $this->form_validation->set_value('company'),
-			);
-			$this->data['phone'] = array(
-				'name'  => 'phone',
-				'id'    => 'phone',
-				'type'  => 'text',
-				'value' => $this->form_validation->set_value('phone'),
-			);
-			$this->data['password'] = array(
-				'name'  => 'password',
-				'id'    => 'password',
-				'type'  => 'password',
-				'value' => $this->form_validation->set_value('password'),
-			);
-			$this->data['password_confirm'] = array(
-				'name'  => 'password_confirm',
-				'id'    => 'password_confirm',
-				'type'  => 'password',
-				'value' => $this->form_validation->set_value('password_confirm'),
-			);
-
-			$this->_render_page(ADM_FOLDER.'auth/create_user', $this->data);
+			load_views();	
 		}
 	}
 
