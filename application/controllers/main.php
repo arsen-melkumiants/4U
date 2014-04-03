@@ -8,8 +8,14 @@ class Main extends CI_Controller {
 			'menu_model',
 			'shop_model',
 		));
+		$this->load->library(array(
+			'session',
+		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->shop_model->get_categories();
+		
+		set_alert($this->session->flashdata('success'), false, 'success');
+		set_alert($this->session->flashdata('danger'), false, 'danger');
     }
 
 	public function index() {

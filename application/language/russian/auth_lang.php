@@ -134,11 +134,12 @@ $lang['change_password_validation_new_password_confirm_label'] = 'Подтвер
 $lang['forgot_password_heading']                 = 'Забыли пароль';
 $lang['forgot_password_subheading']              = 'Пожалуйста введите ваш email и мы сможем отправить вам email с новым паролем.';
 $lang['forgot_password_email_label']             = '%s:';
+$lang['forgot_password_email_not_found']         = 'Пользователь с таким email не найден';
 $lang['forgot_password_submit_btn']              = 'Отправить';
 $lang['forgot_password_validation_email_label']  = 'Email';
 $lang['forgot_password_username_identity_label'] = 'Логин';
 $lang['forgot_password_email_identity_label']    = 'Email';
-$lang['forgot_password_back']    = 'Вернуться';
+$lang['forgot_password_back']                    = 'Вернуться';
 
 // Reset Password
 $lang['reset_password_heading']                               = 'Изменить пароль';

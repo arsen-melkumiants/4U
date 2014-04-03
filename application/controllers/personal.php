@@ -84,9 +84,7 @@ class Personal extends CI_Controller {
 	function logout()
 	{
 		$this->data['title'] = "Logout";
-
 		$logout = $this->ion_auth->logout();
-
 		$this->session->set_flashdata('success', $this->ion_auth->messages());
 		redirect('personal/login', 'refresh');
 	}
@@ -94,26 +92,20 @@ class Personal extends CI_Controller {
 	//activate the user
 	function activate($id, $code=false)
 	{
-		if ($code !== false)
-		{
+		if ($code !== false) {
 			$activation = $this->ion_auth->activate($id, $code);
-		}
-		else if ($this->ion_auth->is_admin())
-		{
+		} else if ($this->ion_auth->is_admin())	{
 			$activation = $this->ion_auth->activate($id);
 		}
 
-		if ($activation)
-		{
+		if ($activation) {
 			//redirect them to the auth page
-			$this->session->set_flashdata('message', $this->ion_auth->messages());
+			$this->session->set_flashdata('success', $this->ion_auth->messages());
 			redirect("", 'refresh');
-		}
-		else
-		{
+		} else {
 			//redirect them to the forgot password page
-			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			redirect("auth/forgot_password", 'refresh');
+			$this->session->set_flashdata('danger', $this->ion_auth->errors());
+			redirect('personal/forgot_password', 'refresh');
 		}
 	}
 
@@ -166,8 +158,51 @@ class Personal extends CI_Controller {
 		}
 	}
 
-	function _get_csrf_nonce()
-	{
+	function forgot_password() {
+		$this->data['header'] = $this->data['title'] = lang('forgot_password_heading');
+		
+		if ($this->config->item('identity', 'ion_auth') == 'username') { 
+			$label = 'forgot_password_username_identity_label';
+			$email_rule = '';
+		} else {
+			$label = 'forgot_password_email_identity_label';
+			$email_rule = '|valid_email';
+		}
+		$label = $this->lang->line($label);
+		$this->form
+			->text('email', array(
+				'valid_rules' => 'required|trim|xss_clean'.$email_rule, 
+				'label' => $label
+			))
+			->btn(array('value' => lang('forgot_password_submit_btn')));
+		
+		if ($this->form_validation->run() == false) {
+			$this->form->form_data[0]['params']['error'] = $this->session->flashdata('message');
+			$this->data['center_block'] = $this->form
+				->create(array('action' => current_url(), 'error_inline' => 'true'));
+			load_views();	
+		} else {
+			$identity = $this->ion_auth->where('email', strtolower($this->input->post('email')))->users()->row();
+			if(empty($identity)) {
+				$this->ion_auth->set_message('forgot_password_email_not_found');
+				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				redirect('personal/forgot_password', 'refresh');
+			}
+
+			//run the forgotten password method to email an activation code to the user
+			$forgotten = $this->ion_auth->forgotten_password($identity->{$this->config->item('identity', 'ion_auth')});
+
+			if ($forgotten) {
+				$this->session->set_flashdata('success', $this->ion_auth->messages());
+				redirect('', 'refresh'); //we should display a confirmation page here instead of the login page
+			} else {
+				$this->session->set_flashdata('danger', $this->ion_auth->errors());
+				redirect('personal/forgot_password', 'refresh');
+			}
+		}
+	}
+
+	function _get_csrf_nonce() {
 		$this->load->helper('string');
 		$key   = random_string('alnum', 8);
 		$value = random_string('alnum', 20);
@@ -177,26 +212,19 @@ class Personal extends CI_Controller {
 		return array($key => $value);
 	}
 
-	function _valid_csrf_nonce()
-	{
+	function _valid_csrf_nonce() {
 		if ($this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
 			$this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue'))
 		{
 			return TRUE;
-		}
-		else
-		{
+		} else {
 			return FALSE;
 		}
 	}
 
-	function _render_page($view, $data=null, $render=false)
-	{
-
+	function _render_page($view, $data = null, $render = false)	{
 		$this->viewdata = (empty($data)) ? $this->data: $data;
-
 		$view_html = $this->load->view($view, $this->viewdata, $render);
-
 		if (!$render) return $view_html;
 	}
 
