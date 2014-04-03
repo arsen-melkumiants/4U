@@ -142,6 +142,12 @@ class Admin_menu_model extends CI_Model {
 		$list = array(
 			'content'         => $this->db->select('id, name')->get('content')->result_array(),
 			'shop_categories' => $this->db->select('id, name')->get('shop_categories')->result_array(),
+			'auth'            => array(
+				array('id' => 'login', 'name' => 'Вход'),
+				array('id' => 'registration', 'name' => 'Регистрация'),
+				array('id' => 'profile', 'name' => 'Профиль'),
+				array('id' => 'logout', 'name' => 'Выход'),
+			),
 		);
 
 		array_unshift($list['shop_categories'], array('id' => 0, 'name' => 'Все категории'));
