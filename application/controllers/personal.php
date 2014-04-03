@@ -34,6 +34,7 @@ class Personal extends CI_Controller {
 
 	//redirect if needed, otherwise display the user list
 	function index() {
+		return false;
 		if (!$this->ion_auth->logged_in()) {
 			redirect(ADM_URL.'auth/login', 'refresh');
 		} elseif (!$this->ion_auth->is_admin())	{
@@ -45,6 +46,13 @@ class Personal extends CI_Controller {
 
 	//log the user in
 	function login() {
+		if ($this->ion_auth->logged_in()) {
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
+			redirect('', 'refresh');
+		}
+
 		$this->data['title'] = $this->data['header'] = "Login";
 
 		$this->form
@@ -86,7 +94,7 @@ class Personal extends CI_Controller {
 		$this->data['title'] = "Logout";
 		$logout = $this->ion_auth->logout();
 		$this->session->set_flashdata('success', $this->ion_auth->messages());
-		redirect('personal/login', 'refresh');
+		redirect('', 'refresh');
 	}
 
 	//activate the user

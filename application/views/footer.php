@@ -24,7 +24,7 @@
 					$.post(action, fields, function(data) {
 						data = $.trim(data);
 						if(data == 'refresh') {
-							//window.location.reload(true);
+							window.location.reload(true);
 						} else if(data == 'close') {
 							$('#ajaxModal').modal('hide');
 						} else {

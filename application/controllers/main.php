@@ -10,6 +10,7 @@ class Main extends CI_Controller {
 		));
 		$this->load->library(array(
 			'session',
+			'ion_auth',
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->shop_model->get_categories();

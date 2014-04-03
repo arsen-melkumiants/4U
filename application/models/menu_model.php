@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Menu_model extends CI_Model {
-
+	
 	function __construct() {
 		parent::__construct();
 		$this->load->database();
@@ -48,6 +48,17 @@ class Menu_model extends CI_Model {
 				$modal = !empty($item['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
 				if ($item['type'] == 'external') {
 					$link = $url.$item['item_id'];
+				} elseif($item['type']) {
+					if (is_object($this->ion_auth) && $this->ion_auth->logged_in()) { 
+						if(in_array($item['item_id'], array('login', 'registration'))) {
+							continue;
+						}
+					} else {
+						if (in_array($item['item_id'], array('profile', 'logout'))) {
+							continue;
+						}
+					}
+					$link = 'personal/'.$item['item_id'];
 				} else {
 					$link = $url.$item['alias'];
 				}
