@@ -34,7 +34,8 @@ class Manage_menu extends CI_Controller {
 	public $TYPES = array(
 		'content'         => 'Контент',
 		'shop_categories' => 'Категории товаров',
-		'external' 		  => 'Ссылка',
+		'external'        => 'Ссылка',
+		'auth'            => 'Пользовательские ссылки',
 	);
 
 	function __construct() {
