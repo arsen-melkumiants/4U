@@ -129,7 +129,25 @@ class Manage_menu extends CI_Controller {
 		}
 		set_header_info($menu_info);
 
-		admin_method('delete', $this->DB_TABLE, $menu_info);
+		if ($this->IS_AJAX) {
+			if (isset($_POST['delete'])) {
+				$this->admin_menu_model->delete_menu_item($id);
+				$this->session->set_flashdata('danger', 'Данные успешно удалены');
+				echo 'refresh';
+			} else {
+				$this->load->library('form');
+				$this->data['center_block'] = $this->form
+					->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+					->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
+					->create(array('action' => current_url(), 'btn_offset' => 4));
+				echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+			}
+		} else {
+			$this->admin_menu_model->delete_menu_item($id);
+			$this->session->set_flashdata('danger', 'Данные успешно удалены');
+			$menu_name = $this->admin_menu_model->get_menu_name($menu_info['menu_id']);
+			redirect(($menu_name ? $this->MAIN_URL.$menu_name : ADM_URL), 'refresh');
+		}
 	}
 	
 	public function active($id = false) {

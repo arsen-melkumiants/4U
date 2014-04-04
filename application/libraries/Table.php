@@ -164,7 +164,8 @@ class Table {
 				if (!isset($row[$item['name']])) {
 					continue;
 				}
-				if (isset($item['params']['date']) && is_numeric($item['params']['date'])) {
+
+				if (isset($item['params']['date']) && is_numeric($row[$item['name']])) {
 					$row[$item['name']] = date($item['params']['type'], $row[$item['name']]);
 				}
 

@@ -5,7 +5,7 @@ class Manage_product extends CI_Controller {
 	public $MAIN_URL = '';
 
 	public $IS_AJAX = false;
-	
+
 	public $DB_TABLE = 'shop_products';
 
 	public $PAGE_INFO = array(
@@ -64,9 +64,10 @@ class Manage_product extends CI_Controller {
 			))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
 			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1))
+			->active(array('link' => $this->MAIN_URL.'active/%d'))
 			->btn(array(
-				'link' => $this->MAIN_URL.'add',
-				'name' => 'Добавить',
+				'link'   => $this->MAIN_URL.'add',
+				'name'   => 'Добавить',
 				'header' => true,
 			))
 			->create(function($CI) {
@@ -109,6 +110,8 @@ class Manage_product extends CI_Controller {
 	private function edit_form($product_info = false) {
 		$product_categories = $this->admin_product_model->get_product_categories();
 		array_unshift($product_categories, array('id' => 0, 'name' => 'Без категории'));
+		$currencies = $this->admin_product_model->get_currencies();
+		array_unshift($currencies, array('id' => '', 'name' => 'Список валюты'));
 		$this->load->library('form');
 		return $this->form
 			->text('name', array(
@@ -120,6 +123,13 @@ class Manage_product extends CI_Controller {
 				'value'       => $product_info['price'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean|numeric',
 				'label'       => 'Цена',
+			))
+			->select('currency', array(
+				'value'       => $product_info['currency'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Валюта',
+				'options'     => $currencies,
+				'search'      => true,
 			))
 			->select('cat_id', array(
 				'value'       => $product_info['cat_id'] ?: false,
@@ -156,7 +166,7 @@ class Manage_product extends CI_Controller {
 		if (empty($id)) {
 			custom_404();
 		}
-		
+
 		$product_info = $this->admin_product_model->get_product_info($id);
 
 		if (empty($product_info)) {
@@ -166,12 +176,12 @@ class Manage_product extends CI_Controller {
 
 		admin_method('delete', $this->DB_TABLE, $product_info);
 	}
-	
+
 	public function active($id = false) {
 		if (empty($id)) {
 			custom_404();
 		}
-		
+
 		$product_info = $this->admin_product_model->get_product_info($id);
 
 		if (empty($product_info)) {
