@@ -26,4 +26,8 @@ class Admin_product_model extends CI_Model {
 
 		return $result;
 	}
+
+	function get_currencies() {
+		return $this->db->where('status', 1)->get('shop_currencies')->result_array();
+	}
 }

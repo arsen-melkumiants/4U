@@ -250,7 +250,7 @@ class Form {
 		if (!$this->load_editor) {
 			$this->load_editor = true;
 		}
-		if (!$params['no_editor']) {
+		if (empty($params['no_editor'])) {
 			$params['class'] = !empty($params['class']) ? $params['class'].' ckeditor' : 'ckeditor';
 		}
 		$params['width'] = 9;

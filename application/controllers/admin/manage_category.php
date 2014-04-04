@@ -105,7 +105,24 @@ class Manage_category extends CI_Controller {
 		}
 		set_header_info($category_info);
 
-		admin_method('delete', $this->DB_TABLE, $category_info);
+		if ($this->IS_AJAX) {
+			if (isset($_POST['delete'])) {
+				$this->admin_category_model->delete_category($id);
+				$this->session->set_flashdata('danger', 'Данные успешно удалены');
+				echo 'refresh';
+			} else {
+				$this->load->library('form');
+				$this->data['center_block'] = $this->form
+					->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+					->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
+					->create(array('action' => current_url(), 'btn_offset' => 4));
+				echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+			}
+		} else {
+			$this->admin_category_model->delete_category($id);
+			$this->session->set_flashdata('danger', 'Данные успешно удалены');
+			redirect($this->MAIN_URL, 'refresh');
+		}
 	}
 	
 	private function edit_form($category_info = false) {
