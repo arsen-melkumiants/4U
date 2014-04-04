@@ -46,6 +46,11 @@ class Admin_control_panel extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => 'Ключевые слова',
 			))
+			->text('SITE_EMAIL', array(
+				'value'       => (defined('SITE_EMAIL') ? SITE_EMAIL : ''),
+				'valid_rules' => 'required|trim|xss_clean|valid_email',
+				'label'       => 'Почта сайта',
+			))
 			->btn(array('offset' => 3, 'value' => 'Изменить'))
 			->create();
 
