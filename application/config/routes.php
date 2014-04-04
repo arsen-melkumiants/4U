@@ -43,21 +43,23 @@ $admin_folder = 'admin/';
 $admin_url = '4U/';
 
 $route['4U'] = $admin_folder.'admin_control_panel';
-$route[$admin_url.'global_settings'] = $admin_folder.'admin_control_panel/global_settings';
-$route[$admin_url.'change_access'] = $admin_folder.'auth/edit_user/1';
-$route[$admin_url.'logout'] = $admin_folder.'auth/logout';
+$route[$admin_url.'global_settings']           = $admin_folder.'admin_control_panel/global_settings';
+$route[$admin_url.'change_access']             = $admin_folder.'auth/edit_user/1';
+$route[$admin_url.'logout']                    = $admin_folder.'auth/logout';
 $route[$admin_url.'manage_menu/(:num)/(:any)'] = $admin_folder.'manage_menu/$2/$1';
-$route[$admin_url.'manage_menu/(:any)/add'] = $admin_folder.'manage_menu/add/$1';
-$route[$admin_url.'manage_menu/(:any)'] = $admin_folder.'manage_menu/menu/$1';
+$route[$admin_url.'manage_menu/(:any)/add']    = $admin_folder.'manage_menu/add/$1';
+$route[$admin_url.'manage_menu/(:any)']        = $admin_folder.'manage_menu/menu/$1';
 
 #General admin routes
 $route[$admin_url.'manage_(:any)'] = $admin_folder.'manage_$1';
-$route[$admin_url.'(:any)'] = $admin_folder.'$1';
+$route[$admin_url.'(:any)']        = $admin_folder.'$1';
 
 #User routes
-$route['default_controller'] = 'main';
+$route['category/(:any)']    = 'shop_controller/category/$1';
+$route['product/(:any)']    = 'shop_controller/product/$1';
+$route['default_controller'] = 'main_controller';
 
-$route['404_override'] = '';
+$route['404_override'] = 'not_found';
 
 
 /* End of file routes.php */

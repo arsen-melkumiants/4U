@@ -16,7 +16,7 @@ $center_block = '<div class="custom_block">
 		<div class="col-md-3 left_block">
 			<div class="search_block">
 				<form>
-					<input type="text" name="q" placeholder="What looking for?"/>
+					<input type="text" name="q" placeholder="What are you looking for?"/>
 					<input type="submit" value=""/>
 				</form>
 			</div>
