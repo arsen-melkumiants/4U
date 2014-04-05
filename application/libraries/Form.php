@@ -144,7 +144,7 @@ class Form {
 
 		if (!empty($addon)) {
 			$addon = '<span class="input-group-addon">'.$addon.'</span>';
-			if (isset($params['icon_pos']) && $params['icon_pos'] == 'right') {
+			if (isset($params['icon_post']) && $params['icon_post'] == 'right') {
 				$input = $input.$addon;
 			}else{
 				$input = $addon.$input;
