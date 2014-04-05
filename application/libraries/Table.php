@@ -119,6 +119,7 @@ class Table {
 		if (empty($this->table_data)) {
 			return false;
 		}
+		$CI =& get_instance();
 		$html = '';
 
 		if (is_callable($rows_data)) {
@@ -144,19 +145,20 @@ class Table {
 		$table_params['class'] = !empty($table_params['class']) ? $table_params['class'] : 'table table-bordered table-hover';
 
 		$html .= '<table class="'.$table_params['class'].'">'."\n";
-		$html .= '<tr>'."\n";
-
-		foreach ((array)$this->table_data as $item) {
-			if (!isset($rows_data[0][$item['name']])) {
-				continue;
+		if (empty($table_params['no_header'])) {
+			$html .= '<tr>'."\n";
+			foreach ((array)$this->table_data as $item) {
+				if (!isset($rows_data[0][$item['name']])) {
+					continue;
+				}
+				$title = !empty($item['params']['title']) ? $item['params']['title'] : ucfirst($item['name']);
+				$html .= '<th'.$item['params']['width'].'>'.$title.'</th>'."\n";
 			}
-			$title = !empty($item['params']['title']) ? $item['params']['title'] : ucfirst($item['name']);
-			$html .= '<th'.$item['params']['width'].'>'.$title.'</th>'."\n";
+			if (!empty($this->active_data)) {
+				$html .= '<th>Действия</th>'."\n";
+			}
+			$html .= '</tr>';
 		}
-		if (!empty($this->active_data)) {
-			$html .= '<th>Действия</th>'."\n";
-		}
-		$html .= '</tr>';
 
 		foreach ((array)$rows_data as $row) {
 			$html .= '<tr>';
@@ -169,7 +171,7 @@ class Table {
 					$row[$item['name']] = date($item['params']['type'], $row[$item['name']]);
 				}
 
-				$row[$item['name']] = isset($item['params']['func']) ? $item['params']['func']($row, $item['params'], $this) : $row[$item['name']];
+				$row[$item['name']] = isset($item['params']['func']) ? $item['params']['func']($row, $item['params'], $this, $CI) : $row[$item['name']];
 
 				$html .= '<td>'.$row[$item['name']].'</td>';
 			}

@@ -22,6 +22,7 @@ class Admin_methods {
 	public function admin_constructor() {
 		$this->CI->load->model(ADM_FOLDER.'admin_control_menu_model');
 		$this->CI->data['top_menu'] = $this->CI->admin_control_menu_model->get_control_menu('top');
+		$this->CI->data['user_info'] = $this->CI->ion_auth->user()->row_array();
 
 		$this->CI->IS_AJAX = $this->CI->input->is_ajax_request();
 
@@ -33,15 +34,15 @@ class Admin_methods {
 	public function add_method($table = false, $data = false) {
 		if (!empty($table)) {
 			$info = !empty($data['add_data']) ? array_merge($data['add_data'], $this->CI->input->post()) : $this->CI->input->post();
-			unset($data['submit']);
-			$data['add_date'] = time();
+			unset($info['submit']);
+			$info['add_date'] = time();
+			$info['author_id'] = $this->CI->data['user_info']['id'];
 			if (!empty($data['except_fields']) && is_array($data['except_fields'])) {
 				foreach ($data['except_fields'] as $field) {
-					unset($data[$field]);
+					unset($info[$field]);
 				}
 			}
 
-			unset($data['add_data'], $data['except_fields']);
 			$this->CI->db->insert($table, $info);
 			$this->CI->session->set_flashdata('success', 'Данные успешно добавлены');
 		}
@@ -55,14 +56,13 @@ class Admin_methods {
 	public function edit_method($table = false, $data = false) {
 		if (!empty($table) && !empty($data['id'])) {
 			$info = !empty($data['add_data']) ? array_merge($data['add_data'], $this->CI->input->post()) : $this->CI->input->post();
-			unset($data['submit']);
+			unset($info['submit']);
 			if (!empty($data['except_fields']) && is_array($data['except_fields'])) {
 				foreach ($data['except_fields'] as $field) {
-					unset($data[$field]);
+					unset($info[$field]);
 				}
 			}
 
-			unset($data['add_data'], $data['except_fields']);
 			$this->CI->db->where('id', $data['id'])->update($table, $info);
 			$this->CI->session->set_flashdata('success', 'Данные успешно обновлены');
 		}
