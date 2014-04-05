@@ -235,5 +235,4 @@ class Personal extends CI_Controller {
 		$view_html = $this->load->view($view, $this->viewdata, $render);
 		if (!$render) return $view_html;
 	}
-
 }

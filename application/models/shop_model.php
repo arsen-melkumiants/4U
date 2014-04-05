@@ -23,8 +23,9 @@ class Shop_model extends CI_Model {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$icon = !empty($item['custom']) ? '<i class="'.$item['custom'].'"></i>' : '';
 				$text .= '<li>';
-				$text .= '<a href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
-				$text .= $this->get_category_tree($all_branch, $item['id'], $url);
+				$sub  = $this->get_category_tree($all_branch, $item['id'], $url);
+				$text .= '<a '.($sub ? 'class="drop"' : '').' href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
+				$text .= $sub;
 				$text .= '</li>';
 				$num++;
 			}

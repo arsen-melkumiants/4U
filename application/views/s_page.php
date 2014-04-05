@@ -3,7 +3,7 @@ $center_block = '<div class="custom_block">
 	<div class="title">
 		<h2>'.$header.'</h2>
 	</div>
-		'.$center_block.'
+		'.(!empty($center_block) ? $center_block : '').'
 	<div class="clear"></div>
 </div>';
 }?>

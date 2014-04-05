@@ -20,11 +20,10 @@ class Not_found extends CI_Controller {
     }
 
 	public function index() {
-		$this->data['title'] = 'Main_page';
+		$this->data['title'] = $this->data['header'] = 'Page doesn\'t exist';
 		
 		$this->output->set_status_header('404');
-
-		$this->data['center_block'] = '<h1 class="text_center">404</h1>';
+		$this->data['center_block'] = '<h1 class="text_404">404</h1>';
 	
 		load_views();
 	}

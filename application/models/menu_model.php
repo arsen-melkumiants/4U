@@ -54,11 +54,16 @@ class Menu_model extends CI_Model {
 							continue;
 						}
 					} else {
-						if (in_array($item['item_id'], array('profile', 'logout'))) {
+						if (!in_array($item['item_id'], array('login', 'registration'))) {
 							continue;
 						}
 					}
-					$link = 'personal/'.$item['item_id'];
+
+					if ($item['item_id'] == 'profile') {
+						$link = $item['item_id'];
+					} else {
+						$link = 'personal/'.$item['item_id'];
+					}
 				} else {
 					$link = $url.$item['alias'];
 				}
