@@ -122,15 +122,16 @@ class Manage_product extends CI_Controller {
 			->text('price', array(
 				'value'       => $product_info['price'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean|numeric',
+				'symbol'	  => 'up',
 				'label'       => 'Цена',
 			))
-			->select('currency', array(
+			/*->select('currency', array(
 				'value'       => $product_info['currency'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => 'Валюта',
 				'options'     => $currencies,
 				'search'      => true,
-			))
+			))*/
 			->select('cat_id', array(
 				'value'       => $product_info['cat_id'] ?: false,
 				'valid_rules' => 'trim|xss_clean',
@@ -158,7 +159,7 @@ class Manage_product extends CI_Controller {
 				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Описание',
 			))
-			->btn(array('value' => empty($id) ? 'Добавить' : 'Изменить'))
+			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'))
 			->create(array('action' => current_url()));
 	}
 

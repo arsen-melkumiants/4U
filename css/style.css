@@ -23,6 +23,8 @@ ul {padding-left: 0;}
 	background-image: linear-gradient(to bottom, #fcae6b, #EF2F00);
 	filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#fcae6b, endColorstr=#EF2F00);
 }
+.btn span,
+.orange_btn span{padding-top: 3px;}
 .btn:hover,
 .orange_btn:hover{
 	border:1px solid #fa7707;
@@ -199,9 +201,12 @@ ul {padding-left: 0;}
 .form-horizontal .form-group label {text-align: left;color: #972d0d;font-weight: normal;padding-top: 3px;}
 .form-horizontal .form-group .error {padding-top: 3px;}
 .form-horizontal .form-group .error * {margin: 0;}
-.form-control {height: 24px;padding: 3px 9px;font-size: 12px;color: #817a7a;border: none;border-top: 1px solid #817a7a;border-radius: 6px;}
+.form-control,
+.input-group-addon {height: 24px;padding: 3px 9px;font-size: 12px;color: #817a7a;border: none;border-top: 1px solid #817a7a;border-radius: 6px;}
 .form-control:focus {border-color: #972d0d;outline: 0;-webkit-box-shadow: none;box-shadow: none;}
+.input-group[class*=col-] {float: left;padding-left: 15px;padding-right: 15px;}
 
+.btn-default:hover, .btn-default:focus, .btn-default:active {color: #fff;outline: none;}
 
 .modal-content {border-radius: 0;}
 .modal-body {padding: 0;background: #ffc1ae;}
@@ -222,3 +227,15 @@ dt, dd {line-height: 2.5;}
 .stats_block li {display: block;background: #fff;padding: 20px 30px;border-bottom:1px dotted #dadada;color: #959595;font-family: "Times New Roman", Times, serif;font-size: 15px;font-style: italic;}
 .stats_block .stars {color: #f27141;}
 .stats_block .stars .empty{color: #959595;}
+
+.profile_tabs {background: #ebebeb;margin-bottom: 5px;}
+.profile_tabs li a {font-size: 16px;color: #ababab;border-radius: 0 !important;border: 1px solid #c6c6c6;border-left-width: 0px;}
+.profile_tabs li:first-child a:hover,
+.profile_tabs li:first-child a {border-left-width: 1px;}
+.profile_tabs li.active a,
+.profile_tabs li.active a:hover {background: #f78765;border: 1px solid #d5542d;color: #fff;}
+.profile_tabs li a:hover {background: #e2e2e2;border: 1px solid #c6c6c6;border-left-width: 0px;}
+.profile_tabs li a:first-letter {text-transform: uppercase;}
+
+.product_list table {border: 0;}
+.product_list .table > tbody > tr > td {

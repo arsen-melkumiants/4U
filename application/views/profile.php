@@ -1,8 +1,8 @@
 <div class="row">
 	<div class="col-md-8">
 		<dl class="dl-horizontal">
-			<?php if(!empty($profile_info)) {
-			foreach ($profile_info as $field => $value) {?>
+			<?php if(!empty($user_info)) {
+			foreach ($user_info as $field => $value) {?>
 			<dt><?php echo $field?></dt>
 			<dd><?php echo $value?></dd>
 			<?php }} ?>

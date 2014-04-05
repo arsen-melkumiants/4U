@@ -8,11 +8,23 @@ class Shop_model extends CI_Model {
 	}
 
 	function get_category_items() {
-		return $this->db->where('status', 1)->get('shop_categories')->result_array();
+		return $this->db->where('status', 1)->order_by('order', 'asc')->get('shop_categories')->result_array();
+	}
+
+	function get_product_categories() {
+		$categories = $this->get_category_items();
+		if (empty($categories)) {
+			return false;
+		}
+		foreach ($categories as $item) {
+			$result[$item['id']] = $item;
+		}
+
+		return $result;
 	}
 
 	function get_categories() {
-		$all_branch = $this->db->where('status', 1)->order_by('order', 'asc')->get('shop_categories')->result_array();
+		$all_branch = $this->get_category_items();
 		return $this->get_category_tree($all_branch, 0);
 	}
 
@@ -85,7 +97,7 @@ class Shop_model extends CI_Model {
 			->select('p.*, c.symbol, c.code, u.username, u.phone')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
-			->join('users as u', 'p.author = u.id')
+			->join('users as u', 'p.author_id = u.id')
 			->where(array(
 				'p.id' => $id,
 				'p.status' => 1,
