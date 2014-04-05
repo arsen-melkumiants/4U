@@ -48,7 +48,7 @@ class Menu_model extends CI_Model {
 				$modal = !empty($item['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
 				if ($item['type'] == 'external') {
 					$link = $url.$item['item_id'];
-				} elseif($item['type']) {
+				} elseif($item['type'] == 'auth') {
 					if (is_object($this->ion_auth) && $this->ion_auth->logged_in()) { 
 						if(in_array($item['item_id'], array('login', 'registration'))) {
 							continue;
