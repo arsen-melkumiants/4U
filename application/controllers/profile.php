@@ -120,12 +120,12 @@ class Profile extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_views();
 		} else {
-			$info = !empty($data['add_data']) ? array_merge($data['add_data'], $this->CI->input->post()) : $this->CI->input->post();
-			unset($data['submit']);
-			$data['add_date'] = time();
-			unset($data['add_data'], $data['except_fields']);
+			$info = $this->input->post();
+			unset($info['submit']);
+			$info['add_date'] = time();
+			$info['author_id'] = $this->data['user_info']['id'];
 			$this->db->insert('shop_products', $info);
-			$this->session->set_flashdata('success', 'Продукт успешно добавлен');
+			$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
 			redirect('profile/product_gallery', 'refresh');
 		}
 
@@ -143,7 +143,7 @@ class Profile extends CI_Controller {
 			))
 			->text('price', array(
 				'value'       => $product_info['price'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|numeric',
+				'valid_rules' => 'required|trim|xss_clean|price',
 				'symbol'      => '$',
 				'icon_post'   => true,
 				'label'       => 'Price',
