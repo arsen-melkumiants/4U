@@ -68,7 +68,7 @@ class Profile extends CI_Controller {
 		$this->data['type'] = $type;
 
 		$this->load->library('table');
-		$this->data['table'] = $this->table
+		$this->table
 			->text('name', array(
 				'title' => 'Name',
 				'width' => '70%',
@@ -93,6 +93,8 @@ class Profile extends CI_Controller {
 				'title' => 'Delete',
 				'modal' => true,
 			))
+			;
+		$this->data['table'] = $this->table
 			->create(function($CI) {
 				return $CI->db
 					->select('p.*, c.symbol, c.code')
