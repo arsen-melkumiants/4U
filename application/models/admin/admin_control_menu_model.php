@@ -31,8 +31,8 @@ class Admin_control_menu_model extends CI_Model
 					'1'                         => '',
 					'manage_product'            => 'Список товаров',
 					'2'                         => '',
-					'manage_order/all'          => 'Список заказов',
-					'manage_order/settings'     => 'Настройки заказов',
+					//'manage_order/all'          => 'Список заказов',
+					//'manage_order/settings'     => 'Настройки заказов',
 					'3'                         => '',
 					'manage_currency'       => 'Список валют'
 				),
