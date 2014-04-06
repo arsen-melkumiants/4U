@@ -173,7 +173,7 @@ class Table {
 
 				$row[$item['name']] = isset($item['params']['func']) ? $item['params']['func']($row, $item['params'], $this, $CI) : $row[$item['name']];
 
-				$html .= '<td>'.$row[$item['name']].'</td>';
+				$html .= '<td'.$item['params']['width'].'>'.$row[$item['name']].'</td>';
 			}
 
 			if (!empty($this->active_data)) {
