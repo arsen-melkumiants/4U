@@ -28,7 +28,7 @@ class Profile extends CI_Controller {
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		//$this->data['left_block'] = $this->shop_model->get_categories();
-		$this->data['left_block'] = $this->load->view('profile_menu', $this->data, true);
+		$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
 		$this->data['user_info'] = $this->ion_auth->user()->row_array();
 
 		set_alert($this->session->flashdata('success'), false, 'success');
@@ -46,7 +46,7 @@ class Profile extends CI_Controller {
 			}
 		}
 
-		$this->data['center_block'] = $this->load->view('profile', $this->data, true);
+		$this->data['center_block'] = $this->load->view('profile/info', $this->data, true);
 
 		load_views();
 	}
@@ -57,7 +57,7 @@ class Profile extends CI_Controller {
 		load_views();
 	}
 
-	function sales($type = 'active') {
+	function products($type = 'active') {
 		$this->data['title'] = $this->data['name'] = 'My products';
 		$this->data['type_list'] = array(
 			'active'      => array(1),
@@ -67,30 +67,32 @@ class Profile extends CI_Controller {
 		$type = isset($this->data['type_list'][$type]) ? $type : 'active';
 		$this->data['type'] = $type;
 
-		$product_categories = $this->shop_model->get_product_categories();
-
 		$this->load->library('table');
 		$this->data['table'] = $this->table
-			->text('cat_id', array(
+			->text('name', array(
 				'title' => 'Name',
-				'extra' => $product_categories ,
-				'func'  => function($row, $params) {
-					return '<div class="image"></div>';
+				'width' => '70%',
+				'func'  => function($row, $params, $that, $CI) {
+					return $CI->load->view('profile/item', $row, true);
 				}
 		))
 			->text('price', array(
 				'title' => 'Price',
-				'extra' => $product_categories ,
 				'func'  => function($row, $params) {
-					if (isset($params['extra'][$row['cat_id']]['name'])) {
-						return '<span class="label label-info">'.$params['extra'][$row['cat_id']]['name'].'</span>';
-					} else {
-						return '<span class="label label-warning">Отсутствует</span>';
-					}
+					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
 				}
 		))
-			->edit(array('link' => 'profile/edit_product/%d'))
-			->delete(array('link' => 'profile/delete_product/%d', 'modal' => 1))
+			->btn(array(
+				'link'  => 'profile/edit_product/%d',
+				'class' => 'edit',
+				'title' => 'Edit',
+			))
+			->btn(array(
+				'link'  => 'profile/delete_product/%d',
+				'class' => 'delete',
+				'title' => 'Delete',
+				'modal' => true,
+			))
 			->create(function($CI) {
 				return $CI->db
 					->select('p.*, c.symbol, c.code')
@@ -98,12 +100,12 @@ class Profile extends CI_Controller {
 					->join('shop_currencies as c', 'p.currency = c.id')
 					->where(array(
 						'p.author_id' => $CI->data['user_info']['id'],
-						'p.status' => 0,
 					))
+					->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
 					->get();
 			}, array('no_header' => 1, 'class' => 'table'));
 		
-		$this->data['center_block'] = $this->load->view('profile_products', $this->data, true);
+		$this->data['center_block'] = $this->load->view('profile/products', $this->data, true);
 
 		load_views();
 	}

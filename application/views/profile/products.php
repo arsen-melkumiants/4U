@@ -6,7 +6,7 @@
 	</div>
 	<ul class="nav nav-justified profile_tabs">
 		<?php foreach ($type_list as $name => $val) {?>
-		<li<?php echo $type == $name ? ' class="active"' : ''?>><a href="<?php echo site_url('profile/'.$name)?>"><?php echo $name?></a></li>
+		<li<?php echo $type == $name ? ' class="active"' : ''?>><a href="<?php echo site_url('profile/products/'.$name)?>"><?php echo $name?></a></li>
 		<?php }?>
 	</ul>
 	<div class="product_list">

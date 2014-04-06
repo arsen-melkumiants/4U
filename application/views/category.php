@@ -14,7 +14,7 @@
 		foreach ($products as $item) {
 	?>
 	<div class="item">
-		<h4 class="name"><a href="<?php echo site_url('product/'.$item['id'].'/'.url_title(translitIt($item['name']), 'underscore', TRUE))?>"><?php echo $item['name']?></a></h4>
+		<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 		<img src="/img/test_thumb.jpg" />
 		<div class="action">
 		<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>

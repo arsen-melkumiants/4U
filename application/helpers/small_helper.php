@@ -101,6 +101,12 @@ function get_human_time($date) {
 	}
 }
 
+function product_url($id, $name) {
+	if (!empty($id) && !empty($name)) {
+		return site_url('product/'.$id.'/'.url_title(translitIt($name), 'underscore', TRUE));
+	}
+}
+
 function translitIt($str) {
 	$tr = array(
 		"А"=>"a","Б"=>"b","В"=>"v","Г"=>"g",
