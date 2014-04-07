@@ -250,6 +250,8 @@ dt, dd {line-height: 2.5;}
 .product_list .info span {color: #9fa5a6;display: block;}
 .product_list .name {font-size: 16px;color: #217487;}
 .product_list .price {margin: 0;}
+.product_list .active_block {text-align: right;}
 .product_list .active_block a {display: inline-block;width: 19px;height: 20px;background: url(../img/action_icons.png) 0px 1px no-repeat;;margin-left: 10px;}
 .product_list .active_block a.edit {background-position: 0px -30px;width: 21px;}
 .product_list .active_block a.delete {background-position: 0px -59px;}
+.product_list .active_block .label {display: inline-block;font-size: 12px;padding: 4px 10px;vertical-align: top;}

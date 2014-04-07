@@ -71,17 +71,33 @@ class Profile extends CI_Controller {
 		$this->table
 			->text('name', array(
 				'title' => 'Name',
-				'width' => '70%',
+				'width' => '60%',
 				'func'  => function($row, $params, $that, $CI) {
 					return $CI->load->view('profile/item', $row, true);
 				}
 		))
 			->text('price', array(
 				'title' => 'Price',
+				'width' => '20%',
 				'func'  => function($row, $params) {
 					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
 				}
-		))
+		));
+		if ($type == 'moderate') {
+			$this->table
+				->btn(
+					array(
+						'func' => function($row, $params, $html, $this, $CI) {
+							if ($row['status'] == 0) {
+								return '<span class="label label-default">Pending</span>';
+							} elseif ($row['status'] == 2) {
+								return '<span class="label label-danger">Rejected</span>';
+							}
+						}
+			));
+		}
+
+		$this->table
 			->btn(array(
 				'link'  => 'profile/edit_product/%d',
 				'class' => 'edit',
@@ -106,12 +122,12 @@ class Profile extends CI_Controller {
 					->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
 					->get();
 			}, array('no_header' => 1, 'class' => 'table'));
-		
+
 		$this->data['center_block'] = $this->load->view('profile/products', $this->data, true);
 
 		load_views();
 	}
-	
+
 
 	function add_product() {
 		$this->data['title'] = $this->data['header'] = 'Add product';
@@ -120,13 +136,65 @@ class Profile extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_views();
 		} else {
-			$info = $this->input->post();
-			unset($info['submit']);
-			$info['add_date'] = time();
-			$info['author_id'] = $this->data['user_info']['id'];
+			$info = array(
+				'name'      => $this->input->post('name'),
+				'price'     => $this->input->post('price'),
+				'cat_id'    => $this->input->post('cat_id'),
+				'content'   => $this->input->post('content'),
+				'add_date'  => time(),
+				'author_id' => $this->data['user_info']['id'],
+				'satus'     => 0,
+			);
 			$this->db->insert('shop_products', $info);
 			$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
 			redirect('profile/product_gallery', 'refresh');
+		}
+
+	}
+
+	function edit_product($id = false) {
+		$id = intval($id);
+		$product_info = $this->db
+			->where(array(
+				'id'        => $id,
+				'author_id' => $this->data['user_info']['id'],
+			))
+			->get('shop_products')
+			->row_array();
+		if (empty($product_info)) {
+			redirect('profile/products', 'refresh');
+		}
+
+		if ($product_info['is_locked']) {
+			set_alert('Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему', false, 'warning');
+		}
+
+		$this->data['title'] = $this->data['header'] = 'Edit product "'.$product_info['name'].'"';
+		$this->data['center_block'] = $this->edit_form($product_info);
+
+		if ($this->form_validation->run() == FALSE) {
+			load_views();
+		} else {
+			$info = array(
+				'name'      => $this->input->post('name'),
+				'price'     => $this->input->post('price'),
+				'cat_id'    => $this->input->post('cat_id'),
+				'content'   => $this->input->post('content'),
+				'author_id' => $this->data['user_info']['id'],
+			);
+
+			foreach ($info as $key => $item) {
+				if (isset($product_info[$key]) && $product_info[$key] != $item) {
+					$info['status'] = 0;
+					break;
+				}
+			}
+
+			if (isset($info['status']) && !$product_info['is_locked'])	{
+				$this->db->where('id', $id)->update('shop_products', $info);
+				$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
+			}
+			redirect(current_url(), 'refresh');
 		}
 
 	}
@@ -160,7 +228,50 @@ class Profile extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => 'Content',
 			))
-			->btn(array('value' => empty($id) ? 'Добавить' : 'Изменить'))
+			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
+	}
+
+	function delete_product($id = false) {
+		$id = intval($id);
+		$product_info = $this->db
+			->where(array(
+				'id'        => $id,
+				'author_id' => $this->data['user_info']['id'],
+			))
+			->get('shop_products')
+			->row_array();
+		if (empty($product_info) || $product_info['is_locked']) {
+			if ($product_info['is_locked']) {
+				$this->session->set_flashdata('danger', 'Удаление данного продукта заблокированно в свзяи с выполенинем заказа по нему');
+			}
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';
+				exit;
+			} else {
+				redirect('profile/products', 'refresh');
+			}
+		}
+
+		$this->data['title'] = $this->data['header'] = 'Deleting of "'.$product_info['name'].'"';
+
+		if ($this->input->is_ajax_request()) {
+			if (isset($_POST['delete'])) {
+				$this->db->where('id', $id)->update('shop_products', array('status' => 3));
+				$this->session->set_flashdata('success', 'Удаление успешно выполено');
+				echo 'refresh';
+			} else {
+				$this->load->library('form');
+				$this->data['center_block'] = $this->form
+					->btn(array('name' => 'cancel', 'value' => 'Cancel', 'class' => 'btn-default', 'modal' => 'close'))
+					->btn(array('name' => 'delete', 'value' => 'Delete', 'class' => 'btn-danger'))
+					->create(array('action' => current_url(), 'btn_offset' => 3));
+				echo $this->load->view('ajax', $this->data, true);
+			}
+		} else {
+			$this->db->where('id', $id)->update('shop_products', array('status' => 3));
+			$this->session->set_flashdata('success', 'Удаление успешно выполено');
+			redirect('profile/products', 'refresh');
+		}
 	}
 }
