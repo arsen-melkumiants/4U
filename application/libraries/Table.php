@@ -180,7 +180,7 @@ class Table {
 				$html .= '<td class="active_block">';
 				foreach ($this->active_data as $item) {
 					if (isset($item['func']) && is_callable($item['func'])) {
-						$item['html'] = $item['func']($row, $item['params'], $item['html'], $this);
+						$item['html'] = $item['func']($row, $item['params'], $item['html'], $this, $CI);
 					}
 					if (!empty($row['id'])) {
 						$html .= sprintf($item['html'], $row['id']);
