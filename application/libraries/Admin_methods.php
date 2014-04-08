@@ -78,6 +78,7 @@ class Admin_methods {
 		if (empty($table) || empty($data['id'])) {
 			if ($this->CI->IS_AJAX) {
 				echo 'refresh';
+				exit;
 			} else {
 				redirect($this->CI->MAIN_URL, 'refresh');
 			}
