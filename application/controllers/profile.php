@@ -87,7 +87,7 @@ class Profile extends CI_Controller {
 			$this->table
 				->btn(
 					array(
-						'func' => function($row, $params, $html, $this, $CI) {
+						'func' => function($row, $params, $html, $that, $CI) {
 							if ($row['status'] == 0) {
 								return '<span class="label label-default">Pending</span>';
 							} elseif ($row['status'] == 2) {
@@ -154,13 +154,7 @@ class Profile extends CI_Controller {
 
 	function edit_product($id = false) {
 		$id = intval($id);
-		$product_info = $this->db
-			->where(array(
-				'id'        => $id,
-				'author_id' => $this->data['user_info']['id'],
-			))
-			->get('shop_products')
-			->row_array();
+		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
 		}
@@ -203,7 +197,7 @@ class Profile extends CI_Controller {
 		$product_categories = $this->shop_model->get_product_categories();
 		array_unshift($product_categories, array('id' => '', 'name' => 'Без категории'));
 		$this->load->library('form');
-		return $this->form
+		$this->form
 			->text('name', array(
 				'value'       => $product_info['name'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
@@ -228,19 +222,19 @@ class Profile extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => 'Content',
 			))
-			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'))
-			->create(array('action' => current_url(), 'error_inline' => 'true'));
+			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'));
+		if (!empty($product_info)) {
+			$this->form->link(array('name' => 'Галерея', 'href' => site_url('profile/product_gallery/'.$product_info['id'])));
+		}
+		return $this->form->create(array('action' => current_url(), 'error_inline' => 'true'));
 	}
 
 	function delete_product($id = false) {
 		$id = intval($id);
-		$product_info = $this->db
-			->where(array(
-				'id'        => $id,
-				'author_id' => $this->data['user_info']['id'],
-			))
-			->get('shop_products')
-			->row_array();
+		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
+		if (empty($product_info)) {
+			redirect('profile/products', 'refresh');
+		}
 		if (empty($product_info) || $product_info['is_locked']) {
 			if ($product_info['is_locked']) {
 				$this->session->set_flashdata('danger', 'Удаление данного продукта заблокированно в свзяи с выполенинем заказа по нему');
@@ -274,4 +268,127 @@ class Profile extends CI_Controller {
 			redirect('profile/products', 'refresh');
 		}
 	}
+
+	function product_gallery($id = false) {
+		$id = $this->data['id'] = intval($id);
+		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
+		if (empty($product_info)) {
+			redirect('profile/products', 'refresh');
+		}
+
+		$this->data['center_block'] = $this->load->view('profile/upload', $this->data, true);
+		load_views();
+	}
+
+
+	function upload_gallery($id = false) {
+		$id = intval($id);
+		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
+		if (empty($product_info)) {
+			redirect('profile/products', 'refresh');
+		}
+
+		$upload_path_url = base_url().'uploads/gallery/';
+		$config['upload_path'] = FCPATH.'uploads/gallery';
+		@mkdir($config['upload_path'], 0777, true);
+		$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
+		$config['allowed_types'] = 'jpg|jpeg|png|gif';
+		$config['max_size'] = '1000000';
+
+		$this->load->helper('file');
+		$this->load->library('upload');
+		$this->upload->initialize($config);
+
+		$files = array();
+
+		if (!$this->upload->do_upload()) {
+			//$error = array('error' => $this->upload->display_errors());
+			//$this->load->view('upload', $error);
+
+			$product_images = $this->shop_model->get_product_images($id);
+			foreach ($product_images as $item) {
+				$files[] = array(
+					'name'         => $item['image'],
+					'url'          => $upload_path_url.$item['image'],
+					'thumbnailUrl' => $upload_path_url.'small_thumb/'.$item['image'],
+					'deleteUrl'    => base_url().'profile/delete_gallery/'.$item['id'],
+					'deleteType'   => 'POST',
+					'error'        => null,
+				);
+			}
+
+		} else {
+			$data = $this->upload->data();
+			$image_id = $this->shop_model->add_product_image($id, $data);
+
+			$this->load->library('image_lib');
+            $this->resize_image($data, $new_width = 200, 'small_thumb');
+
+			$files[] = array(
+				'name'         => $data['file_name'],
+				'url'          => $upload_path_url.$data['file_name'],
+				'thumbnailUrl' => $upload_path_url.'small_thumb/'.$data['file_name'],
+				'deleteUrl'    => base_url().'profile/delete_gallery/'.$image_id,
+				'deleteType'   => 'POST',
+				'error'        => null,
+			);
+		}
+
+
+		if ($this->input->is_ajax_request()) {
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode(array('files' => $files)));
+		} else {
+			$file_data['upload_data'] = $this->upload->data();
+			$this->load->view('upload/upload_success', $file_data);
+		}
+	}
+
+	public function delete_gallery($id = false) {
+		$id = intval($id);
+		$product_image = $this->shop_model->get_image_by_user($id, $this->data['user_info']['id']);
+		if (empty($product_image)) {
+			redirect('profile/products', 'refresh');
+		}
+		
+		$success = $this->shop_model->delete_image($id, $product_image);
+		$file = $product_image['image'];
+		
+		$info = new StdClass;
+		$info->sucess = $success;
+		$info->path = base_url() . 'uploads/' . $file;
+		$info->file = is_file(FCPATH . 'uploads/' . $file);
+
+		if ($this->input->is_ajax_request()) {
+			echo json_encode(array($info));
+		} else {
+			$file_data['delete_data'] = $file;
+			$this->load->view('admin/delete_success', $file_data);
+		}
+	}
+	
+	private function resize_image($data, $new_width = false, $dir = ''){
+        if(empty($new_width)){
+            return false;
+        }
+        $origin_width = $data['image_width'];
+        $origin_height = $data['image_height'];
+        
+        $prep_width = $origin_width/$new_width;
+        $prep_height = round($origin_height/$prep_width);
+        
+		@mkdir($data['file_path'].$dir.'/', 0777, true);
+        $config['image_library'] = 'gd2';
+        $config['source_image']	= $data['full_path'];
+		$config['new_image'] = $data['file_path'].$dir.'/'.$data['file_name'];
+        $config['quality'] = '85%';
+        $config['width'] = $new_width;
+        $config['height'] = $prep_height;
+        $config['maintain_ratio'] = true;
+        
+        $this->image_lib->initialize($config);
+        $this->image_lib->resize();
+    }
+
 }

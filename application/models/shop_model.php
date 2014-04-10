@@ -99,10 +99,82 @@ class Shop_model extends CI_Model {
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('users as u', 'p.author_id = u.id')
 			->where(array(
-				'p.id' => $id,
+				'p.id'     => $id,
 				'p.status' => 1,
 			))
 			->get()
 			->row_array();
+	}
+
+	function get_product_by_user($id, $user_id) {
+		return $this->db
+			->where(array(
+				'id'        => $id,
+				'author_id' => $user_id,
+			))
+			->get('shop_products')
+			->row_array();
+	}
+
+	function get_product_images($id) {
+		return $this->db
+			->where(array(
+				'product_id' => $id,
+			))
+			->get('shop_product_images')
+			->result_array();
+	}
+
+	function add_product_image($id, $data) {
+		$this->db
+			->insert('shop_product_images', array(
+				'product_id' => $id,
+				'image' => $data['file_name'],
+			));
+		return $this->db->insert_id();
+	}
+
+	function get_image_by_user($id, $user_id) {
+		return $this->db
+			->select('i.*')
+			->from('shop_product_images as i')
+			->join('shop_products as p', 'p.id = i.product_id')
+			->where(array(
+				'i.id'        => $id,
+				'p.author_id' => $user_id,
+				'p.status <'  => 3,
+			))
+			->get()
+			->row_array();
+	}
+
+	function delete_image($id, $info = false) {
+		if (empty($info)) {
+			$info = $this->db
+				->select('i.*')
+				->from('shop_product_images as i')
+				->join('shop_products as p', 'p.id = i.product_id')
+				->where(array(
+					'i.id'        => $id,
+					'p.author_id' => $this->data['user_info']['id'],
+					'p.status <'  => 3,
+				))
+				->get()
+				->row_array();
+		}
+
+		$success = false;
+		if (!empty($info)) {
+			$success = true;
+			$success = unlink(FCPATH.'uploads/gallery/'.$info['image']);
+			$success = unlink(FCPATH.'uploads/gallery/small_thumb/'.$info['image']);
+
+			if ($success) {
+				$this->db
+					->where('id', $id)
+					->delete('shop_product_images');
+			}
+		}
+		return $success;
 	}
 }

@@ -2,6 +2,10 @@
 		<script src="/dist/js/bootstrap.min.js"></script>
 		<?php echo after_load('css');?>
 		<?php echo after_load('js');?>
+		<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+		<!--[if (gte IE 8)&(lt IE 10)]>
+		<script src="/js/upload/cors/jquery.xdr-transport.js"></script>
+		<![endif]-->
 
 		<script>
 			$(function(){

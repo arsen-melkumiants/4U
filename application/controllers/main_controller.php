@@ -20,7 +20,6 @@ class Main_controller extends CI_Controller {
     }
 
 	public function index() {
-		$this->data['title'] = 'Main_page';
 		
 		load_views();
 	}
