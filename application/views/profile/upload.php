@@ -95,7 +95,7 @@
 	<div class="title">
 		<h2>Галерея продукта</h2>
 	</div>
-	<form id="fileupload" action="<?php echo site_url('profile/upload_gallery/'.$id)?>" method="POST" enctype="multipart/form-data">
+	<form id="fileupload" class="file_upload" action="<?php echo site_url('profile/upload_gallery/'.$id)?>" method="POST" enctype="multipart/form-data">
 		<!-- Redirect browsers with JavaScript disabled to the origin page -->
 		<noscript><input type="hidden" name="redirect" value="<?php echo site_url('profile/upload_gallery/'.$id)?>"></noscript>
 		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
@@ -121,8 +121,8 @@
 			<!-- The global progress state -->
 			<div class="col-lg-5 fileupload-progress fade">
 				<!-- The global progress bar -->
-				<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-					<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+				<div class="progress" aria-valuemin="0" aria-valuemax="100">
+					<div class="progress-bar" style="width:0%;"></div>
 				</div>
 				<!-- The extended global progress state -->
 				<div class="progress-extended">&nbsp;</div>
@@ -157,7 +157,6 @@
 			</td>
 			<td>
 				<p class="size">Processing...</p>
-				<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
 			</td>
 			<td>
 				{% if (!i && !o.options.autoUpload) { %}
@@ -172,6 +171,7 @@
 						<span>Cancel</span>
 					</button>
 					{% } %}
+				<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar" style="width:0%;"></div></div>
 			</td>
 		</tr>
 		{% } %}

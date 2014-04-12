@@ -2,7 +2,7 @@
 /* https://github.com/chernavin/CodeIgniter-Russian-Language */
 
 $lang['upload_userfile_not_set']		= "Невозможно найти переменную с именем userfile в массиве POST.";
-$lang['upload_file_exceeds_limit']		= "Размер загружаемого файла превышает максимально допустимый размер, указанный в файле конфигурации PHP.";
+$lang['upload_file_exceeds_limit']		= "Размер загружаемого файла превышает максимально допустимый.";
 $lang['upload_file_exceeds_form_limit']	= "Размер загружаемого файла превышает максимально допустимый размер, указанный в отправленной форме.";
 $lang['upload_file_partial']			= "Загружаемый файл был получен только частично.";
 $lang['upload_no_temp_directory']		= "Директория для хранения временных файлов не существует.";

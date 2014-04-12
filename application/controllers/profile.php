@@ -293,7 +293,7 @@ class Profile extends CI_Controller {
 		@mkdir($config['upload_path'], 0777, true);
 		$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
 		$config['allowed_types'] = 'jpg|jpeg|png|gif';
-		$config['max_size'] = '1000000';
+		$config['max_size'] = '100000';
 
 		$this->load->helper('file');
 		$this->load->library('upload');
@@ -302,19 +302,28 @@ class Profile extends CI_Controller {
 		$files = array();
 
 		if (!$this->upload->do_upload()) {
-			//$error = array('error' => $this->upload->display_errors());
-			//$this->load->view('upload', $error);
-
-			$product_images = $this->shop_model->get_product_images($id);
-			foreach ($product_images as $item) {
+			$error = $this->upload->display_errors();
+			if (!empty($error) && !empty($_FILES)) {
 				$files[] = array(
-					'name'         => $item['image'],
-					'url'          => $upload_path_url.$item['image'],
-					'thumbnailUrl' => $upload_path_url.'small_thumb/'.$item['image'],
-					'deleteUrl'    => base_url().'profile/delete_gallery/'.$item['id'],
+					'name'         => $_FILES['userfile']['name'],
+					'url'          => '',
+					'thumbnailUrl' => '',
+					'deleteUrl'    => '',
 					'deleteType'   => 'POST',
-					'error'        => null,
+					'error'        => strip_tags($error),
 				);
+			} else {
+				$product_images = $this->shop_model->get_product_images($id);
+				foreach ($product_images as $item) {
+					$files[] = array(
+						'name'         => $item['image'],
+						'url'          => $upload_path_url.$item['image'],
+						'thumbnailUrl' => $upload_path_url.'small_thumb/'.$item['image'],
+						'deleteUrl'    => base_url().'profile/delete_gallery/'.$item['id'],
+						'deleteType'   => 'POST',
+						'error'        => null,
+					);
+				}
 			}
 
 		} else {
@@ -333,7 +342,6 @@ class Profile extends CI_Controller {
 				'error'        => null,
 			);
 		}
-
 
 		if ($this->input->is_ajax_request()) {
 			$this->output
