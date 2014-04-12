@@ -17,15 +17,24 @@
 		<div class="row">
 			<div class="col-md-8">
 				<div class="main_image">
-					<img src="/img/test_main_image.jpg" />
+					<?php
+					if (!empty($images)) {
+						foreach ($images as $item) {
+							if ($item['main']) {?>
+								<img src="<?php echo base_url('uploads/gallery/'.$item['image'])?>" />
+					<?php		break;
+							}
+						}
+					}?>
 				</div>
 				<div class="mini_images">
 					<ul>
-						<li><a href="#"><img src="/img/test_mini_image.jpg" /></a></li>
-						<li><a href="#"><img src="/img/test_mini_image.jpg" /></a></li>
-						<li><a href="#"><img src="/img/test_mini_image.jpg" /></a></li>
-						<li><a href="#"><img src="/img/test_mini_image.jpg" /></a></li>
-						<li><a href="#"><img src="/img/test_mini_image.jpg" /></a></li>
+					<?php
+					if (!empty($images)) {
+						foreach ($images as $item) {
+							if (!$item['main']) {?>
+								<li><a href="#"><img src="<?php echo base_url('uploads/gallery/small_thumb/'.$item['image']);?>" /></a></li>
+					<?php }}}?>
 					</ul>
 					<div class="clear"></div>
 				</div>
@@ -61,7 +70,7 @@
 				</div>
 				<div class="description">
 					<h2>Info</h2>
-					<?php echo $product_info['description'] ?>
+					<?php echo $product_info['content'] ?>
 				</div>
 			</div>
 		</div>

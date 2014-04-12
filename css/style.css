@@ -110,7 +110,7 @@ ul {padding-left: 0;}
 .custom_block .item {padding: 15px 2%;border: 1px solid #f2f2f2;}
 .custom_block .item:hover {background: #f5efb8;border: 1px solid #d1c664;}
 .custom_block .item .name,
-.custom_block .item .name a {text-align: center;font-size: 16px;}
+.custom_block .item .name a {text-align: center;font-size: 16px;height: 38px;}
 .custom_block .item img {border: 1px solid #a5a5a5;margin-bottom: 15px;max-width: 100%;}
 .custom_block .price {float: left;color: #42403f;font-size: 16px;font-family: Verdana, Geneva, sans-serif;margin: 10px 0;}
 
@@ -139,8 +139,8 @@ ul {padding-left: 0;}
 .breadcrumps li a {color: #aaa6a5;}
 
 .product {padding: 5px 20px 35px;}
-.product .main_image {border: 1px solid #aaa;margin-bottom: 10px;}
-.product .main_image img {max-width: 100%;min-width: 100%;}
+.product .main_image {border: 1px solid #aaa;margin-bottom: 10px;min-height: 290px;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;}
+.product .main_image img {max-width: 100%;min-width: 100%;position: relative;}
 .product .mini_images {margin-left: -3%;margin-bottom: 10px;}
 .product .mini_images li {list-style: none;float: left;width: 17%;margin: 0 0 3% 3%;height: 90px;overflow: hidden;}
 .product .mini_images img {max-width: 100%;min-width: 100%;border: 1px solid #aaa;

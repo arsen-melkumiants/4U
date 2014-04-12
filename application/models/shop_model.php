@@ -61,16 +61,32 @@ class Shop_model extends CI_Model {
 		if (empty($all_branch)) {
 			return false;
 		}
-		$ids = $this->get_category_recurcive($all_branch, $id);
+		$ids = $this->get_parent_category_recurcive($all_branch, $id);
 		return $ids;
 	}
 
-	function get_category_recurcive($all_branch, $id) {
-		$ids = '';
+	function get_parent_category_recurcive($all_branch, $id) {
+		$ids = array();
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] == $id) {
-				$ids[] = $item;
-				$result = $this->get_category_recurcive($all_branch, $item['parent_id']);
+				$ids[$item['id']] = $item;
+				$result = $this->get_parent_category_recurcive($all_branch, $item['parent_id']);
+				if(!empty($result)) {
+					$ids = array_merge($ids, $result);
+				}
+			}
+		}
+		return $ids;
+	}
+	
+	function get_child_category_recurcive($all_branch, $id) {
+		$ids = array();
+		foreach ($all_branch as $key => $item) {
+			if ($item['id'] == $id) {
+				$ids[$item['id']] = $item;
+			} elseif ($item['parent_id'] == $id) {
+				$ids[$item['id']] = $item;
+				$result = $this->get_child_category_recurcive($all_branch, $item['id']);
 				if(!empty($result)) {
 					$ids = array_merge($ids, $result);
 				}
@@ -80,14 +96,14 @@ class Shop_model extends CI_Model {
 	}
 
 	function get_products_by_category($id) {
+		$all_branch = $this->get_category_items();
+		$ids = $this->get_child_category_recurcive($all_branch, $id);
 		return $this->db
 			->select('p.*, c.symbol, c.code')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
-			->where(array(
-				'p.cat_id' => $id,
-				'p.status' => 1,
-			))
+			->where_in('p.cat_id', array_keys($ids))
+			->where('p.status', 1)
 			->get()
 			->result_array();
 	}
@@ -126,11 +142,20 @@ class Shop_model extends CI_Model {
 	}
 
 	function add_product_image($id, $data) {
-		$this->db
-			->insert('shop_product_images', array(
-				'product_id' => $id,
-				'image' => $data['file_name'],
-			));
+		$insert_array = array(
+			'product_id' => $id,
+			'image'      => $data['file_name'],
+		);
+		//Choose main image
+		$count = $this->db->where(array(
+			'product_id' => $id,
+			'main'       => 1
+		))->count_all_results('shop_product_images');
+		if (!$count) {
+			$insert_array['main'] = 1;
+		}
+
+		$this->db->insert('shop_product_images', $insert_array);
 		return $this->db->insert_id();
 	}
 

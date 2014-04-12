@@ -61,6 +61,7 @@ class Shop_controller extends CI_Controller {
 		}
 
 		$this->data['categories'] = $this->shop_model->parent_categories($this->data['product_info']['cat_id']);
+		$this->data['images'] = $this->shop_model->get_product_images($id);
 
 		$this->data['title']        = $this->data['product_info']['name'];
 		$this->data['center_block'] = $this->load->view('product', $this->data, true);

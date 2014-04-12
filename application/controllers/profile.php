@@ -288,7 +288,7 @@ class Profile extends CI_Controller {
 			redirect('profile/products', 'refresh');
 		}
 
-		$upload_path_url = base_url().'uploads/gallery/';
+		$upload_path_url = base_url('uploads/gallery').'/';
 		$config['upload_path'] = FCPATH.'uploads/gallery';
 		@mkdir($config['upload_path'], 0777, true);
 		$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
@@ -337,7 +337,7 @@ class Profile extends CI_Controller {
 				'name'         => $data['file_name'],
 				'url'          => $upload_path_url.$data['file_name'],
 				'thumbnailUrl' => $upload_path_url.'small_thumb/'.$data['file_name'],
-				'deleteUrl'    => base_url().'profile/delete_gallery/'.$image_id,
+				'deleteUrl'    => base_url('profile/delete_gallery/'.$image_id),
 				'deleteType'   => 'POST',
 				'error'        => null,
 			);
@@ -359,14 +359,15 @@ class Profile extends CI_Controller {
 		if (empty($product_image)) {
 			redirect('profile/products', 'refresh');
 		}
-		
+
 		$success = $this->shop_model->delete_image($id, $product_image);
 		$file = $product_image['image'];
-		
-		$info = new StdClass;
-		$info->sucess = $success;
-		$info->path = base_url() . 'uploads/' . $file;
-		$info->file = is_file(FCPATH . 'uploads/' . $file);
+
+		$info = array(
+			'success' => $success,
+			'path'    => base_url('uploads/'.$file),
+			'file'    => is_file(FCPATH.'uploads/'.$file),
+		);
 
 		if ($this->input->is_ajax_request()) {
 			echo json_encode(array($info));
