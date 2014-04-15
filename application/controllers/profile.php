@@ -422,7 +422,7 @@ class Profile extends CI_Controller {
 
 			$files[] = array(
 				'name'         => $data['file_name'],
-				'url'          => $upload_path_url.$data['file_name'],
+				'url'          => $type == 'image' ? $upload_path_url.$data['file_name'] : $upload_path_url.$file_id,
 				'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$data['file_name'] : $upload_path_url.$file_id,
 				'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$file_id,
 				'deleteType'   => 'POST',
