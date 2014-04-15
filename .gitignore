@@ -1,5 +1,7 @@
 add_constants.php
 database.php
+uploads
+media_files
 
 application/cache/*
 !application/cache/index.html
