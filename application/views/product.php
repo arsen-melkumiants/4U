@@ -43,6 +43,7 @@
 				<div class="text-center">
 				<div class="price"><?php echo $product_info['price'].' '.$product_info['symbol']?></div>
 					<button class="orange_btn">Buy Now</button>
+					<?php if (isset($user_info['id']) && $user_info['id'] == $product_info['author_id']) {?>
 					<div class="actions">
 						<ul>
 							<li><a href="#"><i class="c_icon_up"></i>Go to up</a></li>
@@ -50,6 +51,7 @@
 							<li><a href="#"><i class="c_icon_star"></i>Make VIP</a></li>
 						</ul>
 					</div>
+					<?php }?>
 					<div class="info">
 						<ul>
 							<li>Views: <?php echo $product_info['views']?></li>

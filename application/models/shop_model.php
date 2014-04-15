@@ -208,6 +208,20 @@ class Shop_model extends CI_Model {
 	}
 
 	//MEDIA FILES
+
+	function refresh_product($product_id) {
+		$product_info = $this->db->where('id', $product_id)->get('shop_products')->row_array();
+		if ($product_info['type'] == 'licenses') {
+			$amount = $this->get_license_amount($product_id);
+			$update_array = array('amount' => $amount, 'status' => 0);
+		} else {
+			$update_array = array('status' => 0);
+		}
+		$this->db
+			->where(array('id' => $product_id))
+			->update('shop_products', $update_array);
+	}
+
 	function get_product_files($id) {
 		return $this->db
 			->where(array(
@@ -225,16 +239,7 @@ class Shop_model extends CI_Model {
 		$this->db->insert('shop_product_media_files', $insert_array);
 		$file_id = $this->db->insert_id();
 
-		$amount = $this->get_license_amount($product_id);
-		$this->db
-			->where(array(
-				'id'   => $product_id,
-//				'type' => 'licenses',
-			))
-			->update('shop_products', array(
-				//'amount' => $amount,
-				'status' => 0,
-			));
+		$this->refresh_product($product_id);
 		return $file_id;
 	}
 
@@ -277,10 +282,7 @@ class Shop_model extends CI_Model {
 				$this->db
 					->where('id', $id)
 					->delete('shop_product_media_files');
-				$amount = $this->get_license_amount($info['product_id']);
-				$this->db
-					->where('id', $info['product_id'])
-					->update('shop_products', array('status' => 0));
+				$this->refresh_product($info['product_id']);
 			}
 		}
 		return $success;

@@ -56,7 +56,10 @@ $route[$admin_url.'(:any)']        = $admin_folder.'$1';
 
 #User routes
 $route['category/(:any)']    = 'shop_controller/category/$1';
-$route['product/(:any)']    = 'shop_controller/product/$1';
+$route['product/(:any)']     = 'shop_controller/product/$1';
+$route['media_files/(:any)'] = 'profile/get_media_file/$1';
+
+
 $route['default_controller'] = 'main_controller';
 
 $route['404_override'] = 'not_found';

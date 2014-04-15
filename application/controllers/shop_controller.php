@@ -14,6 +14,7 @@ class Shop_controller extends CI_Controller {
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->shop_model->get_categories();
+		$this->data['user_info'] = $this->ion_auth->user()->row_array();
 		
 		set_alert($this->session->flashdata('success'), false, 'success');
 		set_alert($this->session->flashdata('danger'), false, 'danger');

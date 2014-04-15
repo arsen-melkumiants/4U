@@ -401,8 +401,8 @@ class Profile extends CI_Controller {
 				foreach ($product_files as $item) {
 					$files[] = array(
 						'name'         => $item['file_name'],
-						'url'          => $upload_path_url.$item['file_name'],
-						'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$item['file_name'] : $upload_path_url.$item['file_name'],
+						'url'          => $type == 'image' ? $upload_path_url.$item['file_name'] : $upload_path_url.$item['id'],
+						'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$item['file_name'] : $upload_path_url.$item['id'],
 						'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$item['id'],
 						'deleteType'   => 'POST',
 						'error'        => null,
@@ -423,7 +423,7 @@ class Profile extends CI_Controller {
 			$files[] = array(
 				'name'         => $data['file_name'],
 				'url'          => $upload_path_url.$data['file_name'],
-				'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$data['file_name'] : $upload_path_url.$data['file_name'],
+				'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$data['file_name'] : $upload_path_url.$file_id,
 				'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$file_id,
 				'deleteType'   => 'POST',
 				'error'        => null,
@@ -489,5 +489,18 @@ class Profile extends CI_Controller {
 
 		$this->image_lib->initialize($config);
 		$this->image_lib->resize();
+	}
+
+	function get_media_file($id = false) {
+		$id = intval($id);
+		$product_file = $this->shop_model->get_file_by_user($id);
+		if (empty($product_file)) {
+			show_404();
+		}
+
+		header('X-Sendfile: '.FCPATH.'media_files/'.$product_file['file_name']);
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.$product_file['file_name'].'"');
+		exit;
 	}
 }
