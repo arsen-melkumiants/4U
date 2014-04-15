@@ -16,24 +16,24 @@
 	<div class="product">
 		<div class="row">
 			<div class="col-md-8">
-				<div class="main_image">
 					<?php
+					$main_image = false;
 					if (!empty($images)) {
 						foreach ($images as $item) {
-							if ($item['main']) {?>
-								<img src="<?php echo base_url('uploads/gallery/'.$item['image'])?>" />
-					<?php		break;
+							if ($item['main']) {
+								$main_image = '<img src="'.base_url('uploads/gallery/'.$item['file_name']).'" />';
+								break;
 							}
 						}
 					}?>
-				</div>
+						<div class="main_image" <?php echo empty($main_image) ? 'style="min-height: 290px;"' : ''?>><?php echo $main_image?></div>
 				<div class="mini_images">
 					<ul>
 					<?php
 					if (!empty($images)) {
 						foreach ($images as $item) {
 							if (!$item['main']) {?>
-								<li><a href="#"><img src="<?php echo base_url('uploads/gallery/small_thumb/'.$item['image']);?>" /></a></li>
+								<li><a href="#"><img src="<?php echo base_url('uploads/gallery/small_thumb/'.$item['file_name']);?>" /></a></li>
 					<?php }}}?>
 					</ul>
 					<div class="clear"></div>

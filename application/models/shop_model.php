@@ -132,6 +132,7 @@ class Shop_model extends CI_Model {
 			->row_array();
 	}
 
+	//IMAGES
 	function get_product_images($id) {
 		return $this->db
 			->where(array(
@@ -141,14 +142,17 @@ class Shop_model extends CI_Model {
 			->result_array();
 	}
 
-	function add_product_image($id, $data) {
+	function add_product_image($product_id, $data) {
+		$this->db
+			->where('id', $product_id)
+			->update('shop_products', array('status' => 0));
 		$insert_array = array(
-			'product_id' => $id,
-			'image'      => $data['file_name'],
+			'product_id' => $product_id,
+			'file_name'  => $data['file_name'],
 		);
 		//Choose main image
 		$count = $this->db->where(array(
-			'product_id' => $id,
+			'product_id' => $product_id,
 			'main'       => 1
 		))->count_all_results('shop_product_images');
 		if (!$count) {
@@ -159,14 +163,14 @@ class Shop_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	function get_image_by_user($id, $user_id) {
+	function get_image_by_user($id, $user_id = false) {
 		return $this->db
-			->select('i.*')
+			->select('i.*, p.is_locked')
 			->from('shop_product_images as i')
 			->join('shop_products as p', 'p.id = i.product_id')
 			->where(array(
 				'i.id'        => $id,
-				'p.author_id' => $user_id,
+				'p.author_id' => !empty($user_id) ? $user_id : $this->data['user_info']['id'],
 				'p.status <'  => 3,
 			))
 			->get()
@@ -174,30 +178,109 @@ class Shop_model extends CI_Model {
 	}
 
 	function delete_image($id, $info = false) {
-		if (empty($info)) {
-			$info = $this->db
-				->select('i.*')
-				->from('shop_product_images as i')
-				->join('shop_products as p', 'p.id = i.product_id')
-				->where(array(
-					'i.id'        => $id,
-					'p.author_id' => $this->data['user_info']['id'],
-					'p.status <'  => 3,
-				))
-				->get()
-				->row_array();
-		}
+		$info = $this->get_image_by_user($id);
 
 		$success = false;
-		if (!empty($info)) {
+		if ($info['is_locked']) {
+			$success = 'Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему';
+		}
+		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
-			$success = unlink(FCPATH.'uploads/gallery/'.$info['image']);
-			$success = unlink(FCPATH.'uploads/gallery/small_thumb/'.$info['image']);
+			$success = unlink(FCPATH.'uploads/gallery/'.$info['file_name']);
+			$success = unlink(FCPATH.'uploads/gallery/small_thumb/'.$info['file_name']);
 
 			if ($success) {
 				$this->db
 					->where('id', $id)
 					->delete('shop_product_images');
+				if ($info['main']) {
+					$this->db
+						->where('product_id', $info['product_id'])
+						->limit(1)
+						->update('shop_product_images', array('main' => 1));
+				}
+				$this->db
+					->where('id', $info['product_id'])
+					->update('shop_products', array('status' => 0));
+			}
+		}
+		return $success;
+	}
+
+	//MEDIA FILES
+	function get_product_files($id) {
+		return $this->db
+			->where(array(
+				'product_id' => $id,
+			))
+			->get('shop_product_media_files')
+			->result_array();
+	}
+
+	function add_product_file($product_id, $data) {
+		$insert_array = array(
+			'product_id' => $product_id,
+			'file_name'  => $data['file_name'],
+		);
+		$this->db->insert('shop_product_media_files', $insert_array);
+		$file_id = $this->db->insert_id();
+
+		$amount = $this->get_license_amount($product_id);
+		$this->db
+			->where(array(
+				'id'   => $product_id,
+//				'type' => 'licenses',
+			))
+			->update('shop_products', array(
+				//'amount' => $amount,
+				'status' => 0,
+			));
+		return $file_id;
+	}
+
+	function get_license_amount($product_id) {
+		return $this->db
+			->where(array(
+				'product_id' => $product_id,
+				'status'     => 0,
+			))
+			->get('shop_product_media_files')
+			->num_rows();
+	}
+
+	function get_file_by_user($id, $user_id = false) {
+		return $this->db
+			->select('f.*, p.is_locked')
+			->from('shop_product_media_files as f')
+			->join('shop_products as p', 'p.id = f.product_id')
+			->where(array(
+				'f.id'        => $id,
+				'p.author_id' => !empty($user_id) ? $user_id : $this->data['user_info']['id'],
+				'p.status <'  => 3,
+			))
+			->get()
+			->row_array();
+	}
+
+	function delete_file($id, $info = false) {
+		$info = $this->get_file_by_user($id);
+
+		$success = false;
+		if ($info['is_locked']) {
+			$success = 'Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему';
+		}
+		if (!empty($info) && !$info['is_locked']) {
+			$success = true;
+			$success = unlink(FCPATH.'media_files/'.$info['file_name']);
+
+			if ($success) {
+				$this->db
+					->where('id', $id)
+					->delete('shop_product_media_files');
+				$amount = $this->get_license_amount($info['product_id']);
+				$this->db
+					->where('id', $info['product_id'])
+					->update('shop_products', array('status' => 0));
 			}
 		}
 		return $success;

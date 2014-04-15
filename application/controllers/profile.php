@@ -139,17 +139,23 @@ class Profile extends CI_Controller {
 			$info = array(
 				'name'      => $this->input->post('name'),
 				'price'     => $this->input->post('price'),
+				'type'      => $this->input->post('type'),
+				'amount'    => $this->input->post('amount'),
 				'cat_id'    => $this->input->post('cat_id'),
 				'content'   => $this->input->post('content'),
 				'add_date'  => time(),
 				'author_id' => $this->data['user_info']['id'],
-				'satus'     => 0,
+				'status'    => 0,
 			);
+			if ($info['type'] == 'licenses') {
+				$info['amount'] = 0;
+			} else {
+				$info['type'] = 'media';
+			}
 			$this->db->insert('shop_products', $info);
 			$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
 			redirect('profile/product_gallery', 'refresh');
 		}
-
 	}
 
 	function edit_product($id = false) {
@@ -157,10 +163,6 @@ class Profile extends CI_Controller {
 		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
-		}
-
-		if ($product_info['is_locked']) {
-			set_alert('Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему', false, 'warning');
 		}
 
 		$this->data['title'] = $this->data['header'] = 'Edit product "'.$product_info['name'].'"';
@@ -177,11 +179,19 @@ class Profile extends CI_Controller {
 				'author_id' => $this->data['user_info']['id'],
 			);
 
+			if ($product_info['type'] == 'media') {
+				$info['amount'] = $this->input->post('amount');
+			}
+
 			foreach ($info as $key => $item) {
 				if (isset($product_info[$key]) && $product_info[$key] != $item) {
 					$info['status'] = 0;
 					break;
 				}
+			}
+
+			if ($product_info['is_locked']) {
+				set_alert('Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему', false, 'warning');
 			}
 
 			if (isset($info['status']) && !$product_info['is_locked'])	{
@@ -194,6 +204,10 @@ class Profile extends CI_Controller {
 	}
 
 	private function edit_form($product_info = false) {
+		$product_types = array(
+			'media'    => 'Media files',
+			'licenses' => 'Licenses',
+		);
 		$product_categories = $this->shop_model->get_product_categories();
 		array_unshift($product_categories, array('id' => '', 'name' => 'Без категории'));
 		$this->load->library('form');
@@ -209,7 +223,36 @@ class Profile extends CI_Controller {
 				'symbol'      => '$',
 				'icon_post'   => true,
 				'label'       => 'Price',
-			))
+			));
+		if (!empty($product_info)) {
+			$this->form
+				->text('type', array(
+					'value'       => $product_info['type'],
+					'valid_rules' => 'trim|xss_clean',
+					'label'       => 'Type',
+					'readonly'    => true,
+				));
+			if ($product_info['type'] != 'licenses') {
+				$this->form
+					->text('amount', array(
+						'value'       => $product_info['amount'],
+						'valid_rules' => 'required|trim|xss_clean|is_natural',
+						'label'       => 'Amount',
+					));
+			}
+		} else {
+			$this->form
+				->radio('type', array(
+					'inputs' => $product_types,
+					'label'  => 'Type of product (license type sets amount of product according amount of files automatically)',
+				))
+				->text('amount', array(
+					'value'       => 0,
+					'valid_rules' => 'required|trim|xss_clean|is_natural',
+					'label'       => 'Amount',
+				));
+		}
+		$this->form
 			->select('cat_id', array(
 				'value'       => $product_info['cat_id'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
@@ -222,9 +265,11 @@ class Profile extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => 'Content',
 			))
-			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'));
+			->btn(array('value' => empty($product_info) ? 'Add' : 'Update'));
 		if (!empty($product_info)) {
-			$this->form->link(array('name' => 'Галерея', 'href' => site_url('profile/product_gallery/'.$product_info['id'])));
+			$this->form
+				->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
+				->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
 		}
 		return $this->form->create(array('action' => current_url(), 'error_inline' => 'true'));
 	}
@@ -270,22 +315,38 @@ class Profile extends CI_Controller {
 	}
 
 	function product_gallery($id = false) {
-		$id = $this->data['id'] = intval($id);
-		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
-		if (empty($product_info)) {
-			redirect('profile/products', 'refresh');
-		}
-
-		$this->data['center_block'] = $this->load->view('profile/upload', $this->data, true);
-		load_views();
+		$this->product_media_files($id, 'image');
 	}
 
 	function upload_gallery($id = false) {
 		$this->upload_media_files($id, 'image');
 	}
 
-	public function delete_gallery($id = false) {
+	function delete_image($id = false) {
 		$this->delete_media_files($id, 'image');
+	}
+
+	function product_media_files($id = false, $type = false) {
+		$id = intval($id);
+		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
+		if (empty($product_info)) {
+			redirect('profile/products', 'refresh');
+		}
+
+		if ($type == 'image') {
+			$this->data['title'] = $this->data['name'] = 'Product gallery';
+			$this->data['upload_url'] = base_url('profile/upload_gallery/'.$id);
+		} else {
+			$this->data['title'] = $this->data['name'] = 'Product media content files';
+			$this->data['upload_url'] = base_url('profile/upload_media_files/'.$id);
+		}
+
+		if ($product_info['is_locked']) {
+			set_alert('Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему', false, 'warning');
+		}
+
+		$this->data['center_block'] = $this->load->view('profile/upload', $this->data, true);
+		load_views();
 	}
 
 	function upload_media_files($id = false, $type = 'file') {
@@ -294,17 +355,21 @@ class Profile extends CI_Controller {
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
 		}
-		
+
 		if ($type == 'image') {
 			$upload_path_url = base_url('uploads/gallery').'/';
 			$config['upload_path'] = FCPATH.'uploads/gallery';
 			$config['allowed_types'] = 'jpg|jpeg|png|gif';
 			$config['max_size'] = '1000000';
 		} else {
-			$upload_path_url = base_url('uploads/media').'/';
-			$config['upload_path'] = FCPATH.'uploads/media';
-			$config['allowed_types'] = 'jpg|jpeg|png|gif|avi|mp4';
-			$config['max_size']      = 1024 * 1024 * 1024;
+			$upload_path_url = base_url('media_files').'/';
+			$config['upload_path'] = FCPATH.'media_files';
+			if ($product_info['type'] == 'licenses') {
+				$config['allowed_types'] = 'jpg|jpeg|png|gif';
+			} else {
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|avi|mp4';
+			}
+			$config['max_size']      = '10000000000';
 		}
 		@mkdir($config['upload_path'], 0777, true);
 		$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
@@ -314,9 +379,14 @@ class Profile extends CI_Controller {
 		$this->upload->initialize($config);
 
 		$files = array();
-		
-		if (!$this->upload->do_upload()) {
+
+		if (!$this->upload->do_upload() || $product_info['is_locked']) {
 			$error = $this->upload->display_errors();
+			if ($product_info['is_locked']) {
+				$error = 'Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему';
+				$data = $this->upload->data();
+				@unlink($data['full_path']);
+			}
 			if (!empty($error) && !empty($_FILES)) {
 				$files[] = array(
 					'name'         => $_FILES['userfile']['name'],
@@ -327,16 +397,12 @@ class Profile extends CI_Controller {
 					'error'        => strip_tags($error),
 				);
 			} else {
-				if ($type == 'image') {
-					$product_files = $this->shop_model->get_product_images($id);
-				} else {
-					$product_files = $this->shop_model->get_product_files($id);
-				}
+				$product_files = $type == 'image' ? $this->shop_model->get_product_images($id) : $this->shop_model->get_product_files($id);
 				foreach ($product_files as $item) {
 					$files[] = array(
 						'name'         => $item['file_name'],
 						'url'          => $upload_path_url.$item['file_name'],
-						'thumbnailUrl' => $upload_path_url.'small_thumb/'.$item['file_name'],
+						'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$item['file_name'] : $upload_path_url.$item['file_name'],
 						'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$item['id'],
 						'deleteType'   => 'POST',
 						'error'        => null,
@@ -357,8 +423,8 @@ class Profile extends CI_Controller {
 			$files[] = array(
 				'name'         => $data['file_name'],
 				'url'          => $upload_path_url.$data['file_name'],
-				'thumbnailUrl' => $upload_path_url.'small_thumb/'.$data['file_name'],
-				'deleteUrl'    => base_url('profile/delete_gallery/'.$file_id),
+				'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$data['file_name'] : $upload_path_url.$data['file_name'],
+				'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$file_id,
 				'deleteType'   => 'POST',
 				'error'        => null,
 			);
@@ -368,64 +434,60 @@ class Profile extends CI_Controller {
 			$this->output
 				->set_content_type('application/json')
 				->set_output(json_encode(array('files' => $files)));
-		} else {
-			$file_data['upload_data'] = $this->upload->data();
-			$this->load->view('upload/upload_success', $file_data);
-		}
+		}	
 	}
 
-	public function delete_media_files($id = false, $type = 'file') {
+	public function delete_file($id = false, $type = 'file') {
 		$id = intval($id);
 		if ($type == 'image') {
-			$product_file = $this->shop_model->get_image_by_user($id, $this->data['user_info']['id']);
+			$product_file = $this->shop_model->get_image_by_user($id);
 		} else {
-			$product_file = $this->shop_model->get_file_by_user($id, $this->data['user_info']['id']);
+			$product_file = $this->shop_model->get_file_by_user($id);
 		}
 		if (empty($product_file)) {
 			redirect('profile/products', 'refresh');
 		}
 
-		if ($type == 'image') {
-			$success = $this->shop_model->delete_file($id, $product_file);
-		} else {
-			$success = $this->shop_model->delete_image($id, $product_image);
-		}
+		$success = ($type == 'image') ? $this->shop_model->delete_image($id) : $this->shop_model->delete_file($id);
 		$file = $product_file['file_name'];
 
 		$info = array(
 			'success' => $success,
-			'path'    => base_url('uploads/'.$file),
-			'file'    => is_file(FCPATH.'uploads/'.$file),
+			'path'    => base_url('uploads/gallery/'.$file),
+			'file'    => is_file(FCPATH.'uploads/gallery/'.$file),
+			'error'   => $success !== true ? $success : null,
 		);
 
 		if ($this->input->is_ajax_request()) {
-			echo json_encode(array($info));
+			if (!$product_file['is_locked']) {
+				echo json_encode(array($info));
+			}
 		} else {
 			$file_data['delete_data'] = $file;
 			$this->load->view('admin/delete_success', $file_data);
 		}
 	}
-	
+
 	private function resize_image($data, $new_width = false, $dir = ''){
-        if(empty($new_width)){
-            return false;
-        }
-        $origin_width = $data['image_width'];
-        $origin_height = $data['image_height'];
-        
-        $prep_width = $origin_width/$new_width;
-        $prep_height = round($origin_height/$prep_width);
-        
+		if(empty($new_width)){
+			return false;
+		}
+		$origin_width = $data['image_width'];
+		$origin_height = $data['image_height'];
+
+		$prep_width = $origin_width/$new_width;
+		$prep_height = round($origin_height/$prep_width);
+
 		@mkdir($data['file_path'].$dir.'/', 0777, true);
-        $config['image_library']  = 'gd2';
-        $config['source_image']   = $data['full_path'];
+		$config['image_library']  = 'gd2';
+		$config['source_image']   = $data['full_path'];
 		$config['new_image']      = $data['file_path'].$dir.'/'.$data['file_name'];
-        $config['quality']        = '85%';
-        $config['width']          = $new_width;
-        $config['height']         = $prep_height;
-        $config['maintain_ratio'] = true;
-        
-        $this->image_lib->initialize($config);
-        $this->image_lib->resize();
-    }
+		$config['quality']        = '85%';
+		$config['width']          = $new_width;
+		$config['height']         = $prep_height;
+		$config['maintain_ratio'] = true;
+
+		$this->image_lib->initialize($config);
+		$this->image_lib->resize();
+	}
 }
