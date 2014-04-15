@@ -34,7 +34,7 @@ class Form {
 		}
 		$attrs = '';
 		foreach ($list as $name) {
-			if (empty($data[$name])) {
+			if (!isset($data[$name])) {
 				continue;
 			}
 			$attrs .= ' '.$name.'="'.trim($data[$name]).'"';
