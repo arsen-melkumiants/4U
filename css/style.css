@@ -264,3 +264,33 @@ dt, dd {line-height: 2.5;}
 .product_list .active_block .label {display: inline-block;font-size: 12px;padding: 4px 10px;vertical-align: top;}
 
 table.gallery .preview img {max-width: 80px;}
+
+
+.steps_block {float: right;position: relative;background: #edeae4;height: 10px;border-top: 1px solid #d3d0cb;border-radius: 16px;margin-top: 20px;margin-right: 10px;}
+.steps_block:before {display: block;position: absolute;content: "";width: 100%;height: 1px;background: #e4e1db;top: 0px;}
+.steps_block ul {list-style: none;}
+.steps_block li {float: left;padding-left: 125px;margin-left: -5px;height: 8px;position: relative;}
+.steps_block li:first-child {padding-left: 0;}
+.steps_block a {display: block;position: relative;z-index: 1;height: 18px;width: 18px;background: #edeae4;border-top: 1px solid #d3d0cb;border-radius: 8px;margin-top: -5px;}
+.steps_block li.active a {background: none;}
+.steps_block span {display: block;position: absolute;width: 80px;left: -32px;top: -20px;font-size: 12px;text-align: center;color: #b9b6b0;}
+
+.steps_block li.active span {color: #f98100;}
+
+.steps_block li.active:before {display: block;content: "";position: absolute;width: 100%;height: 7px;left: -6px;border-top: 1px solid #fcb96b;}
+.steps_block li.active:first-child:before {display: none;}
+
+.steps_block li.active a {border-bottom: 1px solid #edeae4;}
+.steps_block li.active a:before {display: block;content: "";position: absolute;height: 16px;width: 16px;border-radius: 8px;left: 1px;}
+
+.steps_block li.active:before,
+.steps_block li.active a:before {
+	background: #f98100;
+	background: -moz-linear-gradient(top, #f98100 0%, #f65b00 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f98100), color-stop(100%,#f65b00));
+	background: -webkit-linear-gradient(top, #f98100 0%,#f65b00 100%);
+	background: -o-linear-gradient(top, #f98100 0%,#f65b00 100%);
+	background: -ms-linear-gradient(top, #f98100 0%,#f65b00 100%);
+	background: linear-gradient(to bottom, #f98100 0%,#f65b00 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f98100', endColorstr='#f65b00',GradientType=0 );
+}

@@ -159,14 +159,15 @@ class Profile extends CI_Controller {
 	}
 
 	function edit_product($id = false) {
-		$id = intval($id);
+		$id = $this->data['id'] = intval($id);
 		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
 		}
 
-		$this->data['title'] = $this->data['header'] = 'Edit product "'.$product_info['name'].'"';
+		$this->data['title'] = $this->data['name'] = 'Edit product "'.$product_info['name'].'"';
 		$this->data['center_block'] = $this->edit_form($product_info);
+		$this->data['center_block'] = $this->load->view('profile/edit', $this->data, true);
 
 		if ($this->form_validation->run() == FALSE) {
 			load_views();
@@ -327,7 +328,8 @@ class Profile extends CI_Controller {
 	}
 
 	function product_media_files($id = false, $type = false) {
-		$id = intval($id);
+		$id = $this->data['id'] = intval($id);
+		$this->data['type'] = $type;
 		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
