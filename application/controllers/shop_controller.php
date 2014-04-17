@@ -11,6 +11,7 @@ class Shop_controller extends CI_Controller {
 		$this->load->library(array(
 			'session',
 			'ion_auth',
+            'cart',
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->shop_model->get_categories();
@@ -68,5 +69,112 @@ class Shop_controller extends CI_Controller {
 		$this->data['center_block'] = $this->load->view('product', $this->data, true);
 
 		load_views();
+	}
+
+	public function basket($step = 'orders') {
+		$in_order = $this->cart->total_items();
+		if (empty($in_order) && $step != 'orders') {
+			redirect('basket/orders', 'refresh');
+		}
+
+		$this->data['links'] = array(
+			'orders'       => 'My cart',
+			'contacts'     => 'Information',
+			'payment'      => 'Payment',
+			'confirmation' => 'Finish',
+		);
+		$this->data['cur_step'] = $step;
+		if (!isset($this->data['links'][$step])) {
+			show_404();
+		}
+
+		$this->data['title'] = $this->data['name'] = $this->data['links'][$step];
+
+		if ($step == 'orders') {
+			$order_items = $this->cart->contents();
+			$ids = array();
+			if (!empty($order_items)) {
+				foreach ($order_items as $item) {
+					$ids[] = $item['id'];
+					$orders[$item['id']] = $item;
+				}
+
+				$this->data['order_items'] = !empty($orders) ? $orders : '';
+				$this->data['products'] = $this->product_model->get_products_info($ids);
+				$this->data['table'] = $this->table
+					->text('name', array(
+						'title' => 'Name',
+						'width' => '60%',
+						'func'  => function($row, $params, $that, $CI) {
+							return $CI->load->view('profile/item', $row, true);
+						}
+					))
+					->text('price', array(
+						'title' => 'Price',
+						'width' => '20%',
+						'func'  => function($row, $params) {
+							return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
+						}
+					))
+					->btn(array(
+						'link'  => 'profile/delete_product/%d',
+						'class' => 'delete',
+						'title' => 'Delete',
+						'modal' => true,
+					))
+					->create($this->data['products'], array('no_header' => 1, 'class' => 'table'));
+			}
+
+			$this->data['center_block'] = $this->load->view('basket/orders', $this->data, true);
+		} elseif ($step == 'contacts') {
+
+		}elseif($step == 'delivery_payment'){
+		}elseif($step == 'confirmation'){
+		}        
+		load_views();
+	}
+	
+	public function add_to_basket($id = false){
+		$id = intval($id);
+		if (empty($id)) {
+			return false;
+		}
+
+		$product_info = $this->shop_model->get_product_info($id);
+		if(empty($product_info)){
+			return false;
+		}
+
+		$prods = $this->cart->contents();
+		$count = 1;
+		if(!empty($prods)){
+			foreach ($prods as $item){
+				if($item['id'] == $product_info['id']){
+					$count = $item['qty']+1;
+					$rowid = $item['rowid'];
+					break;
+				}
+			}
+		}
+		$data = array(
+			'id'      => $id,
+			'qty'     => $count,
+			'price'   => $product_info['price'],
+			'name'    => $id,
+			'options' => array(),
+		);
+
+		if($count == 1){
+			$this->cart->insert($data);
+		}else{
+			$updata = array(
+				'rowid'   => $rowid,
+				'qty'     => $count,
+			);
+			$this->cart->update($updata);
+		}
+
+		echo 'OK';
+
 	}
 }

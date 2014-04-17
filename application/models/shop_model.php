@@ -109,17 +109,23 @@ class Shop_model extends CI_Model {
 	}
 
 	function get_product_info($id) {
-		return $this->db
+		$this->db
 			->select('p.*, c.symbol, c.code, u.username, u.phone')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('users as u', 'p.author_id = u.id')
-			->where(array(
-				'p.id'     => $id,
-				'p.status' => 1,
-			))
-			->get()
-			->row_array();
+			->where('p.status', 1);
+		if (is_array($id)) {
+			return $this->db
+				->where_in('p.id', $id)
+				->get()
+				->result_array();
+		} else {
+			return $this->db
+				->where('p.id', $id)
+				->get()
+				->row_array();
+		}
 	}
 
 	function get_product_by_user($id, $user_id) {

@@ -55,8 +55,11 @@ $route[$admin_url.'manage_(:any)'] = $admin_folder.'manage_$1';
 $route[$admin_url.'(:any)']        = $admin_folder.'$1';
 
 #User routes
-$route['category/(:any)']    = 'shop_controller/category/$1';
-$route['product/(:any)']     = 'shop_controller/product/$1';
+$route['category/(:any)'] = 'shop_controller/category/$1';
+$route['product/(:any)']  = 'shop_controller/product/$1';
+$route['basket']          = 'shop_controller/basket';
+$route['basket/(:any)']   = 'shop_controller/basket/$1';
+
 $route['media_files/(:any)'] = 'profile/get_media_file/$1';
 
 
