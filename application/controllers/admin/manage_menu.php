@@ -77,7 +77,7 @@ class Manage_menu extends CI_Controller {
 			custom_404();
 		}
 
-		if(!empty($_POST)){
+		if(!empty($_POST) && $_POST['type'] != 'external'){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 
@@ -104,7 +104,7 @@ class Manage_menu extends CI_Controller {
 		}
 		set_header_info($menu_info);
 
-		if(!empty($_POST)){
+		if(!empty($_POST) && $_POST['type'] != 'external'){
 			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $menu_info['name'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}

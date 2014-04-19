@@ -23,7 +23,7 @@ var update_list = function() {
 			if (typeof options[type]['text'] != 'undefined') {
 				$('.items_list select').remove();
 				$('.items_list > div div').remove();
-				$('.items_list > div').html('<input type="text" class="form-control" name="item_id" value="' + options[type]['text'] + '" />');
+				$('.items_list > div').html('<input type="hidden" class="form-control" value="" />');
 			} else {
 				$('.items_list input').remove();
 				$('.items_list > div').html('<select class="form-control selectpicker" name="item_id" data-live-search="true"></select>');
@@ -36,3 +36,7 @@ var update_list = function() {
 
 <?php echo ($this->IS_AJAX) ? 'update_list()' : 'window.onload = function() {update_list();}';?>
 </script>
+
+<style>
+.items_list input {display: none;}
+</style>
