@@ -227,14 +227,12 @@ class Form {
 		return $this;
 	}
 
-	public function hidden($name = false, $value = false) {
+	public function hidden($name = false, $value = false, $params = false) {
 		if (empty($name)) {
 			return $this;
 		}
-		$this->form_data[] = array(
-			'form' => '<input type="hidden" name="'.$name.'" value="'.$value.'" />',
-			'params' => array('type' => 'hidden') 
-		);
+		$params['value'] = $value;
+		$this->input($name, $params, 'hidden');
 		return $this;
 	}
 
