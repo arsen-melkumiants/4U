@@ -110,7 +110,7 @@ ul {padding-left: 0;}
 .custom_block .item {padding: 15px 2%;border: 1px solid #f2f2f2;}
 .custom_block .item:hover {background: #f5efb8;border: 1px solid #d1c664;}
 .custom_block .item .name,
-.custom_block .item .name a {text-align: center;font-size: 16px;height: 38px;}
+.custom_block .item .name a {text-align: center;font-size: 16px;height: 41px;}
 .custom_block .item img {border: 1px solid #a5a5a5;margin-bottom: 15px;max-width: 100%;}
 .custom_block .price {float: left;color: #42403f;font-size: 16px;font-family: Verdana, Geneva, sans-serif;margin: 10px 0;}
 
@@ -266,10 +266,10 @@ dt, dd {line-height: 2.5;}
 table.gallery .preview img {max-width: 80px;}
 
 
-.steps_block {float: right;position: relative;background: #edeae4;height: 10px;border-top: 1px solid #d3d0cb;border-radius: 16px;margin-top: 20px;margin-right: 10px;}
+.steps_block {float: right;position: relative;background: #edeae4;height: 10px;border-top: 1px solid #d3d0cb;border-radius: 16px;margin-top: 20px;margin-right: 10px;width: 60%;}
 .steps_block:before {display: block;position: absolute;content: "";width: 100%;height: 1px;background: #e4e1db;top: 0px;}
 .steps_block ul {list-style: none;}
-.steps_block li {float: left;padding-left: 125px;margin-left: -5px;height: 8px;position: relative;}
+.steps_block li {float: left;padding-left: 34%;margin-left: -5px;height: 8px;position: relative;width: 0;}
 .steps_block li:first-child {padding-left: 0;}
 .steps_block a {display: block;position: relative;z-index: 1;height: 18px;width: 18px;background: #edeae4;border-top: 1px solid #d3d0cb;border-radius: 8px;margin-top: -5px;}
 .steps_block li.active a {background: none;}

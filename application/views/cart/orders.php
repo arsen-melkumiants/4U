@@ -6,7 +6,7 @@
 			<?php if (!empty($links)) {
 			$class = ' class="active"';
 			foreach ($links as $link => $item) {?>
-				<li<?php echo $class?>><a href="<?php echo site_url('basket/'.$link)?>"><span><?php echo $item?></span></a></li>
+				<li<?php echo $class?>><a href="<?php echo site_url('cart/'.$link)?>"><span><?php echo $item?></span></a></li>
 			<?php if ($link == $cur_step) {$class = '';}}}?>
 			</ul>
 		</div>

@@ -71,10 +71,10 @@ class Shop_controller extends CI_Controller {
 		load_views();
 	}
 
-	public function basket($step = 'orders') {
+	public function cart($step = 'orders') {
 		$in_order = $this->cart->total_items();
 		if (empty($in_order) && $step != 'orders') {
-			redirect('basket/orders', 'refresh');
+			redirect('cart/orders', 'refresh');
 		}
 
 		$this->data['links'] = array(
@@ -100,7 +100,8 @@ class Shop_controller extends CI_Controller {
 				}
 
 				$this->data['order_items'] = !empty($orders) ? $orders : '';
-				$this->data['products'] = $this->product_model->get_products_info($ids);
+				$this->data['products'] = $this->shop_model->get_product_info($ids);
+				$this->load->library('table');
 				$this->data['table'] = $this->table
 					->text('name', array(
 						'title' => 'Name',
@@ -117,15 +118,14 @@ class Shop_controller extends CI_Controller {
 						}
 					))
 					->btn(array(
-						'link'  => 'profile/delete_product/%d',
-						'class' => 'delete',
-						'title' => 'Delete',
-						'modal' => true,
+						'func'  => function($row, $params, $html, $this, $CI) {
+							return '<a href="#" data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" class="delete delete_from_cart" title="Delete"></a>';
+						}
 					))
 					->create($this->data['products'], array('no_header' => 1, 'class' => 'table'));
 			}
 
-			$this->data['center_block'] = $this->load->view('basket/orders', $this->data, true);
+			$this->data['center_block'] = $this->load->view('cart/orders', $this->data, true);
 		} elseif ($step == 'contacts') {
 
 		}elseif($step == 'delivery_payment'){
@@ -134,12 +134,11 @@ class Shop_controller extends CI_Controller {
 		load_views();
 	}
 	
-	public function add_to_basket($id = false){
-		$id = intval($id);
+	public function add_to_cart() {
+		$id = intval($this->input->post('id'));
 		if (empty($id)) {
 			return false;
 		}
-
 		$product_info = $this->shop_model->get_product_info($id);
 		if(empty($product_info)){
 			return false;
@@ -150,7 +149,7 @@ class Shop_controller extends CI_Controller {
 		if(!empty($prods)){
 			foreach ($prods as $item){
 				if($item['id'] == $product_info['id']){
-					$count = $item['qty']+1;
+					$count = $item['qty'] + 1;
 					$rowid = $item['rowid'];
 					break;
 				}
@@ -173,8 +172,14 @@ class Shop_controller extends CI_Controller {
 			);
 			$this->cart->update($updata);
 		}
-
 		echo 'OK';
-
 	}
+	
+	public function update_cart(){
+        $updata = array(
+            'rowid'   => $this->input->post('id'),
+            'qty'     => intval($this->input->post('count')),
+		);
+		echo $this->cart->update($updata) ? 'OK' : 'KO';
+    }
 }

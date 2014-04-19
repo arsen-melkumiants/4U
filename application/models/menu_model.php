@@ -46,9 +46,7 @@ class Menu_model extends CI_Model {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$icon = !empty($item['custom']) ? '<i class="'.$item['custom'].'"></i>' : '';
 				$modal = !empty($item['modal']) ? ' data-toggle="modal" data-target="#ajaxModal"' : '';
-				if ($item['type'] == 'external') {
-					$link = $url.$item['item_id'];
-				} elseif($item['type'] == 'auth') {
+				if($item['type'] == 'auth') {
 					if (is_object($this->ion_auth) && $this->ion_auth->logged_in()) { 
 						if(in_array($item['item_id'], array('login', 'registration'))) {
 							continue;
@@ -67,8 +65,12 @@ class Menu_model extends CI_Model {
 				} else {
 					$link = $url.$item['alias'];
 				}
+				
+				if ($item['type'] != 'external') {
+					$link = site_url($link);
+				}
 				$text .= '<li>';
-				$text .= '<a'.$modal.' href="'.site_url($link).'">'.$icon.$item['name'].'</a>';
+				$text .= '<a'.$modal.' href="'.$link.'">'.$icon.$item['name'].'</a>';
 				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
 				$text .= '</li>';
 				$num++;
