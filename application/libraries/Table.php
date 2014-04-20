@@ -168,12 +168,12 @@ class Table {
 				}
 
 				if (isset($item['params']['date']) && is_numeric($row[$item['name']])) {
-					$row[$item['name']] = date($item['params']['type'], $row[$item['name']]);
+					$result = date($item['params']['type'], $row[$item['name']]);
 				}
 
-				$row[$item['name']] = isset($item['params']['func']) ? $item['params']['func']($row, $item['params'], $this, $CI) : $row[$item['name']];
+				$result = isset($item['params']['func']) ? $item['params']['func']($row, $item['params'], $this, $CI) : $row[$item['name']];
 
-				$html .= '<td'.$item['params']['width'].'>'.$row[$item['name']].'</td>';
+				$html .= '<td'.$item['params']['width'].'>'.$result.'</td>';
 			}
 
 			if (!empty($this->active_data)) {
