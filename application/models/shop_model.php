@@ -99,9 +99,10 @@ class Shop_model extends CI_Model {
 		$all_branch = $this->get_category_items();
 		$ids = $this->get_child_category_recurcive($all_branch, $id);
 		return $this->db
-			->select('p.*, c.symbol, c.code')
+			->select('p.*, c.symbol, c.code, i.file_name')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
+			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where_in('p.cat_id', array_keys($ids))
 			->where('p.status', 1)
 			->get()
@@ -110,10 +111,11 @@ class Shop_model extends CI_Model {
 
 	function get_product_info($id) {
 		$this->db
-			->select('p.*, c.symbol, c.code, u.username, u.phone')
+			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('users as u', 'p.author_id = u.id')
+			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where('p.status', 1);
 		if (is_array($id)) {
 			return $this->db

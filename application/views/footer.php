@@ -89,7 +89,7 @@
 				});
 				new PNotify({
 					title : 'Товар добавлен в корзину',
-				text  : 'Товар' + name + ' успешно добавлен в <a href="<?php echo site_url('cart')?>">корзину</a>',
+					text  : 'Товар' + name + ' успешно добавлен в <a href="<?php echo site_url('cart')?>">корзину</a>',
 					icon  : 'icon-shopping-cart',
 					type  : 'success',
 					delay : 3000,

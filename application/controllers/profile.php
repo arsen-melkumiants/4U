@@ -324,7 +324,7 @@ class Profile extends CI_Controller {
 	}
 
 	function delete_image($id = false) {
-		$this->delete_media_files($id, 'image');
+		$this->delete_file($id, 'image');
 	}
 
 	function product_media_files($id = false, $type = false) {
@@ -339,7 +339,7 @@ class Profile extends CI_Controller {
 			$this->data['title'] = $this->data['name'] = 'Product gallery';
 			$this->data['upload_url'] = base_url('profile/upload_gallery/'.$id);
 		} else {
-			$this->data['title'] = $this->data['name'] = 'Product media content files';
+			$this->data['title'] = $this->data['name'] = 'Product files';
 			$this->data['upload_url'] = base_url('profile/upload_media_files/'.$id);
 		}
 
@@ -417,7 +417,7 @@ class Profile extends CI_Controller {
 			if ($type == 'image') {
 				$file_id = $this->shop_model->add_product_image($id, $data);
 				$this->load->library('image_lib');
-				$this->resize_image($data, $new_width = 200, 'small_thumb');
+				$this->resize_image($data, $new_width = 250, 'small_thumb');
 			} else {
 				$file_id = $this->shop_model->add_product_file($id, $data);
 			}

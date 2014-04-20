@@ -110,16 +110,27 @@ class Shop_controller extends CI_Controller {
 							return $CI->load->view('profile/item', $row, true);
 						}
 					))
+					->text('id', array(
+						'title' => 'Price',
+						'width' => '20%',
+						'func'  => function($row, $params, $that, $CI) {
+							return '<div class="count">
+										<span class="minus none">–</span>
+										<input data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" data-price="'.$row['price'].'" type="text" value="'.$CI->data['order_items'][$row['id']]['qty'].'"/>
+										<span class="plus">+</span>
+									</div>';
+						}
+					))
 					->text('price', array(
 						'title' => 'Price',
 						'width' => '20%',
 						'func'  => function($row, $params) {
-							return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
+							return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].' '.$row['symbol'].'</div>';
 						}
 					))
 					->btn(array(
 						'func'  => function($row, $params, $html, $this, $CI) {
-							return '<a href="#" data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" class="delete delete_from_cart" title="Delete"></a>';
+							return '<a href="#" data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" class="delete" title="Delete"></a>';
 						}
 					))
 					->create($this->data['products'], array('no_header' => 1, 'class' => 'table'));

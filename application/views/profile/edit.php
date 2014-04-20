@@ -8,6 +8,7 @@
 				<li><a href="<?php echo site_url('profile/product_media_files/'.$id)?>"><span>Media</span></a></li>
 			</ul>
 		</div>
+		<div class="clear"></div>
 	</div>
 	<?php echo $center_block ?>
 	<div class="clear"></div>

@@ -74,6 +74,7 @@ window.onload = function() {
 				<li<?php echo $type != 'image' ? ' class="active"' : ''?>><a href="<?php echo site_url('profile/product_media_files/'.$id)?>"><span>Media</span></a></li>
 			</ul>
 		</div>
+		<div class="clear"></div>
 	</div>
 	<form id="fileupload" class="file_upload" action="<?php echo $upload_url?>" method="POST" enctype="multipart/form-data">
 		<!-- Redirect browsers with JavaScript disabled to the origin page -->
