@@ -43,7 +43,7 @@ class Form {
 	}
 	
 	public function func($func = false, $params = false) {
-		if (empty($func) || empty($params)) {
+		if (empty($func)) {
 			return $this;
 		}
 		
