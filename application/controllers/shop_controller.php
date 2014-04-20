@@ -76,10 +76,14 @@ class Shop_controller extends CI_Controller {
 		if (empty($in_order) && $step != 'orders') {
 			redirect('cart/orders', 'refresh');
 		}
+		$session_info = $this->session->userdata('order_info'); 
+		if (empty($session_info) && !in_array($step, array('orders', 'information'))) {
+			redirect('cart/information', 'refresh');
+		}
 
 		$this->data['links'] = array(
 			'orders'       => 'My cart',
-			'contacts'     => 'Information',
+			'information'  => 'Information',
 			'payment'      => 'Payment',
 			'confirmation' => 'Finish',
 		);
@@ -137,10 +141,59 @@ class Shop_controller extends CI_Controller {
 			}
 
 			$this->data['center_block'] = $this->load->view('cart/orders', $this->data, true);
-		} elseif ($step == 'contacts') {
+		} elseif ($step == 'information') {
+			$fields = array(
+				'username' => '',
+				'email'    => '',
+				'company'  => '',
+				'address'  => '',
+				'city'     => '',
+				'state'    => '',
+				'country'  => '',
+				'zip'      => '',
+				'phone'    => '',
+			);
+			foreach ($fields as $key => $item) {
+				if (isset($session_info[$key])) {
+					$fields[$key] = $session_info[$key];
+					continue;
+				}
+				if (isset($this->data['user_info'][$key])) {
+					$fields[$key] = $this->data['user_info'][$key];
+					continue;
+				}
+			}
 
-		}elseif($step == 'delivery_payment'){
-		}elseif($step == 'confirmation'){
+			$this->load->library('form');
+			$this->data['center_block'] = $this->form
+				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => 'Name', 'value' => $fields['username']))
+				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => 'Email', 'value' => $fields['email']))
+				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Company', 'value' => $fields['company']))
+				->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Address', 'value' => $fields['address']))
+				->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'City', 'value' => $fields['city']))
+				->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'State', 'value' => $fields['state']))
+				->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Country', 'value' => $fields['country']))
+				->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => 'Zip', 'value' => $fields['zip']))
+				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Phone', 'value' => $fields['phone']))
+				->func(function($params) {
+					return '<button type="submit" class="orange_btn">Next step</button>';
+				})
+				->create(array('action' => current_url(), 'error_inline' => 'true'));
+			if ($this->form_validation->run() != false) {
+				foreach ($fields as $key => $item) {
+					$item = $this->input->post($key);
+					if (!empty($item)) {
+						$fields[$key] = $item;
+					}
+				}
+				$this->session->set_userdata(array('order_info' => $fields));
+				redirect('cart/payment', 'refresh');
+			}
+			
+			$this->data['center_block'] = $this->load->view('cart/info', $this->data, true);
+		} elseif($step == 'payment') {
+			$this->data['center_block'] = $this->load->view('cart/payment', $this->data, true);
+		} elseif($step == 'confirmation') {
 		}        
 		load_views();
 	}

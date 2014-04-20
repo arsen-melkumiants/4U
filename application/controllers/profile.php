@@ -113,9 +113,10 @@ class Profile extends CI_Controller {
 		$this->data['table'] = $this->table
 			->create(function($CI) {
 				return $CI->db
-					->select('p.*, c.symbol, c.code')
+					->select('p.*, c.symbol, c.code, i.file_name')
 					->from('shop_products as p')
 					->join('shop_currencies as c', 'p.currency = c.id')
+					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 					->where(array(
 						'p.author_id' => $CI->data['user_info']['id'],
 					))

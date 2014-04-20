@@ -56,19 +56,6 @@
 			});
 
 			//SHOPPING CART METHODS
-			$('.delete_from_cart').on('click', function() {
-				var row = $(this).parent().parent();
-				var id = $(this).data('id');
-				if (typeof id === 'undefined') {
-					return false;
-				}
-				$.post('/update_cart/', {id : id, count : 0}).done(function(data) {
-					if ($.trim(data) == 'OK') {
-						row.fadeOut();
-					}
-				});
-			});
-
 			$('.add_to_cart').on('click', function() {
 				var id = $(this).data('id');
 				if (typeof id === 'undefined') {
