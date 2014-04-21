@@ -360,10 +360,10 @@ class Profile extends CI_Controller {
 		}
 
 		if ($type == 'image') {
-			$upload_path_url = base_url('uploads/gallery').'/';
-			$config['upload_path'] = FCPATH.'uploads/gallery';
+			$upload_path_url         = base_url('uploads/gallery').'/';
+			$config['upload_path']   = FCPATH.'uploads/gallery';
 			$config['allowed_types'] = 'jpg|jpeg|png|gif';
-			$config['max_size'] = '1000000';
+			$config['max_size']      = '5000000';
 		} else {
 			$upload_path_url = base_url('media_files').'/';
 			$config['upload_path'] = FCPATH.'media_files';
