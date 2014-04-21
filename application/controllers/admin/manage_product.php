@@ -139,6 +139,12 @@ class Manage_product extends CI_Controller {
 				'options'     => $product_categories,
 				'search'      => true,
 			))
+			->radio('recommended', array(
+				'value'       => $product_info['recommended'] ?: false,
+				'valid_rules' => 'trim|xss_clean|is_natural',
+				'label'       => 'Рекомендуемый',
+				'inputs'      => array('Нет', 'Да'),
+			))
 			->textarea('content', array(
 				'value'       => $product_info['content'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
