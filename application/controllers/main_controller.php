@@ -20,6 +20,19 @@ class Main_controller extends CI_Controller {
     }
 
 	public function index() {
+		$this->data['title'] = SITE_NAME;
+
+		$this->data['name'] = 'Strongly recommended';
+		$this->data['products'] = $this->shop_model->get_recomended_products(6);
+		$this->data['center_block'] = $this->load->view('product_block', $this->data, true);
+
+		$this->data['name'] = 'Best sales';
+		$this->data['products'] = $this->shop_model->get_best_sales_products(6);
+		$this->data['center_block'] .= $this->load->view('product_block', $this->data, true);
+
+		$this->data['name'] = 'New products';
+		$this->data['products'] = $this->shop_model->get_new_products(6);
+		$this->data['center_block'] .= $this->load->view('product_block', $this->data, true);
 		
 		load_views();
 	}

@@ -95,6 +95,39 @@ class Shop_model extends CI_Model {
 		return $ids;
 	}
 
+	function get_recomended_products($limit = 6) {
+		return $this->db
+			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name')
+			->from('shop_products as p')
+			->join('shop_currencies as c', 'p.currency = c.id')
+			->join('users as u', 'p.author_id = u.id')
+			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+			->where(array('p.status' => 1, 'p.recommended' => 1))
+			->limit(6)
+			->get()
+			->result_array();
+	}
+	
+	function get_best_sales_products($limit = 6) {
+		return $this->db
+			->select('SUM(o.qty) as num, p.*, c.symbol, c.code, i.file_name')
+			->from('shop_order_products as o')
+			->join('shop_products as p', 'p.id = o.product_id')
+			->join('shop_currencies as c', 'p.currency = c.id')
+			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+			->where('p.status', 1)
+			->order_by('num', 'desc')
+			->group_by('o.product_id')
+			->limit(6)
+			->get()
+			->result_array();
+	}
+
+	function get_new_products($limit = 6) {
+		$this->db->limit($limit);
+		return $this->get_product_info();
+	}
+
 	function get_products_by_category($id) {
 		$all_branch = $this->get_category_items();
 		$ids = $this->get_child_category_recurcive($all_branch, $id);
@@ -109,24 +142,29 @@ class Shop_model extends CI_Model {
 			->result_array();
 	}
 
-	function get_product_info($id) {
+	function get_product_info($id = false) {
 		$this->db
 			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('users as u', 'p.author_id = u.id')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
-			->where('p.status', 1);
+			->where('p.status', 1)
+			->order_by('p.id', 'desc');
 		if (is_array($id)) {
 			return $this->db
 				->where_in('p.id', $id)
 				->get()
 				->result_array();
-		} else {
+		} elseif (intval($id)) {
 			return $this->db
 				->where('p.id', $id)
 				->get()
 				->row_array();
+		} else {
+			return $this->db
+				->get()
+				->result_array();
 		}
 	}
 
