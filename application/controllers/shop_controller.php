@@ -219,6 +219,8 @@ class Shop_controller extends CI_Controller {
 			$this->data['products'] = $this->shop_model->get_product_info($ids);
             
 			$this->confirm_order($this->data);
+
+			$this->data['center_block'] = '<h4>Congratulations. your purchase is completed. Want to buy something else?</h4>';
 		}        
 		load_views();
 	}
