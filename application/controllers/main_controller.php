@@ -50,6 +50,9 @@ class Main_controller extends CI_Controller {
 
 		if ($menu_info['type'] == 'content') {
 			$content_info = $this->db->where('id', $menu_info['item_id'])->get('content')->row_array();
+			if (empty($content_info)) {
+				show_404();
+			}
 			$this->data['center_block'] = '<h1>'.$content_info['name'].'</h1>';
 			$this->data['center_block'] .= '<div>'.$content_info['content'].'</div>';
 		} else {
