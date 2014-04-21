@@ -192,8 +192,33 @@ class Shop_controller extends CI_Controller {
 			
 			$this->data['center_block'] = $this->load->view('cart/info', $this->data, true);
 		} elseif($step == 'payment') {
+			$this->load->library('form');
+			$this->data['center_block'] = $this->form
+				->hidden('confirm', 1)
+				->func(function($params) {
+					return '<button type="submit" class="orange_btn">Finish</button>';
+				})
+				->create(array('action' => site_url('cart/confirmation')));
 			$this->data['center_block'] = $this->load->view('cart/payment', $this->data, true);
 		} elseif($step == 'confirmation') {
+			$finish = $this->input->post('confirm');
+			if (empty($finish)) {
+				redirect('cart/payment', 'refresh');
+			}
+
+            $order_items = $this->cart->contents();
+            $ids = array();
+            if(!empty($order_items)){
+                foreach ($order_items as $item){
+                    $ids[$item['id']] = $item['id'];
+                    $orders[$item['id']] = $item;
+                }
+            }
+            
+            $this->data['order_items'] = !empty($orders) ? $orders : '';
+			$this->data['products'] = $this->shop_model->get_product_info($ids);
+            
+			$this->confirm_order($this->data);
 		}        
 		load_views();
 	}
@@ -245,5 +270,101 @@ class Shop_controller extends CI_Controller {
             'qty'     => intval($this->input->post('count')),
 		);
 		echo $this->cart->update($updata) ? 'OK' : 'KO';
+    }
+	
+	private function confirm_order($all_data) {
+        $user_data = $this->session->all_userdata();
+        $id = 0;
+        $auto_reg = false;
+        if (!$this->ion_auth->logged_in()) {
+            if (!$this->ion_auth->email_check($user_data['user_info']['email'])) {
+                $username = $user_data['user_info']['username'];
+                $password = $user_data['user_info']['email'];
+                $email = $user_data['user_info']['email'];
+                $additional_data = array(
+					'company' => $user_data['order_info']['company'],
+					'phone'   => $user_data['order_info']['phone'],
+					'country' => $user_data['order_info']['country'],
+					'state'   => $user_data['order_info']['state'],
+					'city'    => $user_data['order_info']['city'],
+					'zip'     => $user_data['order_info']['zip'],
+					'address' => $user_data['order_info']['address'],
+				);								
+                $id = $this->ion_auth->register($username, $password, $email, $additional_data);
+                $auto_reg = true;
+            } else {
+                $by_email = $this->db->where('email', $user_data['user_info']['email'])->get('users')->row_array();
+                $id = $by_email['id'];
+            }
+		} else {
+            $user_identify = $this->ion_auth->user()->row_array();
+            $id = $user_identify['id'];
+        }
+        
+        if(empty($id)){
+           return false; 
+        }
+        
+        $total_price = $this->cart->total();
+        
+        $info = array(
+			'total_price' => $total_price,
+			'clear_price' => $this->cart->total(),
+			'user_id'     => $id,
+			'username'    => $user_data['order_info']['username'],
+			'email'       => $user_data['order_info']['email'],
+			'company'     => $user_data['order_info']['company'],
+			'phone'       => $user_data['order_info']['phone'],
+			'country'     => $user_data['order_info']['country'],
+			'state'       => $user_data['order_info']['state'],
+			'city'        => $user_data['order_info']['city'],
+			'zip'         => $user_data['order_info']['zip'],
+			'address'     => $user_data['order_info']['address'],
+			'add_date'    => time(),
+			'status'      => 0,
+		);
+        
+        $this->db->insert('shop_orders',$info);
+        $order_id = intval($this->db->insert_id());
+      	print_r($all_data['products']); 
+		if (!empty($order_id)) {            
+			foreach ($all_data['products'] as $item){
+				$product_info[$item['id']] = $item;
+			}
+			$order_products = array();
+			foreach ($this->cart->contents() as $item){
+				$order_products[] = array(
+					'order_id'   => $order_id,
+					'product_id' => $item['id'],
+					'name'       => $product_info[$item['id']]['name'],
+					'qty'        => $item['qty'],
+					'price'      => $item['price'],
+					'currency'   => $product_info[$item['id']]['currency'],
+					'content'    => $product_info[$item['id']]['content'],
+					'cat_id'     => $product_info[$item['id']]['cat_id'],
+					'type'       => $product_info[$item['id']]['type'],
+				);
+			}
+			$this->db->insert_batch('shop_order_products', $order_products);
+
+			$email_info = array(
+				'order_id'  => $order_id,
+				'auto_reg'  => $auto_reg,
+				'email'     => $user_data['order_info']['email'],
+			);
+			$this->cart->destroy();
+
+			$this->load->library('email');
+
+			$this->email->from(SITE_EMAIL, SITE_NAME);
+			$this->email->to($info['email']); 
+			$this->email->cc(SITE_EMAIL); 
+
+			$this->email->subject('Заказ успешно принят');
+			$this->email->message($this->load->view('email/create_order', $email_info ,true));
+
+			//$this->email->send();
+
+		}
     }
 }

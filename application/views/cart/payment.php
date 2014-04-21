@@ -55,4 +55,5 @@
 	<p>Click here to confirm the payment.</p>
 	<p>We are activate the orders manually so let us know about the payment to speed up the activation.</p>
 	<p>You'll get the license (to email) and you'll be able to download content from HERE after manual activation</p>
+	<?php echo $center_block ?>
 </div>
