@@ -36,4 +36,26 @@ class Main_controller extends CI_Controller {
 		
 		load_views();
 	}
+
+	function menu_content($name = false) {
+		if(empty($name)) {
+			show_404();
+		}
+
+		$menu_info = $this->db->where('alias', $name)->get('menu_items')->row_array();
+		if (empty($menu_info)) {
+			show_404();
+		}
+		$this->data['title'] = $this->data['header'] = $menu_info['name'];
+
+		if ($menu_info['type'] == 'content') {
+			$content_info = $this->db->where('id', $menu_info['item_id'])->get('content')->row_array();
+			$this->data['center_block'] = '<h1>'.$content_info['name'].'</h1>';
+			$this->data['center_block'] .= '<div>'.$content_info['content'].'</div>';
+		} else {
+			show_404();
+		}
+		
+		load_views();
+	}
 }

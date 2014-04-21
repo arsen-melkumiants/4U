@@ -62,7 +62,12 @@ $route['cart/(:any)']     = 'shop_controller/cart/$1';
 $route['add_to_cart']     = 'shop_controller/add_to_cart';
 $route['update_cart']     = 'shop_controller/update_cart';
 
+$route['profile']        = 'profile';
+$route['profile/(:any)'] = 'profile/$1';
+
 $route['media_files/(:any)'] = 'profile/get_media_file/$1';
+
+$route['(:any)'] = 'main_controller/menu_content/$1';
 
 
 $route['default_controller'] = 'main_controller';
