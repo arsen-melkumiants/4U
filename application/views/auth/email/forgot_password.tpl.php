@@ -1,6 +1,8 @@
 <html>
 <body>
-	<h1><?php echo sprintf(lang('email_forgot_password_heading'), $identity);?></h1>
-	<p><?php echo sprintf(lang('email_forgot_password_subheading'), anchor('auth/reset_password/'. $forgotten_password_code, lang('email_forgot_password_link')));?></p>
+	<h4>Пароль был успешно сброшен</h4>
+	<p>Пожалуйста перейдите по ссылке <?php echo anchor('personal/reset_password/'. $forgotten_password_code, 'Сбросить пароль');?>.</p>
+    <br />
+    <p>С уважением, Администрация сайта <a href="<?php echo base_url()?>"><?php echo SITE_NAME?></a></p>
 </body>
 </html>
