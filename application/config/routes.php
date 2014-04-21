@@ -65,6 +65,8 @@ $route['update_cart']     = 'shop_controller/update_cart';
 $route['profile']        = 'profile';
 $route['profile/(:any)'] = 'profile/$1';
 
+$route['personal/(:any)'] = 'personal/$1';
+
 $route['media_files/(:any)'] = 'profile/get_media_file/$1';
 
 $route['(:any)'] = 'main_controller/menu_content/$1';
