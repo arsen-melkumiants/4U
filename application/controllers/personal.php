@@ -158,10 +158,12 @@ class Personal extends CI_Controller {
 
 		if ($this->form_validation->run() == true && $this->ion_auth->register($username, $password, $email, $additional_data)) {
 			$this->session->set_flashdata('message', $this->ion_auth->messages());
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
 			redirect("", 'refresh');
 		} else {
 			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
 			load_views();	
 		}
 	}
