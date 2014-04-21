@@ -277,10 +277,10 @@ class Shop_controller extends CI_Controller {
         $id = 0;
         $auto_reg = false;
         if (!$this->ion_auth->logged_in()) {
-            if (!$this->ion_auth->email_check($user_data['user_info']['email'])) {
-                $username = $user_data['user_info']['username'];
-                $password = $user_data['user_info']['email'];
-                $email = $user_data['user_info']['email'];
+            if (!$this->ion_auth->email_check($user_data['order_info']['email'])) {
+                $username = $user_data['order_info']['username'];
+                $password = $user_data['order_info']['email'];
+                $email    = $user_data['order_info']['email'];
                 $additional_data = array(
 					'company' => $user_data['order_info']['company'],
 					'phone'   => $user_data['order_info']['phone'],
@@ -293,7 +293,7 @@ class Shop_controller extends CI_Controller {
                 $id = $this->ion_auth->register($username, $password, $email, $additional_data);
                 $auto_reg = true;
             } else {
-                $by_email = $this->db->where('email', $user_data['user_info']['email'])->get('users')->row_array();
+                $by_email = $this->db->where('email', $user_data['order_info']['email'])->get('users')->row_array();
                 $id = $by_email['id'];
             }
 		} else {
@@ -326,7 +326,6 @@ class Shop_controller extends CI_Controller {
         
         $this->db->insert('shop_orders',$info);
         $order_id = intval($this->db->insert_id());
-      	print_r($all_data['products']); 
 		if (!empty($order_id)) {            
 			foreach ($all_data['products'] as $item){
 				$product_info[$item['id']] = $item;
