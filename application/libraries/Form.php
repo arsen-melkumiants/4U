@@ -189,6 +189,9 @@ class Form {
 	}
 
 	public function btn($params = false) {
+		if (!is_array($params)) {
+			return $this;
+		}
 		$name = !empty($params['name']) ? $params['name'] : 'submit';
 		$params['type'] = 'submit';
 		$params['class'] = !empty($params['class']) ? 'btn '.$params['class'] : 'btn btn-primary';
