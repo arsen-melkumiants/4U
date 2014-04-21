@@ -138,7 +138,7 @@ class Personal extends CI_Controller {
 			->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'State'))
 			->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Country'))
 			->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Zip'))
-			->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Phone'))
+			->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Phone'))
 			->btn(array('value' => 'Регистрироваться'))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 

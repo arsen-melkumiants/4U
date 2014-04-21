@@ -174,7 +174,7 @@ class Shop_controller extends CI_Controller {
 				->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'State', 'value' => $fields['state']))
 				->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Country', 'value' => $fields['country']))
 				->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => 'Zip', 'value' => $fields['zip']))
-				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Phone', 'value' => $fields['phone']))
+				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => 'Phone', 'value' => $fields['phone']))
 				->func(function($params) {
 					return '<button type="submit" class="orange_btn">Next step</button>';
 				})
@@ -363,8 +363,7 @@ class Shop_controller extends CI_Controller {
 			$this->email->subject('Заказ успешно принят');
 			$this->email->message($this->load->view('email/create_order', $email_info ,true));
 
-			//$this->email->send();
-
+			$this->email->send();
 		}
     }
 }
