@@ -39,8 +39,15 @@ class Shop_controller extends CI_Controller {
 			show_404();
 		}
 
+		$this->data['types'] = array('default','gallery','list');
+		$view_mode = $this->input->cookie('view_mode');
+		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
+
 		$this->data['title']        = 'Категория "'.$this->data['category_info']['name'].'"';
-		$this->data['products']     = $this->shop_model->get_products_by_category($this->data['category_info']['id']);
+
+		$this->data['per_page']     = 9;
+		$this->data['total']        = $this->shop_model->count_products_by_category($this->data['category_info']['id']);
+		$this->data['products']     = $this->shop_model->get_products_by_category($this->data['category_info']['id'], $this->data['per_page']);
 		$this->data['center_block'] = $this->load->view('category', $this->data, true);
 
 		load_views();

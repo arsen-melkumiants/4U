@@ -371,7 +371,7 @@ class Profile extends CI_Controller {
 			if ($product_info['type'] == 'licenses') {
 				$config['allowed_types'] = 'jpg|jpeg|png|gif';
 			} else {
-				$config['allowed_types'] = 'jpg|jpeg|png|gif|avi|mp4';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|avi|mp4|doc|pdf|docx|txt|xls';
 			}
 			$config['max_size']      = '10000000000';
 		}
@@ -403,10 +403,21 @@ class Profile extends CI_Controller {
 			} else {
 				$product_files = $type == 'image' ? $this->shop_model->get_product_images($id) : $this->shop_model->get_product_files($id);
 				foreach ($product_files as $item) {
+					$thumbnail = '';
+					if ($type == 'image') {
+						$thumbnail = $upload_path_url.'small_thumb/'.$item['file_name'];
+					} else {
+						foreach (explode('|', 'jpg|jpeg|png|gif') as $ext) {
+							if (stripos($item['file_name'], '.'.$ext) !== FALSE) {
+								$thumbnail = $upload_path_url.$item['id'];
+								break;
+							}
+						}
+					}
 					$files[] = array(
 						'name'         => $item['file_name'],
 						'url'          => $type == 'image' ? $upload_path_url.$item['file_name'] : $upload_path_url.$item['id'],
-						'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$item['file_name'] : $upload_path_url.$item['id'],
+						'thumbnailUrl' => $thumbnail,
 						'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$item['id'],
 						'deleteType'   => 'POST',
 						'error'        => null,
@@ -424,10 +435,22 @@ class Profile extends CI_Controller {
 				$file_id = $this->shop_model->add_product_file($id, $data);
 			}
 
+			$thumbnail = '';
+			if ($type == 'image') {
+				$thumbnail = $upload_path_url.'small_thumb/'.$data['file_name'];
+			} else {
+				foreach (explode('|', 'jpg|jpeg|png|gif') as $ext) {
+					if (stripos($data['file_name'], '.'.$ext) !== FALSE) {
+						$thumbnail = $upload_path_url.$file_id;
+						break;
+					}
+				}
+			}
+
 			$files[] = array(
 				'name'         => $data['file_name'],
 				'url'          => $type == 'image' ? $upload_path_url.$data['file_name'] : $upload_path_url.$file_id,
-				'thumbnailUrl' => $type == 'image' ? $upload_path_url.'small_thumb/'.$data['file_name'] : $upload_path_url.$file_id,
+				'thumbnailUrl' => $thumbnail,
 				'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$file_id,
 				'deleteType'   => 'POST',
 				'error'        => null,

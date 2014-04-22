@@ -78,7 +78,7 @@ class Shop_model extends CI_Model {
 		}
 		return $ids;
 	}
-	
+
 	function get_child_category_recurcive($all_branch, $id) {
 		$ids = array();
 		foreach ($all_branch as $key => $item) {
@@ -107,7 +107,7 @@ class Shop_model extends CI_Model {
 			->get()
 			->result_array();
 	}
-	
+
 	function get_best_sales_products($limit = 6) {
 		return $this->db
 			->select('SUM(o.qty) as num, p.*, c.symbol, c.code, i.file_name')
@@ -128,19 +128,37 @@ class Shop_model extends CI_Model {
 		return $this->get_product_info();
 	}
 
-	function get_products_by_category($id) {
+	function count_products_by_category($id) {
+		$this->products_by_category($id);
+		return $this->db
+			->select('p.id')
+			->get()
+			->num_rows();
+	}
+
+	function get_products_by_category($id, $limit = false) {
+		$this->products_by_category($id);
+		if ($limit) {
+			$offset = isset($_GET['page']) && intval($_GET['page']) > 1 ? (intval($_GET['page']) - 1) * $limit : 0;
+			$this->db->limit($limit, $offset);
+		}
+		return $this->db
+			->select('p.*, c.symbol, c.code, i.file_name')
+			->get()
+			->result_array();
+	}
+
+	function products_by_category($id) {
 		$all_branch = $this->get_category_items();
 		$ids = $this->get_child_category_recurcive($all_branch, $id);
 		return $this->db
-			->select('p.*, c.symbol, c.code, i.file_name')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where_in('p.cat_id', array_keys($ids))
-			->where('p.status', 1)
-			->get()
-			->result_array();
+			->where('p.status', 1);
 	}
+
 
 	function get_product_info($id = false) {
 		$this->db
