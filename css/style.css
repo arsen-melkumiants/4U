@@ -136,6 +136,9 @@ ul {padding-left: 0;}
 .custom_block .horizontal.item .controls {text-align: right;margin-bottom: 10px;height: 17px;}
 .custom_block .horizontal.item .controls > * {margin-left: 10px;width: 16px;display: inline-block;}
 
+.custom_block .list.item {float: none;width: auto;text-align: left;margin: 10px;border-bottom: 1px solid #c9c9c9;padding: 0 2%;}
+.custom_block .list.item h4 {height: auto;float: left;width:55%;text-align: left;}
+
 .right_block {padding: 50px 0;}
 .right_block .title {margin-bottom: 15px;border: 0;border-bottom: 1px solid #f2f2f2;margin: 0;}
 .right_block .title.stars > * {display: inline;}
