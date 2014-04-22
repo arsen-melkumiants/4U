@@ -71,7 +71,7 @@ class Personal extends CI_Controller {
 		if ($this->form_validation->run() == true) {
 			$remember = (bool) $this->input->post('remember');
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
-				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				$this->session->set_flashdata('success', $this->ion_auth->messages());
 				if ($this->input->is_ajax_request()) {
 					echo 'refresh';exit;
 				}
@@ -157,7 +157,7 @@ class Personal extends CI_Controller {
 		}
 
 		if ($this->form_validation->run() == true && $this->ion_auth->register($username, $password, $email, $additional_data)) {
-			$this->session->set_flashdata('message', $this->ion_auth->messages());
+			$this->session->set_flashdata('success', $this->ion_auth->messages());
 			if ($this->input->is_ajax_request()) {
 				echo 'refresh';exit;
 			}
