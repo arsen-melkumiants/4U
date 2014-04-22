@@ -170,7 +170,7 @@ ul {padding-left: 0;}
 	-khtml-opacity: 1;
 	opacity: 1;
 }
-.product .mini_images img {height: 100%;min-width: 100%;}
+.product .mini_images img {min-width: 100%;max-width: 100%;min-height: 100%;}
 .product .price {margin-top: 0;text-align: center;float: none;font-size: 20px;}
 .product .orange_btn {text-align: center;} 
 .product .actions {margin: 15px 0;} 
