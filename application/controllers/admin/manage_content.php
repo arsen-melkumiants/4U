@@ -266,7 +266,7 @@ class Manage_content extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			edit_method('content_categories', $id, array('add_date'));
+			admin_method('edit', 'content_categories', array('id' => $id));
 		}
 	}
 
@@ -281,7 +281,7 @@ class Manage_content extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			add_method('content_categories', array('add_date'));
+			admin_method('add', 'content_categories', array('except_fields' => array('add_date', 'author_id')));
 		}
 	}
 

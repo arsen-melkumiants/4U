@@ -8,7 +8,7 @@ class Admin_product_model extends CI_Model {
 	}
 
 	function get_all_products() {
-		return $this->db->get('shop_products');
+		return $this->db->order_by('id', 'desc')->get('shop_products');
 	}
 
 	function get_product_info($id) {

@@ -8,7 +8,7 @@ class Admin_content_model extends CI_Model {
 	}
 
 	function get_all_content() {
-		return $this->db->get('content');
+		return $this->db->order_by('id', 'desc')->get('content');
 	}
 
 	function get_content_info($id) {

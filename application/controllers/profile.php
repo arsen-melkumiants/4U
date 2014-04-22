@@ -121,6 +121,7 @@ class Profile extends CI_Controller {
 						'p.author_id' => $CI->data['user_info']['id'],
 					))
 					->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
+					->order_by('id', 'desc')
 					->get();
 			}, array('no_header' => 1, 'class' => 'table'));
 

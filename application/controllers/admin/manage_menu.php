@@ -89,7 +89,7 @@ class Manage_menu extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			admin_method('add', $this->DB_TABLE, array('except_fields' => array('add_date')));
+			admin_method('add', $this->DB_TABLE, array('except_fields' => array('add_date', 'author_id')));
 		}
 	}
 
