@@ -72,7 +72,7 @@ class Shop_model extends CI_Model {
 				$ids[$item['id']] = $item;
 				$result = $this->get_parent_category_recurcive($all_branch, $item['parent_id']);
 				if(!empty($result)) {
-					$ids = array_merge($ids, $result);
+					$ids = $ids + $result;
 				}
 			}
 		}
@@ -88,7 +88,7 @@ class Shop_model extends CI_Model {
 				$ids[$item['id']] = $item;
 				$result = $this->get_child_category_recurcive($all_branch, $item['id']);
 				if(!empty($result)) {
-					$ids = array_merge($ids, $result);
+					$ids = $ids + $result;
 				}
 			}
 		}
