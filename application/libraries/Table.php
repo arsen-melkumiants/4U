@@ -166,6 +166,7 @@ class Table {
 				if (!isset($row[$item['name']])) {
 					continue;
 				}
+				$result = false;
 				if (isset($item['params']['date']) && intval($row[$item['name']])) {
 					$result = date($item['params']['type'], $row[$item['name']]);
 				}
