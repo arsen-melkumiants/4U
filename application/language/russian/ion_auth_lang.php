@@ -31,7 +31,7 @@ $lang['forgot_password_unsuccessful']        = 'Невозможен сброс 
 // Activation
 $lang['activate_successful']                 = 'Учетная запись активирована';
 $lang['activate_unsuccessful']               = 'Не удалось активировать учетную запись';
-$lang['deactivate_successful']               = 'Учетная запись деактивирована';
+$lang['deactivate_successful']               = '';//'Учетная запись деактивирована';
 $lang['deactivate_unsuccessful']             = 'Невозможно деактивировать учетную запись';
 $lang['activation_email_successful']         = 'Сообщение об активации отправлено';
 $lang['activation_email_unsuccessful']       = 'Сообщение об активации невозможно отправить';
