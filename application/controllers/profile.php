@@ -155,8 +155,9 @@ class Profile extends CI_Controller {
 				$info['type'] = 'media';
 			}
 			$this->db->insert('shop_products', $info);
+			$id = $this->db->insert_id();
 			$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
-			redirect('profile/product_gallery', 'refresh');
+			redirect('profile/product_gallery/'.$id, 'refresh');
 		}
 	}
 
