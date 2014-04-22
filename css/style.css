@@ -46,6 +46,28 @@ ul {padding-left: 0;}
 
 .progress {margin: 10px 0;border: 1px solid #cfc8bc;height: 8px;}
 
+input[type="checkbox"], input[type="radio"] {width: 0;cursor: pointer;}
+input[type="checkbox"]::before,
+input[type="radio"]::before {
+	content: "";
+	cursor: pointer;
+	display: inline-block;
+	height: 15px;
+	width: 15px;
+	margin: -5px 5px 0 0;
+	background-image: url(../img/inputs.png);
+	background-repeat: no-repeat;
+}
+input[type="checkbox"]::before {background-position: 0px 0px;}
+input[type="radio"]::before {background-position: 0px -37px;}
+input[type="checkbox"]:checked::before {background-position: 0px -18px;}
+input[type="radio"]:checked::before {background-position: 0px -55px;}
+input[type="checkbox"]:disabled::before {background-position: -152px -260px;}
+input[type="checkbox"]:checked:disabled::before {background-position: -171px -260px;}
+input[type="radio"]:disabled::before {background-position: -144px -279px;}
+input[type="radio"]:checked:disabled::before {background-position: -162px -279px;}
+
+
 .top_block {background: #f78765;border-bottom: 2px solid #e44436;margin-bottom: 30px;}
 .top_block .logo {display: block;width: 175px;height: 30px;background: url(../img/logo.png);margin: 15px 0 10px;}
 
