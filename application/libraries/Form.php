@@ -198,7 +198,7 @@ class Form {
 		$params['value'] = isset($params['value']) ? $params['value'] : ucfirst($name);
 		$params['modal'] = !empty($params['modal']) ? ($params['modal'] == 'close' ? ' data-dismiss="modal"' : ' data-toggle="modal" data-target="#ajaxModal"') : '' ;
 
-		$attrs_list = array('class', 'name', 'modal', 'value', 'type');
+		$attrs_list = array('class', 'name', 'modal', 'value', 'type', 'style');
 		$btn = '<button'.$this->attributes($attrs_list, $params).'>'.$params['value'].'</button>'.PHP_EOL;
 		$this->btn_data[] = array(
 			'form' => $btn,
@@ -213,7 +213,7 @@ class Form {
 		$params['href'] = isset($params['href']) ? $params['href'] : '#';
 		$params['modal'] = !empty($params['modal']) ? ($params['modal'] == 'close' ? ' data-dismiss="modal"' : ' data-toggle="modal" data-target="#ajaxModal"') : '' ;
 
-		$attrs_list = array('class','href','modal');
+		$attrs_list = array('class','href','modal','style');
 		$btn = '<a'.$this->attributes($attrs_list, $params).'>'.$params['name'].'</a>'.PHP_EOL;
 		$this->btn_data[] = array(
 			'form' => $btn,

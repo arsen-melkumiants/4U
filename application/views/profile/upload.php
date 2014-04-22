@@ -124,11 +124,20 @@ window.onload = function() {
 		<ol class="indicator"></ol>
 	</div>
 	<div class="clear"></div>
+<?php /*
 	<a class="btn btn-primary" href="<?php echo site_url('profile/edit_product/'.$id)?>">Edit information</a>
 	<?php if ($type != 'image') {?>
 	<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>">Gallery</a>
 	<?php } else {?>
 	<a class="btn btn-primary" href="<?php echo site_url('profile/product_media_files/'.$id)?>">Media content</a>
+	<?php } ?>
+*/ ?>
+	<?php if ($type == 'image') {?>
+	<a class="btn btn-primary" href="<?php echo site_url('profile/edit_product/'.$id)?>">Previous step</a>
+	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/product_media_files/'.$id)?>">Next_step</a>
+	<?php } else {?>
+	<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>">Previous step</a>
+	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/products/moderate')?>">Finish</a>
 	<?php } ?>
 </div>
 <!-- The template to display files available for upload -->

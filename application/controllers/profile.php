@@ -271,8 +271,9 @@ class Profile extends CI_Controller {
 			->btn(array('value' => empty($product_info) ? 'Add' : 'Update'));
 		if (!empty($product_info)) {
 			$this->form
-				->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
-				->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
+				->link(array('name' => 'Next step', 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
+				//->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
+				//->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
 		}
 		return $this->form->create(array('action' => current_url(), 'error_inline' => 'true'));
 	}
