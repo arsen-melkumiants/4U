@@ -46,7 +46,7 @@ ul {padding-left: 0;}
 
 .progress {margin: 10px 0;border: 1px solid #cfc8bc;height: 8px;}
 
-input[type="checkbox"], input[type="radio"] {width: 0;cursor: pointer;}
+input[type="checkbox"], input[type="radio"] {cursor: pointer;margin-top: 3px;}
 input[type="checkbox"]::before,
 input[type="radio"]::before {
 	content: "";
@@ -54,7 +54,7 @@ input[type="radio"]::before {
 	display: inline-block;
 	height: 15px;
 	width: 15px;
-	margin: -5px 5px 0 0;
+	margin: -3px 5px 0 0;
 	background-image: url(../img/inputs.png);
 	background-repeat: no-repeat;
 }
@@ -102,7 +102,7 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 
 .search_block {background: #f2916d;position: relative;padding-bottom: 2px;margin:15px 0 35px;}
 .search_block input[type="text"] {width: 100%;padding-left: 27px;padding-right: 5px;height: 20px;border: 0;}
-.search_block input[type="submit"] {position: absolute;background: #f2916d url(../img/search_icon.png) no-repeat center;border: 0;height: 20px;width: 23px;top: 0;}
+.search_block input[type="submit"] {position: absolute;background: #f2916d url(../img/search_icon.png) no-repeat center;border: 0;height: 20px;width: 23px;top: 0;left: 0;}
 
 .center_block {position: relative;z-index: 2;margin-left: 15px;background: #f2f2f2;border-bottom: 1px solid #d0d0d0;}
 .under_center_line {position: absolute;width: 98%;background: #fff;height: 3px;bottom: -4px;margin-left: 1%;}
