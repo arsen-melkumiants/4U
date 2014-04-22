@@ -261,8 +261,9 @@ dt, dd {line-height: 2.5;}
 .profile_tabs li a:hover {background: #e2e2e2;border: 1px solid #c6c6c6;border-left-width: 0px;}
 .profile_tabs li a:first-letter {text-transform: uppercase;}
 
+.product_list ,
 .product_list table {border: 0;}
-.product_list .table > tbody > tr > td {border: 0;}
+.product_list tbody > tr > td {border: 0;}
 .product_list .image {border: 1px solid #aaaaaa;width: 130px;float: left;margin-right: 10px;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;}
 .product_list .image img {max-width: 100%;}
 .product_list .info {float: left;width: 50%;}
@@ -314,3 +315,7 @@ table.gallery .preview img {max-width: 80px;}
 .cart .count span {color: #f27141;line-height: 20px;font-weight: bold;font-size: 30px;cursor: pointer;position: relative;top: 4px;}
 .price_total,
 .price_total *{font-size: 16px;}
+
+.orders th ,
+.orders td {font-size: 16px;}
+.orders td .number {font-size: 16px;}

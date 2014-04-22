@@ -314,6 +314,7 @@ class Shop_controller extends CI_Controller {
 			'total_price' => $total_price,
 			'clear_price' => $this->cart->total(),
 			'user_id'     => $id,
+			'currency'    => 1,
 			'username'    => $user_data['order_info']['username'],
 			'email'       => $user_data['order_info']['email'],
 			'company'     => $user_data['order_info']['company'],

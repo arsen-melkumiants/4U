@@ -13,7 +13,7 @@
 		<div class="clear"></div>
 	</div>
 	<div class="cart product_list">
-		<?php echo !empty($table) ? $table : '<h4>There isn\'t any product yet. We are sure you will find your product</h4>'?>
+		<?php echo !empty($table) ? $table : '<h4>There isn\'t any product yet. We are sure you will find everything</h4>'?>
 	</div>
 	<div class="row">
 		<div class="col-sm-6">

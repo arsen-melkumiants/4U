@@ -5,5 +5,5 @@
 </a>
 <div class="info">
 	<a class="name" href="<?php echo product_url($id, $name)?>"><?php echo $name ?></a>
-	<span><?php echo date('d.m.Y', $add_date)?></span>
+	<span><?php echo !empty($add_date) ? date('d.m.Y', $add_date) : ''?></span>
 </div>

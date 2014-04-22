@@ -85,15 +85,14 @@ class Profile extends CI_Controller {
 		));
 		if ($type == 'moderate') {
 			$this->table
-				->btn(
-					array(
-						'func' => function($row, $params, $html, $that, $CI) {
-							if ($row['status'] == 0) {
-								return '<span class="label label-default">Pending</span>';
-							} elseif ($row['status'] == 2) {
-								return '<span class="label label-danger">Rejected</span>';
-							}
+				->btn(array(
+					'func' => function($row, $params, $html, $that, $CI) {
+						if ($row['status'] == 0) {
+							return '<span class="label label-default">Pending</span>';
+						} elseif ($row['status'] == 2) {
+							return '<span class="label label-danger">Rejected</span>';
 						}
+					}
 			));
 		}
 
@@ -377,7 +376,7 @@ class Profile extends CI_Controller {
 			$config['max_size']      = '10000000000';
 		}
 		@mkdir($config['upload_path'], 0777, true);
-		$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
+		//$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
 
 		$this->load->helper('file');
 		$this->load->library('upload');
@@ -507,5 +506,125 @@ class Profile extends CI_Controller {
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename="'.$product_file['file_name'].'"');
 		exit;
+	}
+
+
+	function orders() {
+		$this->data['title'] = $this->data['header'] = 'My orders';
+
+		$this->load->library('table');
+		$this->table
+			->text('id', array(
+				'title' => 'Number',
+				'width' => '20%',
+				'func'  => function($row, $params) {
+					return '<a class="number" href="'.site_url('profile/order_view/'.$row['id']).'">'.$row['id'].'</a>';
+				}
+		))
+			->text('total_price', array(
+				'title' => 'Price',
+				'width' => '30%',
+				'func'  => function($row, $params) {
+					return '<div class="price"><i class="c_icon_label"></i>'.$row['total_price'].' '.$row['symbol'].'</div>';
+				}
+		))
+			->date('add_date', array('title' => 'Date', 'width' => '20%'))
+			->btn(array('func' => function($row, $params, $html, $that, $CI) {
+				if ($row['status'] == 0) {
+					return '<span class="label label-default">Pending payment</span>';
+				} elseif ($row['status'] == 1) {
+					return '<span class="label label-success">Paid</span>';
+				}
+			}
+		))
+			->btn(array('link'  => site_url('profile/order_view/%d'), 'title' => 'View products'))
+			->btn(array('func' => function($row, $params, $html, $that, $CI) {
+				if ($row['status'] == 0) {
+					return '<a href="'.site_url('profile/test_pay'.$row['id']).'" data-original-title="Pay order"></a>';
+				}
+			}));
+
+		$this->data['center_block'] = $this->table
+			->create(function($CI) {
+				return $CI->db
+					->select('o.*, c.symbol, c.code')
+					->from('shop_orders as o')
+					->join('shop_currencies as c', 'o.currency = c.id')
+					->where(array(
+						'o.user_id' => $CI->data['user_info']['id'],
+					))
+					->order_by('id', 'desc')
+					->get();
+			}, array('no_header' => 1, 'class' => 'table product_list orders'));
+		load_views();
+	}
+
+
+	function order_view($id = false) {
+		$id = intval($id);
+		if (empty($id)) {
+			show_404();
+		}
+
+		$order_info = $this->db->where(array('id' => $id, 'user_id' => $this->data['user_info']['id']))->get('shop_orders')->row_array();
+		if (empty($order_info)) {
+			show_404();
+		}
+
+		$this->data['title'] = $this->data['header'] = 'Order №'.$order_info['id'];
+
+		$this->load->library('table');
+		$this->table
+			->text('name', array(
+				'title' => 'Name',
+				'width' => '60%',
+				'func'  => function($row, $params, $that, $CI) {
+					$row['id'] = $row['product_id'];
+					return $CI->load->view('profile/item', $row, true);
+				}
+		))
+			->text('qty', array(
+				'title' => 'Count',
+				'width' => '20%',
+				'func'  => function($row, $params) {
+					return $row['qty'].' '.($row['qty'] > 1 ? 'items' : 'item');
+				}
+		))
+			->text('price', array(
+				'title' => 'Price',
+				'width' => '20%',
+				'func'  => function($row, $params) {
+					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
+				}
+		));
+
+		$this->data['center_block'] = $this->table
+			->create(function($CI) {
+				return $CI->db
+					->select('p.*, c.symbol, c.code, i.file_name')
+					->from('shop_order_products as p')
+					->join('shop_currencies as c', 'p.currency = c.id')
+					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+					->order_by('id', 'desc')
+					->get();
+			}, array('no_header' => 1, 'class' => 'table product_list orders'));
+
+		load_views();
+	}
+
+	function test_pay($id = false) {
+		$id = intval($id);
+		if (empty($id)) {
+			show_404();
+		}
+
+		$order_info = $this->db->where(array('id' => $id, 'user_id' => $this->data['user_info']['id']))->get('shop_orders')->row_array();
+		if (empty($order_info)) {
+			show_404();
+		}
+
+		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
+		$this->session->set_flashdata('success', 'Тестовый платеж успешно произведён');
+		redirect('profile/orders', 'refresh');
 	}
 }
