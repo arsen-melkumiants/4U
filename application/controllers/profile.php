@@ -561,12 +561,7 @@ class Profile extends CI_Controller {
 				}
 			}
 		))
-			->btn(array('link'  => site_url('profile/order_view/%d'), 'title' => 'View products'))
-			->btn(array('func' => function($row, $params, $html, $that, $CI) {
-				if ($row['status'] == 0) {
-					return '<a href="'.site_url('profile/test_pay'.$row['id']).'" data-original-title="Pay order"></a>';
-				}
-			}));
+			->btn(array('link'  => site_url('profile/order_view/%d'), 'title' => 'Order details'));
 
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
@@ -590,12 +585,13 @@ class Profile extends CI_Controller {
 			show_404();
 		}
 
-		$order_info = $this->db->where(array('id' => $id, 'user_id' => $this->data['user_info']['id']))->get('shop_orders')->row_array();
-		if (empty($order_info)) {
+		$this->data['order_info'] = $this->db->where(array('id' => $id, 'user_id' => $this->data['user_info']['id']))->get('shop_orders')->row_array();
+		if (empty($this->data['order_info'])) {
 			show_404();
 		}
 
-		$this->data['title'] = $this->data['header'] = 'Order №'.$order_info['id'];
+		$this->data['title'] = $this->data['header'] = 'Order №'.$this->data['order_info']['id'];
+		$this->data['right_amount'] = true;
 
 		$this->load->library('table');
 		$this->table
@@ -620,23 +616,38 @@ class Profile extends CI_Controller {
 				'func'  => function($row, $params) {
 					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
 				}
+		))
+			->btn(array('func' => function($row, $params, $html, $that, $CI) {
+				if ($row['amount'] < $row['qty'] && $CI->data['order_info']['status'] == 0) {
+					$CI->data['right_amount'] = false;
+					set_alert('You can not pay this order. The seller doen\'t have product "'.$row['name'].'" in amount of '.$row['qty'], false, 'danger');
+					return '<span class="label label-danger">No product in amount of '.$row['qty'].'</span>';
+				}
+			}
 		));
 
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				return $CI->db
-					->select('p.*, c.symbol, c.code, i.file_name')
-					->from('shop_order_products as p')
+					->select('op.*, p.amount, c.symbol, c.code, i.file_name')
+					->from('shop_order_products as op')
+					->join('shop_products as p', 'p.id = op.product_id')
 					->join('shop_currencies as c', 'p.currency = c.id')
 					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
-					->order_by('id', 'desc')
+					->where('op.order_id', $CI->data['order_info']['id'])
+					->order_by('op.id', 'desc')
 					->get();
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
+
+		if ($this->data['right_amount'] && $this->data['order_info']['status'] == 0) {
+			$this->data['center_block'] .= '<a href="'.site_url('profile/test_payment/'.$id).'" class="btn" title="">Pay order</a>';
+		}
+		$this->data['center_block'] .= '<span class="price_total">Total price <span><i class="c_icon_label"></i> <span>'.$this->data['order_info']['total_price'].'</span> $</span></span>';
 
 		load_views();
 	}
 
-	function test_pay($id = false) {
+	function test_payment($id = false) {
 		$id = intval($id);
 		if (empty($id)) {
 			show_404();
@@ -646,6 +657,64 @@ class Profile extends CI_Controller {
 		if (empty($order_info)) {
 			show_404();
 		}
+
+		$order_products = $this->db
+					->select('op.*, p.amount')
+					->from('shop_order_products as op')
+					->join('shop_products as p', 'p.id = op.product_id')
+					->where('op.order_id', $id)
+					->order_by('op.id', 'desc')
+					->get()
+					->result_array();
+		foreach ($order_products as $item) {
+			if ($item['amount'] < $item['qty']) {
+				redirect('profile/orders', 'refresh');
+			}
+
+			$update_array[$item['product_id']] = array(
+				'id'     => $item['product_id'],
+				'amount' => $item['amount'] - $item['qty'],
+				'name'   => $item['name'],
+			);
+			
+			if ($item['type'] == 'licenses') {
+				$license_products[$item['product_id']] = false;
+			}
+		}
+
+		if(!empty($update_array)) {
+			if (!empty($license_products)) {
+				$license_files = $this->db
+					->where_in('product_id', $license_products)
+					->where('status', 0)
+					->group_by('product_id')
+					->get('shop_product_media_files')
+					->result_array();
+
+				if ($license_files) {
+					foreach ($license_files as $item) {
+						if ($license_products[$item['product_id']]) {
+							$license_products[$item['product_id']] = array(
+								'id'     => $item['id'],
+								'status' => 1,
+							);
+						}
+					}
+
+					foreach ($license_products as $item) {
+						if (empty($item)) {
+							$this->session->set_flashdata('danger', 'The license key is not avaliable for product "'.$update_array['name'].'"');
+							redirect('profile/orders', 'refresh');
+						}
+					}
+
+					$this->db->update_batch('shop_product_media_files', $license_products, 'id'); 
+					//TODO UPDATE FILE_ID;
+					//exit;
+				}
+			}
+			$this->db->update_batch('shop_products', $update_array, 'id'); 
+		}	
 
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
 		$this->session->set_flashdata('success', 'Тестовый платеж успешно произведён');

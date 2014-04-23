@@ -275,11 +275,27 @@ class Shop_controller extends CI_Controller {
 	}
 	
 	public function update_cart(){
+		$rowid = $this->input->post('id');
+        $qty = intval($this->input->post('count'));
+		$cart_products = $this->cart->contents();
+		if (!isset($cart_products[$rowid])) {
+			echo 'KO';
+			exit;
+		}
+
+		$has_amount = $this->db->where(array(
+			'id'        => $cart_products[$rowid]['id'],
+			'amount >=' => $qty,
+		))->get('shop_products')->num_rows();
+		if (!$has_amount) {
+			echo $cart_products[$rowid]['qty'];
+			exit;
+		}
         $updata = array(
-            'rowid'   => $this->input->post('id'),
-            'qty'     => intval($this->input->post('count')),
+            'rowid' => $rowid,
+            'qty'   => $qty,
 		);
-		echo $this->cart->update($updata) ? 'OK' : 'KO';
+		echo $this->cart->update($updata) ? 'OK' : $cart_products[$rowid]['qty'];
     }
 	
 	private function confirm_order($all_data) {

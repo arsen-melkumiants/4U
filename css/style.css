@@ -11,6 +11,7 @@ button {outline: none;}
 ul {padding-left: 0;}
 .clear {clear: both;height: 0;overflow: hidden;}
 
+.alert {border: 0;}
 .text_404 {font-size: 150px;text-align: center;padding: 50px 0;}
 
 .tooltip-inner {background-color: #fff;color: #f27141;border: 1px solid #f27141;font-weight: bold;}

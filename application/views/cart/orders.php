@@ -26,6 +26,7 @@
 </div>
 <script>
 	var over_price = 0;
+    var last_count = 0;
 
 	function calc_price(){
 		var over_price = 0;
@@ -36,13 +37,18 @@
 		$('.price_total span span').text(over_price);
 	}
 
-	function update_product(count,id){
+	function update_product(count, id, input){
 		$.post('/update_cart', {id : id,count : count})
 		.done(function(data) {
-			if($.trim(data) != 'OK') {
-				return false;
+			data = $.trim(data)
+			if(data === 'OK') {
+				input.val(count);
+				calc_price();
+			} else {
+				if (typeof Number(data) === 'number') {
+					input.val(data);
+				}
 			}
-			calc_price();
 		})
 	}
 
@@ -69,9 +75,8 @@
 			var count = new Number($(this).prev().val());
 			var id = $(this).prev().data('id');
 			count = count + 1;
-			$(this).prev().val(count);
 			$(this).prev().prev().removeClass('none');
-			update_product(count,id);
+			update_product(count, id, $(this).prev());
 		});
 		$('.minus').click(function(){
 			var count = new Number($(this).next().val())
@@ -81,8 +86,7 @@
 					$(this).addClass('none');
 				}
 				count = count - 1;
-				$(this).next().val(count);
-				update_product(count,id);
+				update_product(count, id, $(this).next());
 			}
 		});
 		$('.count input').change(function(){
@@ -90,9 +94,8 @@
 			var id = $(this).data('id');
 			if(count < 1 || isNaN(count)){
 				count = 1;
-				$(this).val(count);
 			}
-			update_product(count,id);
+			update_product(count, id, $(this));
 		});
 	};
 </script>
