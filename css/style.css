@@ -46,6 +46,7 @@ ul {padding-left: 0;}
 
 .progress {margin: 10px 0;border: 1px solid #cfc8bc;height: 8px;}
 
+/*
 input[type="checkbox"], input[type="radio"] {cursor: pointer;margin-top: 3px;}
 input[type="checkbox"]::before,
 input[type="radio"]::before {
@@ -66,6 +67,12 @@ input[type="checkbox"]:disabled::before {background-position: -152px -260px;}
 input[type="checkbox"]:checked:disabled::before {background-position: -171px -260px;}
 input[type="radio"]:disabled::before {background-position: -144px -279px;}
 input[type="radio"]:checked:disabled::before {background-position: -162px -279px;}
+*/
+
+.radio {display: inline;padding: 0;position: relative;top:3px;}
+.radio input {display: none;}
+.radio span {cursor: pointer;display: inline-block;height: 15px;width: 15px;margin: -3px 5px 0 0;background-image: url(../img/inputs.png);background-repeat: no-repeat;background-position: 0px -37px;}
+.radio span.checked {background-position: 0px -55px;}
 
 
 .top_block {background: #f78765;border-bottom: 2px solid #e44436;margin-bottom: 30px;}
@@ -135,7 +142,7 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 .custom_block .item .image {border: 1px solid #a5a5a5;margin-bottom: 15px;height: 170px;overflow: hidden;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;position: relative;}
 .custom_block .item .image .bg,
 .custom_block .item .image .bg_text {display: none;}
-.custom_block .item .image:hover .bg_text {display: block;position: absolute;font-size: 28px;color: #fff;z-index: 2;top: 0;text-align: center;line-height: 165px;width: 100%;text-shadow: -1px -1px 0px rgba(3, 3, 3, 0.4);}
+.custom_block .item .image:hover .bg_text {display: block;position: absolute;font-size: 28px;color: #fff;z-index: 2;top: 36%;text-align: center;width: 100%;text-shadow: -1px -1px 0px rgba(3, 3, 3, 0.4);}
 .custom_block .item .image:hover .bg {display: block;position: absolute;width: 100%;height: 100%;top: 0;left: 0;background: #f48258;z-index: 1;border: 7px solid #ae4923;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter: alpha(opacity=70);

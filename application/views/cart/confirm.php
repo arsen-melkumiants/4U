@@ -1,4 +1,4 @@
-<div class="custom_block">
+<div class="custom_block product_list">
 	<div class="title">
 		<h2><?php echo $name?></h2>
 		<div class="steps_block">
