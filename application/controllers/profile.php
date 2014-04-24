@@ -272,8 +272,8 @@ class Profile extends CI_Controller {
 		if (!empty($product_info)) {
 			$this->form
 				->link(array('name' => 'Next step', 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
-				//->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
-				//->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
+			//->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
+			//->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
 		}
 		return $this->form->create(array('action' => current_url(), 'error_inline' => 'true'));
 	}
@@ -659,13 +659,13 @@ class Profile extends CI_Controller {
 		}
 
 		$order_products = $this->db
-					->select('op.*, p.amount')
-					->from('shop_order_products as op')
-					->join('shop_products as p', 'p.id = op.product_id')
-					->where('op.order_id', $id)
-					->order_by('op.id', 'desc')
-					->get()
-					->result_array();
+			->select('op.*, p.amount')
+			->from('shop_order_products as op')
+			->join('shop_products as p', 'p.id = op.product_id')
+			->where('op.order_id', $id)
+			->order_by('op.id', 'desc')
+			->get()
+			->result_array();
 		foreach ($order_products as $item) {
 			if ($item['amount'] < $item['qty']) {
 				redirect('profile/orders', 'refresh');
@@ -674,49 +674,45 @@ class Profile extends CI_Controller {
 			$update_array[$item['product_id']] = array(
 				'id'     => $item['product_id'],
 				'amount' => $item['amount'] - $item['qty'],
-				'name'   => $item['name'],
 			);
-			
+
 			if ($item['type'] == 'licenses') {
-				$license_products[$item['product_id']] = false;
+				$license_products = $this->db
+					->where(array('product_id' => $item['product_id'], 'status' => 0))
+					->limit($item['qty'])
+					->get('shop_product_media_files')
+					->result_array();
+				if (empty($license_products) || count($license_products) != $item['qty']) {
+					$this->session->set_flashdata('danger', 'The license key is not avaliable for product "'.$item['name'].'"');
+					redirect('profile/orders', 'refresh');
+				}
+
+				foreach ($license_products as $file) {
+					$license_files[$file['id']] = array(
+						'id'     => $file['id'],
+						'status' => 1,
+					);
+				}
+
+				$order_products_update[$item['id']] = array(
+					'id'       => $item['id'],
+					'file_ids' => implode(',', array_keys($license_files)),
+				);
 			}
 		}
 
-		if(!empty($update_array)) {
-			if (!empty($license_products)) {
-				$license_files = $this->db
-					->where_in('product_id', $license_products)
-					->where('status', 0)
-					->group_by('product_id')
-					->get('shop_product_media_files')
-					->result_array();
+		$this->db->trans_start();
 
-				if ($license_files) {
-					foreach ($license_files as $item) {
-						if ($license_products[$item['product_id']]) {
-							$license_products[$item['product_id']] = array(
-								'id'     => $item['id'],
-								'status' => 1,
-							);
-						}
-					}
+		if (!empty($license_files)) {
+			$this->db->update_batch('shop_product_media_files', $license_files, 'id');
+			$this->db->update_batch('shop_order_products', $order_products_update, 'id');
+		}
 
-					foreach ($license_products as $item) {
-						if (empty($item)) {
-							$this->session->set_flashdata('danger', 'The license key is not avaliable for product "'.$update_array['name'].'"');
-							redirect('profile/orders', 'refresh');
-						}
-					}
-
-					$this->db->update_batch('shop_product_media_files', $license_products, 'id'); 
-					//TODO UPDATE FILE_ID;
-					//exit;
-				}
-			}
-			$this->db->update_batch('shop_products', $update_array, 'id'); 
-		}	
-
+		$this->db->update_batch('shop_products', $update_array, 'id');
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
+
+		$this->db->trans_complete();
+
 		$this->session->set_flashdata('success', 'Тестовый платеж успешно произведён');
 		redirect('profile/orders', 'refresh');
 	}

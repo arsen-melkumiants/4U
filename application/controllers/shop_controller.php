@@ -366,7 +366,6 @@ class Shop_controller extends CI_Controller {
 					'qty'        => $item['qty'],
 					'price'      => $item['price'],
 					'currency'   => $product_info[$item['id']]['currency'],
-					'content'    => $product_info[$item['id']]['content'],
 					'cat_id'     => $product_info[$item['id']]['cat_id'],
 					'type'       => $product_info[$item['id']]['type'],
 				);
