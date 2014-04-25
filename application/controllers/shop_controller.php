@@ -359,7 +359,7 @@ class Shop_controller extends CI_Controller {
 			}
 			$order_products = array();
 			foreach ($this->cart->contents() as $item){
-				$order_products[] = array(
+				$order_products[$item['rowid']] = array(
 					'order_id'   => $order_id,
 					'product_id' => $item['id'],
 					'name'       => $product_info[$item['id']]['name'],
@@ -370,6 +370,32 @@ class Shop_controller extends CI_Controller {
 					'type'       => $product_info[$item['id']]['type'],
 				);
 			}
+
+			$prep_files = $this->db
+				->select('COUNT(*) as num, product_id')
+				->where_in('product_id', array_keys($product_info))
+				->where('status', 0)
+				->group_by('product_id')
+				->get('shop_product_media_files')
+				->result_array();
+			$license_files = false;
+			if (!empty($prep_files)) {
+				foreach ($prep_files as $key => $file) {
+					$license_files[$file['product_id']] = $file['num'];
+				}
+			}
+
+			foreach ($order_products as $rowid => $item) {
+				if ($item['type'] == 'licenses') {
+					if (!isset($license_files[$item['product_id']]) || $license_files[$item['product_id']] < $item['qty']) {
+						$this->session->set_flashdata('danger', 'The product "'.$item['name'].'" doesn\'t have enough amount');
+						$this->cart->update(array('rowid' => $rowid, 'qty'   => isset($license_files[$item['product_id']]) ? $license_files[$item['product_id']] : 0));
+						redirect('cart', 'refresh');
+						break;
+					}
+				}
+			}
+
 			$this->db->insert_batch('shop_order_products', $order_products);
 
 			$email_info = array(
@@ -388,7 +414,7 @@ class Shop_controller extends CI_Controller {
 			$this->email->subject('Заказ успешно принят');
 			$this->email->message($this->load->view('email/create_order', $email_info ,true));
 
-//			$this->email->send();
+			//			$this->email->send();
 		}
     }
 }

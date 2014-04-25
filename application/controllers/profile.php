@@ -520,7 +520,26 @@ class Profile extends CI_Controller {
 		$id = intval($id);
 		$product_file = $this->shop_model->get_file_by_user($id);
 		if (empty($product_file)) {
-			show_404();
+			$product_file = $this->db
+				->select('f.*, p.type, p.file_ids, o.status, o.user_id')
+				->from('shop_product_media_files as f')
+				->join('shop_order_products as p', 'p.product_id = f.product_id')
+				->join('shop_orders as o', 'p.order_id = o.id')
+				->where('f.id', $id)
+				->where('o.user_id', $this->data['user_info']['id'])
+				->where('o.status', 1)
+				->get()
+				->row_array();
+			if (empty($product_file)) {
+				show_404();
+			}
+
+			if ($product_file['type'] == 'licenses') {
+				$file_ids = explode(',', $product_file['file_ids']);
+				if (empty($file_ids) || !in_array($id, $file_ids)) {
+					show_404();
+				}
+			}
 		}
 
 		header('X-Sendfile: '.FCPATH.'media_files/'.$product_file['file_name']);
@@ -597,6 +616,13 @@ class Profile extends CI_Controller {
 				'width' => '60%',
 				'func'  => function($row, $params, $that, $CI) {
 					$row['id'] = $row['product_id'];
+					if ($CI->data['order_info']['status'] == 1) {
+						if ($row['type'] == 'licenses') {
+							$row['files_list'] = $CI->db->where_in('id', explode(',', $row['file_ids']))->get('shop_product_media_files')->result_array();
+						} else {
+							$row['files_list'] = $CI->db->where(array('product_id' => $row['id'], 'status' => 0))->get('shop_product_media_files')->result_array();
+						}
+					}
 					return $CI->load->view('profile/item', $row, true);
 				}
 		))
@@ -711,6 +737,6 @@ class Profile extends CI_Controller {
 		$this->db->trans_complete();
 
 		$this->session->set_flashdata('success', 'Тестовый платеж успешно произведён');
-		redirect('profile/orders', 'refresh');
+		redirect('profile/view_order/'.$id, 'refresh');
 	}
 }

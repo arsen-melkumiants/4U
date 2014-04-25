@@ -83,12 +83,11 @@
 					<h2>Info</h2>
 					<?php echo $product_info['content'] ?>
 				</div>
-				<div class="attach_files">
+				<div class="files_list">
 					<?php if (!empty($attach_files)) {?>
 					<ul>
 						<?php foreach ($attach_files as $item) {
-						$ext = strtolower(end(explode('.', $item['file_name'])));
-						?>
+						$ext = strtolower(end(explode('.', $item['file_name'])));?>
 						<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('uploads/gallery/'.$item['file_name'])?>"><?php echo $item['file_name']?></a></li>
 						<?php }?>
 					</ul>
