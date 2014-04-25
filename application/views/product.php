@@ -32,8 +32,13 @@
 					<?php
 						if (!empty($images)) {
 							foreach ($images as $item) {
-								if (!$item['main']) {?>
-								<li><a href="<?php echo base_url('uploads/gallery/'.$item['file_name']);?>"><img src="<?php echo base_url('uploads/gallery/small_thumb/'.$item['file_name']);?>" /></a></li>
+								if (!$item['main']) {
+									if(!preg_match('/\.(jpg|jpeg|png|gif)/iu', $item['file_name'])) {
+										$attach_files[] = $item;
+										continue;
+									}
+									?>
+									<li><a href="<?php echo base_url('uploads/gallery/'.$item['file_name']);?>"><img src="<?php echo base_url('uploads/gallery/small_thumb/'.$item['file_name']);?>" /></a></li>
 					<?php }}}?>
 					</ul>
 					<div class="clear"></div>
@@ -77,6 +82,17 @@
 				<div class="description">
 					<h2>Info</h2>
 					<?php echo $product_info['content'] ?>
+				</div>
+				<div class="attach_files">
+					<?php if (!empty($attach_files)) {?>
+					<ul>
+						<?php foreach ($attach_files as $item) {
+						$ext = strtolower(end(explode('.', $item['file_name'])));
+						?>
+						<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('uploads/gallery/'.$item['file_name'])?>"><?php echo $item['file_name']?></a></li>
+						<?php }?>
+					</ul>
+					<?php }?>
 				</div>
 			</div>
 		</div>

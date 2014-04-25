@@ -219,7 +219,7 @@ class Shop_model extends CI_Model {
 			'product_id' => $product_id,
 			'main'       => 1
 		))->count_all_results('shop_product_images');
-		if (!$count) {
+		if (!$count && !preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
 			$insert_array['main'] = 1;
 		}
 
@@ -251,17 +251,16 @@ class Shop_model extends CI_Model {
 		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
 			$success = unlink(FCPATH.'uploads/gallery/'.$info['file_name']);
-			$success = unlink(FCPATH.'uploads/gallery/small_thumb/'.$info['file_name']);
+			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $info['file_name'])) {
+				$success = unlink(FCPATH.'uploads/gallery/small_thumb/'.$info['file_name']);
+			}
 
 			if ($success) {
 				$this->db
 					->where('id', $id)
 					->delete('shop_product_images');
 				if ($info['main']) {
-					$this->db
-						->where('product_id', $info['product_id'])
-						->limit(1)
-						->update('shop_product_images', array('main' => 1));
+					$this->db->query('UPDATE shop_product_images SET main = 1 WHERE `file_name` REGEXP \'\\.(jpg|jpeg|png|gif)\' LIMIT 1;');
 				}
 				$this->db
 					->where('id', $info['product_id'])

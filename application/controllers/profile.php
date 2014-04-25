@@ -364,7 +364,7 @@ class Profile extends CI_Controller {
 		if ($type == 'image') {
 			$upload_path_url         = base_url('uploads/gallery').'/';
 			$config['upload_path']   = FCPATH.'uploads/gallery';
-			$config['allowed_types'] = 'jpg|jpeg|png|gif';
+			$config['allowed_types'] = 'jpg|jpeg|png|gif|txt|text|rtx|rtf|doc|docx|xlsx|word|xl';
 			$config['max_size']      = '5000000';
 		} else {
 			$upload_path_url = base_url('media_files').'/';
@@ -405,14 +405,11 @@ class Profile extends CI_Controller {
 				$product_files = $type == 'image' ? $this->shop_model->get_product_images($id) : $this->shop_model->get_product_files($id);
 				foreach ($product_files as $item) {
 					$thumbnail = '';
-					if ($type == 'image') {
-						$thumbnail = $upload_path_url.'small_thumb/'.$item['file_name'];
-					} else {
-						foreach (explode('|', 'jpg|jpeg|png|gif') as $ext) {
-							if (stripos($item['file_name'], '.'.$ext) !== FALSE) {
-								$thumbnail = $upload_path_url.$item['id'];
-								break;
-							}
+					if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $item['file_name'])) {
+						if ($type == 'image') {
+							$thumbnail = $upload_path_url.'small_thumb/'.$item['file_name'];
+						} else {
+							$thumbnail = $upload_path_url.$item['id'];
 						}
 					}
 					$files[] = array(
@@ -422,6 +419,7 @@ class Profile extends CI_Controller {
 						'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$item['id'],
 						'deleteType'   => 'POST',
 						'error'        => null,
+						'sold'         => !empty($item['status'])
 					);
 				}
 			}
@@ -431,20 +429,19 @@ class Profile extends CI_Controller {
 			if ($type == 'image') {
 				$file_id = $this->shop_model->add_product_image($id, $data);
 				$this->load->library('image_lib');
-				$this->resize_image($data, $new_width = 250, 'small_thumb');
+				if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
+					$this->resize_image($data, $new_width = 250, 'small_thumb');
+				}
 			} else {
 				$file_id = $this->shop_model->add_product_file($id, $data);
 			}
 
 			$thumbnail = '';
-			if ($type == 'image') {
-				$thumbnail = $upload_path_url.'small_thumb/'.$data['file_name'];
-			} else {
-				foreach (explode('|', 'jpg|jpeg|png|gif') as $ext) {
-					if (stripos($data['file_name'], '.'.$ext) !== FALSE) {
-						$thumbnail = $upload_path_url.$file_id;
-						break;
-					}
+			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
+				if ($type == 'image') {
+					$thumbnail = $upload_path_url.'small_thumb/'.$data['file_name'];
+				} else {
+					$thumbnail = $upload_path_url.$file_id;
 				}
 			}
 

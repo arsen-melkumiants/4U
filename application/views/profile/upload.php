@@ -134,7 +134,7 @@ window.onload = function() {
 */ ?>
 	<?php if ($type == 'image') {?>
 	<a class="btn btn-primary" href="<?php echo site_url('profile/edit_product/'.$id)?>">Previous step</a>
-	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/product_media_files/'.$id)?>">Next_step</a>
+	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/product_media_files/'.$id)?>">Next step</a>
 	<?php } else {?>
 	<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>">Previous step</a>
 	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/products/moderate')?>">Finish</a>
@@ -193,6 +193,9 @@ window.onload = function() {
 				</p>
 				{% if (file.error) { %}
 					<div><span class="label label-danger">Error</span> {%=file.error%}</div>
+					{% } %}
+				{% if (file.sold) { %}
+					<div><span class="label label-warning">Sold</span></div>
 					{% } %}
 			</td>
 			<td>
