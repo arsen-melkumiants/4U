@@ -25,18 +25,23 @@ class Shop_model extends CI_Model {
 
 	function get_categories() {
 		$all_branch = $this->get_category_items();
-		return $this->get_category_tree($all_branch, 0);
+		$active_ids = array();
+		if ($this->uri->segment(1) == 'category') {
+			$category_info = $this->get_category_info($this->uri->segment(2));
+			$active_ids = array_keys($this->parent_categories($category_info['id'], $all_branch));
+		}
+		return $this->get_category_tree($all_branch, 0, 'category/', $active_ids);
 	}
 
-	function get_category_tree($all_branch, $id = 0, $url = 'category/') {
+	function get_category_tree($all_branch, $id = 0, $url = 'category/', $active_ids = array()) {
 		$text = '<ul>';
 		$num = 0;
 		foreach ($all_branch as $key => $item) {
 			if ($item['id'] && $item['parent_id'] == $id) {
 				$icon = !empty($item['custom']) ? '<i class="'.$item['custom'].'"></i>' : '';
-				$text .= '<li>';
-				$sub  = $this->get_category_tree($all_branch, $item['id'], $url);
-				$text .= '<a '.($sub ? 'class="drop"' : '').' href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
+				$sub  = $this->get_category_tree($all_branch, $item['id'], $url, $active_ids);
+				$text .= '<li'.($sub ? ' class="drop'.(in_array($item['id'], $active_ids) ? ' down' : '').'"' : '').'>';
+				$text .= '<a href="'.site_url($url.$item['alias']).'">'.$icon.$item['name'].'</a>';
 				$text .= $sub;
 				$text .= '</li>';
 				$num++;
@@ -56,10 +61,12 @@ class Shop_model extends CI_Model {
 			->row_array();
 	}
 
-	function parent_categories($id = false) {
-		$all_branch = $this->get_category_items();
+	function parent_categories($id = false, $all_branch = false) {
 		if (empty($all_branch)) {
-			return false;
+			$all_branch = $this->get_category_items();
+			if (empty($all_branch)) {
+				return false;
+			}
 		}
 		$ids = $this->get_parent_category_recurcive($all_branch, $id);
 		return $ids;

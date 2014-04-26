@@ -85,6 +85,25 @@
 					delay : 3000,
 				});
 			});
+
+			$('.left_block a').on('click', function() {
+				var li = $(this).parent();
+				if (!li.hasClass('drop')) {
+					return true;
+				}
+				var ul = li.children('ul');
+				if (ul.length === 0) {
+					return true;
+				}
+				if (li.hasClass('down')) {
+					ul.slideUp('medium');
+					li.removeClass('down');
+				} else {
+					ul.stop().slideDown('medium');
+					li.addClass('down');
+				}
+				return false;
+			});
 		});
 		</script>
 
