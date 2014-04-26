@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Shop_controller extends CI_Controller {
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->load->model(array(
@@ -11,15 +11,15 @@ class Shop_controller extends CI_Controller {
 		$this->load->library(array(
 			'session',
 			'ion_auth',
-            'cart',
+			'cart',
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->shop_model->get_categories();
 		$this->data['user_info'] = $this->ion_auth->user()->row_array();
-		
+
 		set_alert($this->session->flashdata('success'), false, 'success');
 		set_alert($this->session->flashdata('danger'), false, 'danger');
-    }
+	}
 
 	public function index() {
 		show_404();
@@ -43,7 +43,13 @@ class Shop_controller extends CI_Controller {
 		$view_mode = $this->input->cookie('view_mode');
 		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
 
-		$this->data['title']        = 'Категория "'.$this->data['category_info']['name'].'"';
+		//VIP
+		$this->data['name'] = 'VIP lots';
+		$this->data['products']     = $this->shop_model->get_vip_products(3);
+		$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
+
+		$this->data['name']  = $this->data['category_info']['name'];
+		$this->data['title'] = 'Категория "'.$this->data['name'].'"';
 
 		$this->data['per_page']     = 9;
 		$this->data['total']        = $this->shop_model->count_products_by_category($this->data['category_info']['id']);
@@ -52,7 +58,29 @@ class Shop_controller extends CI_Controller {
 
 		load_views();
 	}
-	
+
+	public function search() {
+		$query = $this->input->get('q');
+
+		$this->data['types'] = array('default','gallery','list');
+		$view_mode = $this->input->cookie('view_mode');
+		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
+
+		//VIP
+		$this->data['name'] = 'VIP lots';
+		$this->data['products']     = $this->shop_model->get_vip_products(3);
+		$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
+
+		$this->data['title'] = $this->data['name'] = 'Поиск "'.$query.'"';
+
+		$this->data['per_page']     = 9;
+		$this->data['total']        = $this->shop_model->count_search_products($query);
+		$this->data['products']     = $this->shop_model->get_search_products($query, $this->data['per_page']);
+		$this->data['center_block'] = $this->load->view('category', $this->data, true);
+
+		load_views();
+	}
+
 	public function product($id = false, $name = false) {
 		if (empty($id)) {
 			show_404();
@@ -120,30 +148,30 @@ class Shop_controller extends CI_Controller {
 						'func'  => function($row, $params, $that, $CI) {
 							return $CI->load->view('profile/item', $row, true);
 						}
-					))
+				))
 					->text('id', array(
 						'title' => 'Price',
 						'width' => '20%',
 						'func'  => function($row, $params, $that, $CI) {
 							return '<div class="count">
-										<span class="minus none">–</span>
-										<input data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" data-price="'.$row['price'].'" type="text" value="'.$CI->data['order_items'][$row['id']]['qty'].'"/>
-										<span class="plus">+</span>
-									</div>';
+								<span class="minus none">–</span>
+								<input data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" data-price="'.$row['price'].'" type="text" value="'.$CI->data['order_items'][$row['id']]['qty'].'"/>
+								<span class="plus">+</span>
+								</div>';
 						}
-					))
+				))
 					->text('price', array(
 						'title' => 'Price',
 						'width' => '20%',
 						'func'  => function($row, $params) {
 							return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].' '.$row['symbol'].'</div>';
 						}
-					))
+				))
 					->btn(array(
 						'func'  => function($row, $params, $html, $this, $CI) {
 							return '<a href="#" data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" class="delete" title="Delete"></a>';
 						}
-					))
+				))
 					->create($this->data['products'], array('no_header' => 1, 'class' => 'table'));
 			}
 
@@ -185,7 +213,7 @@ class Shop_controller extends CI_Controller {
 				->func(function($params) {
 					return '<button type="submit" class="orange_btn">Next step</button>';
 				})
-				->create(array('action' => current_url(), 'error_inline' => 'true'));
+					->create(array('action' => current_url(), 'error_inline' => 'true'));
 			if ($this->form_validation->run() != false) {
 				foreach ($fields as $key => $item) {
 					$item = $this->input->post($key);
@@ -196,7 +224,7 @@ class Shop_controller extends CI_Controller {
 				$this->session->set_userdata(array('order_info' => $fields));
 				redirect('cart/payment', 'refresh');
 			}
-			
+
 			$this->data['center_block'] = $this->load->view('cart/info', $this->data, true);
 		} elseif($step == 'payment') {
 			$this->load->library('form');
@@ -205,7 +233,7 @@ class Shop_controller extends CI_Controller {
 				->func(function($params) {
 					return '<button type="submit" class="orange_btn">Finish</button>';
 				})
-				->create(array('action' => site_url('cart/confirmation')));
+					->create(array('action' => site_url('cart/confirmation')));
 			$this->data['center_block'] = $this->load->view('cart/payment', $this->data, true);
 		} elseif($step == 'confirmation') {
 			$finish = $this->input->post('confirm');
@@ -213,18 +241,18 @@ class Shop_controller extends CI_Controller {
 				redirect('cart/payment', 'refresh');
 			}
 
-            $order_items = $this->cart->contents();
-            $ids = array();
-            if(!empty($order_items)){
-                foreach ($order_items as $item){
-                    $ids[$item['id']] = $item['id'];
-                    $orders[$item['id']] = $item;
-                }
-            }
-            
-            $this->data['order_items'] = !empty($orders) ? $orders : '';
+			$order_items = $this->cart->contents();
+			$ids = array();
+			if(!empty($order_items)){
+				foreach ($order_items as $item){
+					$ids[$item['id']] = $item['id'];
+					$orders[$item['id']] = $item;
+				}
+			}
+
+			$this->data['order_items'] = !empty($orders) ? $orders : '';
 			$this->data['products'] = $this->shop_model->get_product_info($ids);
-            
+
 			$this->confirm_order($this->data);
 
 			$this->data['center_block'] = '<h4>Congratulations. your purchase is completed. Want to buy something else?</h4>';
@@ -232,7 +260,7 @@ class Shop_controller extends CI_Controller {
 		}        
 		load_views();
 	}
-	
+
 	public function add_to_cart() {
 		$id = intval($this->input->post('id'));
 		if (empty($id)) {
@@ -273,10 +301,10 @@ class Shop_controller extends CI_Controller {
 		}
 		echo 'OK';
 	}
-	
+
 	public function update_cart(){
 		$rowid = $this->input->post('id');
-        $qty = intval($this->input->post('count'));
+		$qty = intval($this->input->post('count'));
 		$cart_products = $this->cart->contents();
 		if (!isset($cart_products[$rowid])) {
 			echo 'KO';
@@ -291,23 +319,23 @@ class Shop_controller extends CI_Controller {
 			echo $cart_products[$rowid]['qty'];
 			exit;
 		}
-        $updata = array(
-            'rowid' => $rowid,
-            'qty'   => $qty,
+		$updata = array(
+			'rowid' => $rowid,
+			'qty'   => $qty,
 		);
 		echo $this->cart->update($updata) ? 'OK' : $cart_products[$rowid]['qty'];
-    }
-	
+	}
+
 	private function confirm_order($all_data) {
-        $user_data = $this->session->all_userdata();
-        $id = 0;
-        $auto_reg = false;
-        if (!$this->ion_auth->logged_in()) {
-            if (!$this->ion_auth->email_check($user_data['order_info']['email'])) {
-                $username = $user_data['order_info']['username'];
-                $password = $user_data['order_info']['email'];
-                $email    = $user_data['order_info']['email'];
-                $additional_data = array(
+		$user_data = $this->session->all_userdata();
+		$id = 0;
+		$auto_reg = false;
+		if (!$this->ion_auth->logged_in()) {
+			if (!$this->ion_auth->email_check($user_data['order_info']['email'])) {
+				$username = $user_data['order_info']['username'];
+				$password = $user_data['order_info']['email'];
+				$email    = $user_data['order_info']['email'];
+				$additional_data = array(
 					'company' => $user_data['order_info']['company'],
 					'phone'   => $user_data['order_info']['phone'],
 					'country' => $user_data['order_info']['country'],
@@ -316,24 +344,24 @@ class Shop_controller extends CI_Controller {
 					'zip'     => $user_data['order_info']['zip'],
 					'address' => $user_data['order_info']['address'],
 				);								
-                $id = $this->ion_auth->register($username, $password, $email, $additional_data);
-                $auto_reg = true;
-            } else {
-                $by_email = $this->db->where('email', $user_data['order_info']['email'])->get('users')->row_array();
-                $id = $by_email['id'];
-            }
+				$id = $this->ion_auth->register($username, $password, $email, $additional_data);
+				$auto_reg = true;
+			} else {
+				$by_email = $this->db->where('email', $user_data['order_info']['email'])->get('users')->row_array();
+				$id = $by_email['id'];
+			}
 		} else {
-            $user_identify = $this->ion_auth->user()->row_array();
-            $id = $user_identify['id'];
-        }
-        
-        if(empty($id)){
-           return false; 
-        }
-        
-        $total_price = $this->cart->total();
-        
-        $info = array(
+			$user_identify = $this->ion_auth->user()->row_array();
+			$id = $user_identify['id'];
+		}
+
+		if(empty($id)){
+			return false; 
+		}
+
+		$total_price = $this->cart->total();
+
+		$info = array(
 			'total_price' => $total_price,
 			'clear_price' => $this->cart->total(),
 			'user_id'     => $id,
@@ -350,9 +378,9 @@ class Shop_controller extends CI_Controller {
 			'add_date'    => time(),
 			'status'      => 0,
 		);
-        
-        $this->db->insert('shop_orders',$info);
-        $order_id = intval($this->db->insert_id());
+
+		$this->db->insert('shop_orders',$info);
+		$order_id = intval($this->db->insert_id());
 		if (!empty($order_id)) {            
 			foreach ($all_data['products'] as $item){
 				$product_info[$item['id']] = $item;
@@ -416,5 +444,5 @@ class Shop_controller extends CI_Controller {
 
 			//			$this->email->send();
 		}
-    }
+	}
 }

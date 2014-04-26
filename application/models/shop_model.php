@@ -128,6 +128,36 @@ class Shop_model extends CI_Model {
 		return $this->get_product_info();
 	}
 
+	function count_search_products($query) {
+		$this->search_products($query);
+		return $this->db
+			->select('p.id')
+			->get()
+			->num_rows();
+	}
+
+	function get_search_products($query, $limit = false) {
+		$this->search_products($query);
+		if ($limit) {
+			$offset = isset($_GET['page']) && intval($_GET['page']) > 1 ? (intval($_GET['page']) - 1) * $limit : 0;
+			$this->db->limit($limit, $offset);
+		}
+		return $this->db
+			->select('p.*, c.symbol, c.code, i.file_name')
+			->get()
+			->result_array();
+	}
+
+	function search_products($query) {
+		return $this->db
+			->from('shop_products as p')
+			->join('shop_currencies as c', 'p.currency = c.id')
+			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+			->like('p.name', $query)
+			->or_like('p.content', $query)
+			->where('p.status', 1);
+	}
+
 	function count_products_by_category($id) {
 		$this->products_by_category($id);
 		return $this->db
@@ -159,6 +189,12 @@ class Shop_model extends CI_Model {
 			->where('p.status', 1);
 	}
 
+	function get_vip_products($limit = false) {
+		if (!empty($limit)) {
+			$this->db->limit($limit);
+		}
+		return $this->get_product_info();
+	}
 
 	function get_product_info($id = false) {
 		$this->db

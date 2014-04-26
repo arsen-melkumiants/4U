@@ -136,11 +136,15 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 	opacity: 0.5;
 }
 
+.custom_block .item_container {margin: 0 -20px;}
 .custom_block .item {float: left;width: 33%;text-align: center;padding: 15px 2%;border: 1px solid #f2f2f2;}
 .custom_block .item.top {background: #f5efb8;border: 1px solid #d1c664;}
 .custom_block .item .name {text-align: center;font-size: 16px;height: 41px;overflow: hidden;}
 .custom_block .item .name a {font-size: 16px;}
 .custom_block .item .image {border: 1px solid #a5a5a5;margin-bottom: 15px;height: 170px;overflow: hidden;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;position: relative;}
+.custom_block.with_right .item .image,
+.custom_block.with_right .item.horizontal .image {height: 105px;}
+.custom_block.with_right .item .image:hover .bg_text {font-size: 20px;}
 .custom_block .item .image .bg,
 .custom_block .item .image .bg_text {display: none;}
 .custom_block .item .image:hover .bg_text {display: block;position: absolute;font-size: 28px;color: #fff;z-index: 2;top: 36%;text-align: center;width: 100%;text-shadow: -1px -1px 0px rgba(3, 3, 3, 0.4);}
@@ -173,9 +177,8 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 .right_block .title {margin-bottom: 15px;border: 0;border-bottom: 1px solid #f2f2f2;margin: 0;}
 .right_block .title.stars > * {display: inline;}
 .right_block .title.stars:before,
-.right_block .title.stars:after {content: '★';font-size: 18px;position: relative;top: -4px;color: #f27141;padding: 0 5px;}
+.right_block .title.stars:after {content: '★';font-size: 18px;position: relative;top: -4px;color: #f27141;padding: 0 5px;background: none;}
 .right_block .custom_block .item {width: 100%;float: none;border-color: #fff;}
-.right_block .custom_block .item:hover {border-color: #d1c664;}
 
 .breadcrumps {float: left;margin-top: 8px;}
 .breadcrumps li {float: left;color: #aaa6a5;list-style: none;margin-right: 7px;}

@@ -40,7 +40,7 @@
 
 #Admin routes
 $admin_folder = 'admin/';
-$admin_url = '4U/';
+$admin_url    = '4U/';
 
 $route['4U'] = $admin_folder.'admin_control_panel';
 $route[$admin_url.'global_settings']           = $admin_folder.'admin_control_panel/global_settings';
@@ -57,6 +57,7 @@ $route[$admin_url.'(:any)']        = $admin_folder.'$1';
 #User routes
 $route['category/(:any)'] = 'shop_controller/category/$1';
 $route['product/(:any)']  = 'shop_controller/product/$1';
+$route['search']          = 'shop_controller/search';
 $route['cart']            = 'shop_controller/cart';
 $route['cart/(:any)']     = 'shop_controller/cart/$1';
 $route['add_to_cart']     = 'shop_controller/add_to_cart';
