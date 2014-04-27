@@ -125,6 +125,7 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 .custom_block > .title:before {content: '';}
 .custom_block > .title h2 {color: #f27141;margin: 0;display: inline;}
 .custom_block > .title h1 {margin: 0;}
+.custom_block > .title .link {float: right;color: #888;margin-top: 10px;}
 .custom_block > .title .view_mode {float: right;margin: 10px 5px 0 0;}
 .custom_block > .title .view_mode li {float: left;background: url('../img/view_icons.png');width: 17px;height: 13px;list-style: none;margin-left: 10px;cursor: pointer;}
 .custom_block > .title .view_mode li.gallery {background-position: -37px 0px;width: 13px;}
@@ -159,7 +160,6 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 }
 .custom_block .item img {max-width: 100%;min-height: 100%;}
 .custom_block .item .orange_btn {margin-right: -3px;float: right;}
-.custom_block.with_right .item .orange_btn {float: none;}
 .custom_block .price {float: left;color: #42403f;font-size: 16px;font-family: Verdana, Geneva, sans-serif;margin: 10px 0;}
 
 .custom_block .horizontal.item {float: none;width: auto;text-align: left;margin: 10px;}

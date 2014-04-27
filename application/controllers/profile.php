@@ -37,7 +37,7 @@ class Profile extends CI_Controller {
 
 	//redirect if needed, otherwise display the user list
 	function index() {
-		$this->data['title'] = $this->data['header'] = 'My profile';
+		$this->data['title'] = 'My profile';
 
 		$allowed_fields = array_flip(array('username','email','active','company','address','city','state','country','zip','phone'));
 		foreach ($this->data['user_info'] as $key => $field) {

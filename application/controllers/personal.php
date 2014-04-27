@@ -147,12 +147,14 @@ class Personal extends CI_Controller {
 			$email    = strtolower($this->input->post('email'));
 			$password = $this->input->post('password');
 
-			$additional_data = $this->input->post();
-			unset(
-				$additional_data['username'],
-				$additional_data['email'],
-				$additional_data['password'],
-				$additional_data['password_confirm']
+			$additional_data = array(
+				'company' => $this->input->post('company'),
+				'address' => $this->input->post('address'),
+				'city'    => $this->input->post('city'),
+				'state'   => $this->input->post('state'),
+				'country' => $this->input->post('country'),
+				'zip'     => $this->input->post('zip'),
+				'phone'   => $this->input->post('phone'),
 			);
 		}
 
@@ -168,9 +170,57 @@ class Personal extends CI_Controller {
 		}
 	}
 
+	function edit_profile()	{
+		$this->data['title'] = $this->data['header'] = 'Edit profile';
+
+		if (!$this->ion_auth->logged_in()) {
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
+			redirect('', 'refresh');
+		}
+
+		$user_info = $this->ion_auth->user()->row_array();
+		$this->data['center_block'] = $this->form
+			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_fname_label')))
+			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Company'))
+			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Address'))
+			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'City'))
+			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'State'))
+			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Country'))
+			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Zip'))
+			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Phone'))
+			->btn(array('value' => 'Edit'))
+			->create(array('action' => current_url(), 'error_inline' => 'true'));
+
+		if ($this->form_validation->run() == true) {
+			$update_array = array(
+				'username' => $this->input->post('username'),
+				'company'  => $this->input->post('company'),
+				'address'  => $this->input->post('address'),
+				'city'     => $this->input->post('city'),
+				'state'    => $this->input->post('state'),
+				'country'  => $this->input->post('country'),
+				'zip'      => $this->input->post('zip'),
+				'phone'    => $this->input->post('phone'),
+			);
+
+			$this->db->where('id', $user_info['id'])->update('users', $update_array);
+			$this->session->set_flashdata('success', 'The profile has been successfuly changed');
+
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
+			redirect('personal/edit_profile', 'refresh');
+		} else {
+			$this->data['message'] = validation_errors();
+			load_views();	
+		}
+	}
+
 	function forgot_password() {
 		$this->data['header'] = $this->data['title'] = lang('forgot_password_heading');
-		
+
 		if ($this->config->item('identity', 'ion_auth') == 'username') { 
 			$label = 'forgot_password_username_identity_label';
 			$email_rule = '';
@@ -185,7 +235,7 @@ class Personal extends CI_Controller {
 				'label' => $label
 			))
 			->btn(array('value' => lang('forgot_password_submit_btn')));
-		
+
 		if ($this->form_validation->run() == false) {
 			$this->form->form_data[0]['params']['error'] = $this->session->flashdata('message');
 			$this->data['center_block'] = $this->form

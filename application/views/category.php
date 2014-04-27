@@ -28,10 +28,12 @@
 				<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>
 			</div>
 			<div class="action">
+				<?php if (isset($user_info['id']) && $user_info['id'] == $item['author_id']) {?>
 				<div class="controls">
 					<a href="#"><i class="c_icon_up"></i></a>
 					<a href="#"><i class="c_icon_edit"></i></a>
 				</div>
+				<?php }?>
 				<button class="orange_btn add_to_cart"
 					data-name="<?php echo $item['name']?>"
 					data-id="<?php echo $item['id']?>"
