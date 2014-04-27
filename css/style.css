@@ -144,7 +144,7 @@ input[type="radio"]:checked:disabled::before {background-position: -162px -279px
 .custom_block .item.top {background: #f5efb8;border: 1px solid #d1c664;}
 .custom_block .item .name {text-align: center;font-size: 16px;height: 41px;overflow: hidden;}
 .custom_block .item .name a {font-size: 16px;}
-.custom_block .item .image {border: 1px solid #a5a5a5;margin-bottom: 15px;height: 170px;overflow: hidden;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;position: relative;}
+.custom_block .item .image {border: 1px solid #a5a5a5;margin-bottom: 15px;height: 140px;overflow: hidden;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;position: relative;}
 .custom_block.with_right .item .image,
 .custom_block.with_right .item.horizontal .image {height: 105px;}
 .custom_block.with_right .item .image:hover .bg_text {font-size: 20px;}
