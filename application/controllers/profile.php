@@ -39,12 +39,41 @@ class Profile extends CI_Controller {
 	function index() {
 		$this->data['title'] = 'My profile';
 
+		$user_id = $this->data['user_info']['id'];
+
+		$sold_stats = $this->db
+			->select('SUM(op.qty) as amount, SUM(op.qty * op.price) as price')	
+			->from('shop_order_products as op')
+			->join('shop_products as p', 'p.id = op.product_id')
+			->join('shop_orders as o', 'o.id = op.order_id')
+			->where('o.status', 1)
+			->where('p.author_id', $user_id)
+			->get()
+			->row_array();
+
+		$bought_stats = $this->db
+			->select('SUM(op.qty) as amount, SUM(op.qty * op.price) as price')	
+			->from('shop_order_products as op')
+			->join('shop_orders as o', 'o.id = op.order_id')
+			->where('o.status', 1)
+			->where('o.user_id', $user_id)
+			->get()
+			->row_array();
+
+		$this->data['stats'] = array(
+			'active_sales'            => $this->db->where(array('author_id' => $user_id, 'status' => 1))->get('shop_products')->num_rows(),
+			'sold_products_amount'    => $sold_stats['amount'],
+			'sold_products_profit'    => $sold_stats['price'].' $',
+			'bought_products_amount'  => $bought_stats['amount'],
+			'bought_products_expense' => $bought_stats['price'].' $',
+		);
 		$allowed_fields = array_flip(array('username','email','active','company','address','city','state','country','zip','phone'));
 		foreach ($this->data['user_info'] as $key => $field) {
 			if(!isset($allowed_fields[$key])) {
 				unset($this->data['user_info'][$key]);
 			}
 		}
+
 
 		$this->data['center_block'] = $this->load->view('profile/info', $this->data, true);
 

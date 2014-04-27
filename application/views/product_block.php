@@ -27,6 +27,18 @@
 	</div>
 	<div class="clear"></div>
 </div>
-<?php }?>
+<?php } /*?>
 <?php after_load('js', '/js/scroll/jquery.mCustomScrollbar.min.js');?>
+<?php after_load('css', '/js/scroll/jquery.mCustomScrollbar.css');?>
 <?php after_load('js', '/js/scroll/jquery.mousewheel.min.js');?>
+<script>
+	window.onload = function() {
+		if(typeof scrollOn === 'undefined' || !scrollOn) {
+			var scrollOn = true;
+			$('.slide_content').mCustomScrollbar({
+				horizontalScroll:true
+			});
+		}
+	}
+</script>
+<?php */?>

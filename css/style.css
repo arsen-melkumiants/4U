@@ -290,7 +290,8 @@ dt, dd {line-height: 2.5;}
 
 .stats_block .title {padding: 0 10px 0 63px;background: #f9f9f9 url(../img/stats_bg.png) left no-repeat;text-align: center;color: #f27141;height: 54px;margin-bottom: 1px;}
 .stats_block .title span {font-size: 30px;line-height: 52px;}
-.stats_block li {display: block;background: #fff;padding: 20px 30px;border-bottom:1px dotted #dadada;color: #959595;font-family: "Times New Roman", Times, serif;font-size: 15px;font-style: italic;}
+.stats_block li {display: block;background: #fff;padding: 20px 10px 20px 30px;border-bottom:1px dotted #dadada;color: #959595;}
+.stats_block .value {display: block;float: right;width: 20%;}
 .stats_block .stars {color: #f27141;}
 .stats_block .stars .empty{color: #959595;}
 

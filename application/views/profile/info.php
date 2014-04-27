@@ -13,51 +13,17 @@
 			</dl>
 		</div>
 		<div class="col-md-4">
+			<?php if (!empty($stats)) {?>
 			<div class="stats_block">
 				<div class="title"><span>My stats</span></div>
 				<ul>
-					<li>
-					The most popular topic
-					<div class="stars">
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-					</div>
-					</li>
-					<li>
-					The most popular topic
-					<div class="stars">
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-						<i class="icon-star empty"></i>
-						<i class="icon-star empty"></i>
-						<i class="icon-star empty"></i>
-					</div>
-					</li>
-					<li>
-					The most popular topic
-					<div class="stars">
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-						<i class="icon-star empty"></i>
-						<i class="icon-star empty"></i>
-						<i class="icon-star empty"></i>
-					</div>
-					</li>
-					<li>
-					The most popular topic
-					<div class="stars">
-						<i class="icon-star"></i>
-						<i class="icon-star"></i>
-						<i class="icon-star empty"></i>
-						<i class="icon-star empty"></i>
-						<i class="icon-star empty"></i>
-					</div>
-					</li>
+					<?php foreach ($stats as $name => $value) {
+					$name = ucfirst(strtolower(str_replace('_', ' ', $name)))?>
+					<li><?php echo $name?> <span class="value"><?php echo $value?></span></li>
+					<?php }?>
 				</ul>
 			</div>
+			<?php }?>
 		</div>
 	</div>
 
