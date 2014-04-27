@@ -454,16 +454,21 @@ class Auth extends CI_Controller {
 			redirect(ADM_URL.'auth', 'refresh');
 		}
 		
-		$user = $this->ion_auth->user($id)->row();
+		$user_info = $this->ion_auth->user($id)->row_array();
 		$groups=$this->ion_auth->groups()->result_array();
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
 		//validate form input
 		$this->load->library('form');
 		$this->form
-			->text('username', array('value' => $user->username, 'label' => $this->lang->line('edit_user_fname_label'), 'valid_rules' => 'required|xss_clean'))
-			->text('phone', array('value' => $user->phone, 'label' => $this->lang->line('edit_user_phone_label'), 'valid_rules' => 'required|xss_clean'))
-			->text('company', array('value' => $user->company, 'label' => $this->lang->line('edit_user_company_label'), 'valid_rules' => 'required|xss_clean'))
+			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_fname_label')))
+			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Company'))
+			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Address'))
+			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'City'))
+			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'State'))
+			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Country'))
+			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Zip'))
+			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Phone'))
 			->separator()
 			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
 			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));
@@ -478,9 +483,14 @@ class Auth extends CI_Controller {
 			}
 
 			$data = array(
-				'username'   => $this->input->post('username'),
-				'company'    => $this->input->post('company'),
-				'phone'      => $this->input->post('phone'),
+				'username' => $this->input->post('username'),
+				'company'  => $this->input->post('company'),
+				'address'  => $this->input->post('address'),
+				'city'     => $this->input->post('city'),
+				'state'    => $this->input->post('state'),
+				'country'  => $this->input->post('country'),
+				'zip'      => $this->input->post('zip'),
+				'phone'    => $this->input->post('phone'),
 			);
 
 			//Update the groups user belongs to
@@ -502,17 +512,15 @@ class Auth extends CI_Controller {
 				$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 				$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
 				$this->form_validation->run();
-				set_alert(form_error('password'), false, 'danger');
-				$this->form->form_data[5]['params']['error'] = form_error('password');
-				set_alert(form_error('password_confirm'), false, 'danger');
-				$this->form->form_data[6]['params']['error'] = form_error('password_confirm');
+				$this->form->form_data[9]['params']['error'] = form_error('password');
+				$this->form->form_data[10]['params']['error'] = form_error('password_confirm');
 				
 				$data['password'] = $this->input->post('password');
 			}
 
 			if ($this->form_validation->run() === TRUE)
 			{
-				$this->ion_auth->update($user->id, $data);
+				$this->ion_auth->update($user_info['id'], $data);
 
 				//check to see if we are creating the user
 				//redirect them back to the admin page
@@ -532,7 +540,7 @@ class Auth extends CI_Controller {
 		$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
 		//pass the user to the view
-		$this->data['user'] = $user;
+		$this->data['user'] = $user_info;
 		$this->data['groups'] = $groups;
 		$this->data['currentGroups'] = $currentGroups;
 
@@ -541,9 +549,9 @@ class Auth extends CI_Controller {
 			->btn(array('value' => 'Изменить', 'offset' => 3))
 			->create();
 		
-		$this->_render_page('header', $this->data);
-		$this->_render_page('s_page', $this->data);
-		$this->_render_page('footer', $this->data);
+		$this->_render_page(ADM_FOLDER.'header', $this->data);
+		$this->_render_page(ADM_FOLDER.'s_page', $this->data);
+		$this->_render_page(ADM_FOLDER.'footer', $this->data);
 	}
 
 	// create a new group
