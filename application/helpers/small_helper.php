@@ -58,15 +58,15 @@ function after_load($type, $url = false) {
 	}
 
 	if (!empty($url)) {
-		$GLOBALS['after_load'][$type][] = $url;
+		$GLOBALS['after_load'][$type][$url] = $url;
 		return true;
 	}
 	if (!empty($GLOBALS['after_load'][$type])) {
-		$result = '';
+		$result = PHP_EOL;
 		foreach ($GLOBALS['after_load'][$type] as $item) {
-			$result .= str_replace('$url', $item, $type_list[$type]);
+			$result .= str_replace('$url', $item, $type_list[$type]).PHP_EOL;
 		}
-		return $result;
+		return $result.PHP_EOL;
 	}
 
 	return false;
