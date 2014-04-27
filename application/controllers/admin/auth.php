@@ -445,23 +445,29 @@ class Auth extends CI_Controller {
 	//edit a user
 	function edit_user($id)
 	{
-		$this->data['title'] = "Edit User";
+		$this->data['header'] = 'Редактирование доступа';
+		$this->data['header_descr'] = 'Редактирование настроек и доступа администратора';
+		$this->data['title'] = $this->data['header'];
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
 			redirect(ADM_URL.'auth', 'refresh');
 		}
-
+		
 		$user = $this->ion_auth->user($id)->row();
 		$groups=$this->ion_auth->groups()->result_array();
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
 		//validate form input
-		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'required|xss_clean');
-		$this->form_validation->set_rules('groups', $this->lang->line('edit_user_validation_groups_label'), 'xss_clean');
+		$this->load->library('form');
+		$this->form
+			->text('username', array('value' => $user->username, 'label' => $this->lang->line('edit_user_fname_label'), 'valid_rules' => 'required|xss_clean'))
+			->text('phone', array('value' => $user->phone, 'label' => $this->lang->line('edit_user_phone_label'), 'valid_rules' => 'required|xss_clean'))
+			->text('company', array('value' => $user->company, 'label' => $this->lang->line('edit_user_company_label'), 'valid_rules' => 'required|xss_clean'))
+			->separator()
+			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
+			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));
+			
 
 		if (isset($_POST) && !empty($_POST))
 		{
@@ -472,8 +478,7 @@ class Auth extends CI_Controller {
 			}
 
 			$data = array(
-				'first_name' => $this->input->post('first_name'),
-				'last_name'  => $this->input->post('last_name'),
+				'username'   => $this->input->post('username'),
 				'company'    => $this->input->post('company'),
 				'phone'      => $this->input->post('phone'),
 			);
@@ -496,7 +501,12 @@ class Auth extends CI_Controller {
 			{
 				$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 				$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
-
+				$this->form_validation->run();
+				set_alert(form_error('password'), false, 'danger');
+				$this->form->form_data[5]['params']['error'] = form_error('password');
+				set_alert(form_error('password_confirm'), false, 'danger');
+				$this->form->form_data[6]['params']['error'] = form_error('password_confirm');
+				
 				$data['password'] = $this->input->post('password');
 			}
 
@@ -506,13 +516,17 @@ class Auth extends CI_Controller {
 
 				//check to see if we are creating the user
 				//redirect them back to the admin page
-				$this->session->set_flashdata('message', "User Saved");
-				redirect("auth", 'refresh');
+				$this->session->set_flashdata('success', "Данные успешно сохранены");
+				redirect(current_url(), 'refresh');
 			}
 		}
 
 		//display the edit user form
 		$this->data['csrf'] = $this->_get_csrf_nonce();
+		$this->form
+			->hidden(key($this->data['csrf']), $this->data['csrf'][key($this->data['csrf'])])
+			->hidden('id', $id);
+		
 
 		//set the flash data error message if there is one
 		$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
@@ -522,42 +536,14 @@ class Auth extends CI_Controller {
 		$this->data['groups'] = $groups;
 		$this->data['currentGroups'] = $currentGroups;
 
-		$this->data['first_name'] = array(
-			'name'  => 'first_name',
-			'id'    => 'first_name',
-			'type'  => 'text',
-			'value' => $this->form_validation->set_value('first_name', $user->first_name),
-		);
-		$this->data['last_name'] = array(
-			'name'  => 'last_name',
-			'id'    => 'last_name',
-			'type'  => 'text',
-			'value' => $this->form_validation->set_value('last_name', $user->last_name),
-		);
-		$this->data['company'] = array(
-			'name'  => 'company',
-			'id'    => 'company',
-			'type'  => 'text',
-			'value' => $this->form_validation->set_value('company', $user->company),
-		);
-		$this->data['phone'] = array(
-			'name'  => 'phone',
-			'id'    => 'phone',
-			'type'  => 'text',
-			'value' => $this->form_validation->set_value('phone', $user->phone),
-		);
-		$this->data['password'] = array(
-			'name' => 'password',
-			'id'   => 'password',
-			'type' => 'password'
-		);
-		$this->data['password_confirm'] = array(
-			'name' => 'password_confirm',
-			'id'   => 'password_confirm',
-			'type' => 'password'
-		);
-
-		$this->_render_page(ADM_FOLDER.'auth/edit_user', $this->data);
+		
+		$this->data['center_block'] = $this->form
+			->btn(array('value' => 'Изменить', 'offset' => 3))
+			->create();
+		
+		$this->_render_page('header', $this->data);
+		$this->_render_page('s_page', $this->data);
+		$this->_render_page('footer', $this->data);
 	}
 
 	// create a new group
