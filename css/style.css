@@ -18,7 +18,9 @@ ul {padding-left: 0;}
 .tooltip.top .tooltip-arrow {border-top-color: #f27141;}
 
 .btn,
-.orange_btn {border:1px solid #d82f00;text-transform: uppercase; -webkit-border-radius: 25px; -moz-border-radius: 25px;border-radius: 25px;font-size:14px;font-family:arial, helvetica, sans-serif; padding: 5px 25px; text-decoration:none; display:inline-block;text-shadow: -1px -1px 0 rgba(0,0,0,0.3);font-weight:bold; color: #FFFFFF;margin-right: 10px;}
+.orange_btn {border:1px solid #d82f00;text-transform: uppercase; -webkit-border-radius: 25px; -moz-border-radius: 25px;border-radius: 25px;font-size:14px;font-family:arial, helvetica, sans-serif; padding: 5px 25px; text-decoration:none; display:inline-block; text-shadow:0px 1px 0px #a22b00;
+
+font-weight:bold; color: #FFFFFF;margin-right: 10px;}
 
 .btn,
 .orange_btn,
