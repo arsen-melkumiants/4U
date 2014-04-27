@@ -10,7 +10,7 @@ class Admin_control_menu_model extends CI_Model
 		$this->load->database();
 		
 		$this->menus = array(
-			'top' => array(
+			'top'                               => array(
 				'Сайт'                          => array(
 					'global_settings'           => 'Глобальные настройки',
 					'change_access'             => 'Смена доступа в админ-панель',
@@ -34,9 +34,11 @@ class Admin_control_menu_model extends CI_Model
 					//'manage_order/all'          => 'Список заказов',
 					//'manage_order/settings'     => 'Настройки заказов',
 					'3'                         => '',
-					'manage_currency'       => 'Список валют'
+					'manage_currency'           => 'Список валют'
 				),
-				'manage_users/user/all'         => 'Пользователи',
+				'Пользователи'                  => array(
+					'manage_user'               => 'Список пользователей',
+				),
 				'extra'                         => 'Дополнительно',
 				'developers'                    => 'О разработчиках',
 			),
