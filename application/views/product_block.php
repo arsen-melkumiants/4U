@@ -3,6 +3,7 @@
 	<div class="title">
 		<h2><?php echo $name?></h2>
 	</div>
+	<div class="slide_content">
 	<?php foreach ($products as $item) {?>
 	<div class="item">
 		<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
@@ -23,6 +24,9 @@
 		</div>
 	</div>
 	<?php }?>
+	</div>
 	<div class="clear"></div>
 </div>
 <?php }?>
+<?php after_load('js', '/js/scroll/jquery.mCustomScrollbar.min.js');?>
+<?php after_load('js', '/js/scroll/jquery.mousewheel.min.js');?>
