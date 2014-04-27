@@ -51,7 +51,7 @@
 						data-name="<?php echo $product_info['name']?>" 
 						data-id="<?php echo $product_info['id']?>" 
 						data-href="<?php echo product_url($product_info['id'], $product_info['name'])?>"
-					>Buy Now</button>
+					>Buy</button>
 					<?php if (isset($user_info['id']) && $user_info['id'] == $product_info['author_id']) {?>
 					<div class="actions">
 						<ul>

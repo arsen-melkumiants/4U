@@ -19,7 +19,7 @@
 				data-name="<?php echo $item['name']?>"
 				data-id="<?php echo $item['id']?>"
 				data-href="<?php echo product_url($item['id'], $item['name'])?>"
-				>Buy Now</button>
+				>Buy</button>
 		</div>
 		<div class="clear"></div>
 	</div>
