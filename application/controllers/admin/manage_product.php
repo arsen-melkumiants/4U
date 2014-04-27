@@ -64,7 +64,7 @@ class Manage_product extends CI_Controller {
 			))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
 			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1))
-			->active(array('link' => $this->MAIN_URL.'active/%d'))
+//			->active(array('link' => $this->MAIN_URL.'active/%d'))
 			->btn(array(
 				'link'   => $this->MAIN_URL.'add',
 				'name'   => 'Добавить',
@@ -122,7 +122,7 @@ class Manage_product extends CI_Controller {
 			->text('price', array(
 				'value'       => $product_info['price'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean|numeric',
-				'symbol'	  => 'up',
+				'symbol'	  => '$',
 				'label'       => 'Цена',
 			))
 			/*->select('currency', array(
@@ -165,23 +165,16 @@ class Manage_product extends CI_Controller {
 				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Описание',
 			))
+			->radio('status', array(
+				'value'       => $product_info['status'] ?: false,
+				'valid_rules' => 'trim|xss_clean|is_natural',
+				'label'       => '<span class="text-danger">Модерация</span>',
+				'inputs'      => array('Ожидание', 'Подтверждено', 'Отказано'),
+			))
 			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'))
+			->link(array('name' => 'Галерея', 'href' => site_url($this->MAIN_URL.'gallery/'.$product_info['id'])))
+			->link(array('name' => 'Медиа контент', 'href' => site_url($this->MAIN_URL.'media_files/'.$product_info['id'])))
 			->create(array('action' => current_url()));
-	}
-
-	public function delete($id = false, $type = false) {
-		if (empty($id)) {
-			custom_404();
-		}
-
-		$product_info = $this->admin_product_model->get_product_info($id);
-
-		if (empty($product_info)) {
-			custom_404();
-		}
-		set_header_info($product_info);
-
-		admin_method('delete', $this->DB_TABLE, $product_info);
 	}
 
 	public function active($id = false) {
@@ -197,6 +190,76 @@ class Manage_product extends CI_Controller {
 		set_header_info($product_info);
 
 		admin_method('active', $this->DB_TABLE, $product_info);
+	}
+
+	function gallery($id = false) {
+		$this->media_files($id, 'image');
+	}
+
+	function upload_gallery($id = false) {
+		$this->upload_media_files($id, 'image');
+	}
+
+	function media_files($id = false, $type = false) {
+		$id = $this->data['id'] = intval($id);
+		$this->data['type'] = $type;
+		$product_info = $this->admin_product_model->get_product_info($id);
+		if (empty($product_info)) {
+			redirect($this->MAIN_URL, 'refresh');
+		}
+
+		if ($type == 'image') {
+			$this->data['title'] = $this->data['name'] = 'Галерея';
+			$this->data['upload_url'] = base_url($this->MAIN_URL.'upload_gallery/'.$id);
+		} else {
+			$this->data['title'] = $this->data['name'] = 'Медиа контент';
+			$this->data['upload_url'] = base_url($this->MAIN_URL.'upload_media_files/'.$id);
+		}
+
+		$this->data['center_block'] = $this->load->view(ADM_FOLDER.'upload', $this->data, true);
+		load_admin_views();
+	}
+
+	function upload_media_files($id = false, $type = 'file') {
+		$id = intval($id);
+		$product_info = $this->admin_product_model->get_product_info($id);
+		if (empty($product_info)) {
+			redirect($this->MAIN_URL, 'refresh');
+		}
+		$this->load->model('shop_model');
+
+		if ($type == 'image') {
+			$upload_path_url = base_url('uploads/gallery').'/';
+		} else {
+			$upload_path_url = base_url('media_files').'/';
+		}
+
+		$files = array();
+
+		$product_files = $type == 'image' ? $this->shop_model->get_product_images($id) : $this->shop_model->get_product_files($id);
+		foreach ($product_files as $item) {
+			$thumbnail = '';
+			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $item['file_name'])) {
+				if ($type == 'image') {
+					$thumbnail = $upload_path_url.'small_thumb/'.$item['file_name'];
+				} else {
+					$thumbnail = $upload_path_url.$item['id'];
+				}
+			}
+			$files[] = array(
+				'name'         => $item['file_name'],
+				'url'          => $type == 'image' ? $upload_path_url.$item['file_name'] : $upload_path_url.$item['id'],
+				'thumbnailUrl' => $thumbnail,
+				'error'        => null,
+				'sold'         => !empty($item['status'])
+			);
+		}
+
+		if ($this->input->is_ajax_request()) {
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode(array('files' => $files)));
+		}	
 	}
 
 }
