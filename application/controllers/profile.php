@@ -62,10 +62,10 @@ class Profile extends CI_Controller {
 
 		$this->data['stats'] = array(
 			'active_sales'            => $this->db->where(array('author_id' => $user_id, 'status' => 1))->get('shop_products')->num_rows(),
-			'sold_products_amount'    => $sold_stats['amount'],
-			'sold_products_profit'    => $sold_stats['price'].' $',
-			'bought_products_amount'  => $bought_stats['amount'],
-			'bought_products_expense' => $bought_stats['price'].' $',
+			'sold_products_amount'    => !empty($sold_stats['amount']) ? $sold_stats['amount'] : 0,
+			'sold_products_profit'    => (!empty($sold_stats['price']) ? $sold_stats['price'] : 0).' $',
+			'bought_products_amount'  => !empty($bought_stats['amount']) ? $bought_stats['amount'] : 0,
+			'bought_products_expense' => (!empty($bought_stats['price']) ? $bought_stats['price'] : 0).' $',
 		);
 		$allowed_fields = array_flip(array('username','email','active','company','address','city','state','country','zip','phone'));
 		foreach ($this->data['user_info'] as $key => $field) {
