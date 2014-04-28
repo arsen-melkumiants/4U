@@ -71,7 +71,6 @@ class Profile extends CI_Controller {
 		$allowed_fields = array(
 			'username' => lang('create_user_fname_label'),
 			'email'    => lang('create_user_email_label'),
-			'active'   => lang('create_user_password_label'),
 			'company'  => lang('create_user_company_label'),
 			'address'  => lang('create_user_address_label'),
 			'city'     => lang('create_user_city_label'),
@@ -87,9 +86,7 @@ class Profile extends CI_Controller {
 			}
 		}
 
-		echo lang('cal_su');
 		$this->data['labels'] = $allowed_fields;
-
 		$this->data['center_block'] = $this->load->view('profile/info', $this->data, true);
 
 		load_views();
@@ -102,7 +99,7 @@ class Profile extends CI_Controller {
 	}
 
 	function products($type = 'active') {
-		$this->data['title'] = $this->data['name'] = 'My products';
+		$this->data['title'] = $this->data['name'] = lang('my_products');
 		$this->data['type_list'] = array(
 			'active'      => array(1),
 			'moderate'    => array(0,2),
@@ -114,14 +111,14 @@ class Profile extends CI_Controller {
 		$this->load->library('table');
 		$this->table
 			->text('name', array(
-				'title' => 'Name',
+				'title' => lang('product_name'),
 				'width' => '60%',
 				'func'  => function($row, $params, $that, $CI) {
 					return $CI->load->view('profile/item', $row, true);
 				}
 		))
 			->text('price', array(
-				'title' => 'Price',
+				'title' => lang('product_price'),
 				'width' => '20%',
 				'func'  => function($row, $params) {
 					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
@@ -132,9 +129,9 @@ class Profile extends CI_Controller {
 				->btn(array(
 					'func' => function($row, $params, $html, $that, $CI) {
 						if ($row['status'] == 0) {
-							return '<span class="label label-default">Pending</span>';
+							return '<span class="label label-default">'.lang('pending').'</span>';
 						} elseif ($row['status'] == 2) {
-							return '<span class="label label-danger">Rejected</span>';
+							return '<span class="label label-danger">'.lang('rejected').'</span>';
 						}
 					}
 			));
@@ -144,12 +141,12 @@ class Profile extends CI_Controller {
 			->btn(array(
 				'link'  => 'profile/edit_product/%d',
 				'class' => 'edit',
-				'title' => 'Edit',
+				'title' => lang('edit'),
 			))
 			->btn(array(
 				'link'  => 'profile/delete_product/%d',
 				'class' => 'delete',
-				'title' => 'Delete',
+				'title' => lang('delete'),
 				'modal' => true,
 			))
 			;

@@ -1,7 +1,7 @@
 <div class="custom_block">
 	<div class="title">
 		<div class="corner"></div>
-		<h1><?php echo $name?><a href="<?php echo site_url('profile/add_product')?>" class="btn btn-primary" style="float:right;">Add product</a></h1>
+		<h1><?php echo $name?><a href="<?php echo site_url('profile/add_product')?>" class="btn btn-primary" style="float:right;"><?php echo lang('add_product')?></a></h1>
 		<div class="clear"></div>
 	</div>
 	<?php if (!empty($type_list)) {?>
