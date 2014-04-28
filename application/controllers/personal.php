@@ -57,15 +57,15 @@ class Personal extends CI_Controller {
 
 		$this->form
 			->text('identity', array(
-				'label' => 'Логин или Email:',
+				'label' => lang('login_identity_label'),
 				'valid_rules' => 'required|xss'
 			))
 			->password('password', array(
-				'label' => 'Пароль:',
+				'label'       => lang('login_password_label'),
 				'valid_rules' => 'required|xss'
 			))
 			->btn(array(
-				'value' => $this->lang->line('login_submit_btn'),
+				'value' => lang('login_submit_btn'),
 			));
 
 		if ($this->form_validation->run() == true) {
@@ -91,7 +91,6 @@ class Personal extends CI_Controller {
 	//log the user out
 	function logout()
 	{
-		$this->data['title'] = "Logout";
 		$logout = $this->ion_auth->logout();
 		$this->session->set_flashdata('success', $this->ion_auth->messages());
 		redirect('', 'refresh');
@@ -118,7 +117,7 @@ class Personal extends CI_Controller {
 	}
 
 	function registration()	{
-		$this->data['title'] = $this->data['header'] = "Create User";
+		$this->data['title'] = $this->data['header'] = lang('create_user_heading');
 
 		if ($this->ion_auth->logged_in()) {
 			if ($this->input->is_ajax_request()) {
@@ -128,18 +127,18 @@ class Personal extends CI_Controller {
 		}
 
 		$this->data['center_block'] = $this->form
-			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_fname_label')))
-			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => $this->lang->line('create_user_validation_email_label')))
+			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_validation_fname_label')))
+			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => lang('create_user_validation_email_label')))
 			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_validation_password_label')))
-			->password('password_confirm', array('valid_rules' => 'required|matches[password]',  'label' => $this->lang->line('create_user_validation_password_confirm_label')))
-			->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Company'))
-			->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Address'))
-			->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'City'))
-			->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'State'))
-			->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Country'))
-			->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Zip'))
-			->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Phone'))
-			->btn(array('value' => 'Регистрироваться'))
+			->password('password_confirm', array('valid_rules' => 'required|matches[password]',  'label' => lang('create_user_validation_password_confirm_label')))
+			->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
+			->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
+			->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_city_label')))
+			->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_state_label')))
+			->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_country_label')))
+			->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_zip_label')))
+			->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_phone_label')))
+			->btn(array('value' => lang('create_user_submit_btn')))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
 		if ($this->form_validation->run() == true) {

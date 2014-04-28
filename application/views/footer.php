@@ -74,7 +74,7 @@
 					}
 				}
 
-				$.post('/add_to_cart/', {id : id}).done(function(data) {
+				$.post('<?php echo site_url('add_to_cart')?>', {id : id}).done(function(data) {
 					if ($.trim(data) == 'Noqty') {
 						new PNotify({
 							title : 'Товар не добавлен в корзину',

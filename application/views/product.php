@@ -75,7 +75,7 @@
 			<div class="col-md-12">
 				<div class="saller_info">
 					<ul>
-					<li><span>Saller:</span> <?php echo $product_info['username']?></li>
+					<li><span>Seller:</span> <?php echo $product_info['username']?></li>
 						<li><span>Phone:</span> <?php echo $product_info['phone']?></li>
 					</ul>
 				</div>
