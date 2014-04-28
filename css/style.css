@@ -9,6 +9,7 @@ input,
 .btn.active:focus,
 button {outline: none;}
 ul {padding-left: 0;}
+.radio-inline {padding-left: 0;}
 .clear {clear: both;height: 0;overflow: hidden;}
 
 .alert {border: 0;}

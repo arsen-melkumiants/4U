@@ -4,10 +4,18 @@ $lang['my_profile']              = 'My profile';
 
 $lang['my_sales']                = 'My sales';
 $lang['my_products']             = 'My products';
-$lang['add_product']             = 'Add product';
+$lang['product_add']             = 'Add product';
+$lang['product_add_header']      = 'Add product';
+$lang['product_edit_header']     = 'Edit product';
 $lang['product_name']            = 'Name';
 $lang['product_price']           = 'Price';
 $lang['product_type']            = 'Type';
+$lang['product_type_descr']      = 'Type of product (license type sets amount of product according amount of files automatically)';
+$lang['product_amount']          = 'Amount';
+$lang['product_category']        = 'Category';
+$lang['product_content']         = 'Content';
+$lang['product_media_files']     = 'Media files';
+$lang['product_licenses']        = 'licenses';
 
 
 $lang['my_stats']                = 'My stats';

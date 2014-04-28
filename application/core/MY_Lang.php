@@ -40,6 +40,10 @@ class MY_Lang extends CI_Lang {
 		/* get the language abbreviation from uri */
 		$uri_abbr = $URI->segment(1);
 
+		if (strpos($URI->uri_string, '4U') !== false) {
+			return true;
+		}
+
 		/* adjust the uri string leading slash */
 		$URI->uri_string = preg_replace("|^\/?|", '/', $URI->uri_string);
 

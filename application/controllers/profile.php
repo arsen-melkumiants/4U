@@ -172,7 +172,7 @@ class Profile extends CI_Controller {
 
 
 	function add_product() {
-		$this->data['title'] = $this->data['header'] = 'Add product';
+		$this->data['title'] = $this->data['header'] = lang('product_add_header');
 		$this->data['center_block'] = $this->edit_form();
 
 		if ($this->form_validation->run() == FALSE) {
@@ -208,7 +208,7 @@ class Profile extends CI_Controller {
 			redirect('profile/products', 'refresh');
 		}
 
-		$this->data['title'] = $this->data['name'] = 'Edit product "'.$product_info['name'].'"';
+		$this->data['title'] = $this->data['name'] = lang('product_edit_header').' "'.$product_info['name'].'"';
 		$this->data['center_block'] = $this->edit_form($product_info);
 		$this->data['center_block'] = $this->load->view('profile/edit', $this->data, true);
 
@@ -249,8 +249,8 @@ class Profile extends CI_Controller {
 
 	private function edit_form($product_info = false) {
 		$product_types = array(
-			'media'    => 'Media files',
-			'licenses' => 'Licenses',
+			'media'    => lang('product_media_files'),
+			'licenses' => lang('product_licenses'),
 		);
 		$product_categories = $this->shop_model->get_product_categories();
 		array_unshift($product_categories, array('id' => '', 'name' => 'Без категории'));
@@ -259,21 +259,21 @@ class Profile extends CI_Controller {
 			->text('name', array(
 				'value'       => $product_info['name'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Name',
+				'label'       => lang('product_name'),
 			))
 			->text('price', array(
 				'value'       => $product_info['price'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean|price',
 				'symbol'      => '$',
 				'icon_post'   => true,
-				'label'       => 'Price',
+				'label'       => lang('product_price'),
 			));
 		if (!empty($product_info)) {
 			$this->form
 				->text('type', array(
 					'value'       => $product_info['type'],
 					'valid_rules' => 'trim|xss_clean',
-					'label'       => 'Type',
+					'label'       => lang('product_type'),
 					'readonly'    => true,
 				));
 			if ($product_info['type'] != 'licenses') {
@@ -281,35 +281,36 @@ class Profile extends CI_Controller {
 					->text('amount', array(
 						'value'       => $product_info['amount'],
 						'valid_rules' => 'required|trim|xss_clean|is_natural',
-						'label'       => 'Amount',
+						'label'       => lang('product_amount'),
 					));
 			}
 		} else {
 			$this->form
 				->radio('type', array(
-					'inputs' => $product_types,
-					'label'  => 'Type of product (license type sets amount of product according amount of files automatically)',
+					'inputs'      => $product_types,
+					'label'       => lang('product_type_descr'),
+					'valid_rules' => 'required|trim|xss_clean',
 				))
 				->text('amount', array(
 					'value'       => 0,
 					'valid_rules' => 'required|trim|xss_clean|is_natural',
-					'label'       => 'Amount',
+					'label'       => lang('product_amount'),
 				));
 		}
 		$this->form
 			->select('cat_id', array(
 				'value'       => $product_info['cat_id'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Category',
+				'label'       => lang('product_category'),
 				'options'     => $product_categories,
 				'search'      => true,
 			))
 			->textarea('content', array(
 				'value'       => $product_info['content'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Content',
+				'label'       => lang('product_content'),
 			))
-			->btn(array('value' => empty($product_info) ? 'Add' : 'Update'));
+			->btn(array('value' => empty($product_info) ? lang('product_add') : lang('update')));
 		if (!empty($product_info)) {
 			$this->form
 				->link(array('name' => 'Next step', 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
