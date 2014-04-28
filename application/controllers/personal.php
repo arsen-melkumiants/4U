@@ -53,11 +53,11 @@ class Personal extends CI_Controller {
 			redirect('', 'refresh');
 		}
 
-		$this->data['title'] = $this->data['header'] = "Login";
+		$this->data['title'] = $this->data['header'] = lang('login_heading');
 
 		$this->form
 			->text('identity', array(
-				'label' => lang('login_identity_label'),
+				'label'       => lang('login_identity_label'),
 				'valid_rules' => 'required|xss'
 			))
 			->password('password', array(
@@ -170,7 +170,7 @@ class Personal extends CI_Controller {
 	}
 
 	function edit_profile()	{
-		$this->data['title'] = $this->data['header'] = 'Edit profile';
+		$this->data['title'] = $this->data['header'] = lang('edit_user_heading');
 
 		if (!$this->ion_auth->logged_in()) {
 			if ($this->input->is_ajax_request()) {
@@ -181,15 +181,15 @@ class Personal extends CI_Controller {
 
 		$user_info = $this->ion_auth->user()->row_array();
 		$this->data['center_block'] = $this->form
-			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_fname_label')))
-			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Company'))
-			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Address'))
-			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'City'))
-			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'State'))
-			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Country'))
-			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Zip'))
-			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Phone'))
-			->btn(array('value' => 'Edit'))
+			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
+			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
+			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
+			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_city_label')))
+			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_state_label')))
+			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_country_label')))
+			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_zip_label')))
+			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_phone_label')))
+			->btn(array('value' => lang('edit_user_submit_btn')))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
 		if ($this->form_validation->run() == true) {

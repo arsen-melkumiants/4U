@@ -73,7 +73,7 @@ $lang['create_user_password_confirm_label']                    = 'Подтвер
 $lang['create_user_submit_btn']                                = 'Регистрация';
 
 // Edit User
-$lang['edit_user_heading']                                     = 'Редактировать пользователя';
+$lang['edit_user_heading']                                     = 'Редактирование профиля';
 $lang['edit_user_subheading']                                  = 'Пожалуйста заполните информацию ниже.';
 $lang['edit_user_fname_label']                                 = 'Имя:';
 $lang['edit_user_lname_label']                                 = 'Фамилия:';
@@ -83,7 +83,7 @@ $lang['edit_user_phone_label']                                 = 'Телефон
 $lang['edit_user_password_label']                              = 'Пароль: (если изменился)';
 $lang['edit_user_password_confirm_label']                      = 'Подтвердить пароль: (если изменился)';
 $lang['edit_user_groups_heading']                              = 'Член группы';
-$lang['edit_user_submit_btn']                                  = 'Сохранить пользователя';
+$lang['edit_user_submit_btn']                                  = 'Сохранить';
 $lang['edit_user_validation_fname_label']                      = 'Имя';
 $lang['edit_user_validation_lname_label']                      = 'Фамилия';
 $lang['edit_user_validation_email_label']                      = 'Email';

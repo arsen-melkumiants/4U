@@ -37,7 +37,7 @@ class Profile extends CI_Controller {
 
 	//redirect if needed, otherwise display the user list
 	function index() {
-		$this->data['title'] = 'My profile';
+		$this->data['title'] = $this->data['name'] = lang('my_profile');
 
 		$user_id = $this->data['user_info']['id'];
 
@@ -67,13 +67,28 @@ class Profile extends CI_Controller {
 			'bought_products_amount'  => !empty($bought_stats['amount']) ? $bought_stats['amount'] : 0,
 			'bought_products_expense' => (!empty($bought_stats['price']) ? $bought_stats['price'] : 0).' $',
 		);
-		$allowed_fields = array_flip(array('username','email','active','company','address','city','state','country','zip','phone'));
+
+		$allowed_fields = array(
+			'username' => lang('create_user_fname_label'),
+			'email'    => lang('create_user_email_label'),
+			'active'   => lang('create_user_password_label'),
+			'company'  => lang('create_user_company_label'),
+			'address'  => lang('create_user_address_label'),
+			'city'     => lang('create_user_city_label'),
+			'state'    => lang('create_user_state_label'),
+			'country'  => lang('create_user_country_label'),
+			'zip'      => lang('create_user_zip_label'),
+			'phone'    => lang('create_user_phone_label'),
+		);
+
 		foreach ($this->data['user_info'] as $key => $field) {
 			if(!isset($allowed_fields[$key])) {
 				unset($this->data['user_info'][$key]);
 			}
 		}
 
+		echo lang('cal_su');
+		$this->data['labels'] = $allowed_fields;
 
 		$this->data['center_block'] = $this->load->view('profile/info', $this->data, true);
 
