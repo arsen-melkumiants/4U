@@ -38,7 +38,7 @@
 	}
 
 	function update_product(count, id, input){
-		$.post('/update_cart', {id : id,count : count})
+		$.post('<?php echo site_url('update_cart')?>', {id : id,count : count})
 		.done(function(data) {
 			data = $.trim(data)
 			if(data === 'OK') {
@@ -53,7 +53,7 @@
 	}
 
 	function delete_product(id, dom){
-		$.post('/update_cart',{id : id, count : 0})
+		$.post('<?php echo site_url('update_cart')?>',{id : id, count : 0})
 		.done(function(data) {
 			if($.trim(data) != 'OK') {
 				return false;

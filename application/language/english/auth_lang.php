@@ -53,25 +53,21 @@ $lang['deactivate_validation_confirm_label'] = 'confirmation';
 $lang['deactivate_validation_user_id_label'] = 'user ID';
 
 // Create User
-$lang['create_user_heading']                           = 'Create User';
+$lang['create_user_heading']                           = 'Registration User';
 $lang['create_user_subheading']                        = 'Please enter the users information below.';
-$lang['create_user_fname_label']                       = 'First Name:';
-$lang['create_user_lname_label']                       = 'Last Name:';
-$lang['create_user_company_label']                     = 'Company Name:';
-$lang['create_user_email_label']                       = 'Email:';
-$lang['create_user_phone_label']                       = 'Phone:';
-$lang['create_user_password_label']                    = 'Password:';
-$lang['create_user_password_confirm_label']            = 'Confirm Password:';
-$lang['create_user_submit_btn']                        = 'Create User';
-$lang['create_user_validation_fname_label']            = 'First Name';
-$lang['create_user_validation_lname_label']            = 'Last Name';
-$lang['create_user_validation_email_label']            = 'Email Address';
-$lang['create_user_validation_phone1_label']           = 'First Part of Phone';
-$lang['create_user_validation_phone2_label']           = 'Second Part of Phone';
-$lang['create_user_validation_phone3_label']           = 'Third Part of Phone';
-$lang['create_user_validation_company_label']          = 'Company Name';
-$lang['create_user_validation_password_label']         = 'Password';
-$lang['create_user_validation_password_confirm_label'] = 'Password Confirmation';
+$lang['create_user_fname_label']                       = 'Name';
+$lang['create_user_lname_label']                       = 'Last Name';
+$lang['create_user_company_label']                     = 'Company Name';
+$lang['create_user_address_label']                             = 'Address';
+$lang['create_user_city_label']                                = 'City';
+$lang['create_user_country_label']                             = 'Country';
+$lang['create_user_state_label']                             = 'State';
+$lang['create_user_zip_label']                                 = 'Zip';
+$lang['create_user_email_label']                       = 'Email';
+$lang['create_user_phone_label']                       = 'Phone';
+$lang['create_user_password_label']                    = 'Password';
+$lang['create_user_password_confirm_label']            = 'Confirm Password';
+$lang['create_user_submit_btn']                        = 'Sign Up';
 
 // Edit User
 $lang['edit_user_heading']                           = 'Edit User';

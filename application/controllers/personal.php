@@ -127,10 +127,10 @@ class Personal extends CI_Controller {
 		}
 
 		$this->data['center_block'] = $this->form
-			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_validation_fname_label')))
-			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => lang('create_user_validation_email_label')))
-			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_validation_password_label')))
-			->password('password_confirm', array('valid_rules' => 'required|matches[password]',  'label' => lang('create_user_validation_password_confirm_label')))
+			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_fname_label')))
+			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => lang('create_user_email_label')))
+			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_password_label')))
+			->password('password_confirm', array('valid_rules' => 'required|matches[password]',  'label' => lang('create_user_password_confirm_label')))
 			->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
 			->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
 			->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_city_label')))
