@@ -107,7 +107,7 @@ class Table {
 				$params['title'] = 'Неопубликовано';
 				$params['icon'] = 'eye-close';
 			}
-
+			unset($params['class']);
 			$btn = $that->btn($params, true);
 			return $btn['html'];
 		};
