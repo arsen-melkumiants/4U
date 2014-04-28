@@ -81,7 +81,7 @@ $config['lang_uri_abbr'] = array(
 );
 
 /* hide the language segment (use cookie) */
-$config['lang_ignore'] = TRUE;
+$config['lang_ignore'] = false;
 
 /*
 |--------------------------------------------------------------------------
