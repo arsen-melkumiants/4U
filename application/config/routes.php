@@ -55,25 +55,25 @@ $route[$admin_url.'manage_(:any)'] = $admin_folder.'manage_$1';
 $route[$admin_url.'(:any)']        = $admin_folder.'$1';
 
 #User routes
-$route['category/(:any)'] = 'shop_controller/category/$1';
-$route['product/(:any)']  = 'shop_controller/product/$1';
-$route['search']          = 'shop_controller/search';
-$route['cart']            = 'shop_controller/cart';
-$route['cart/(:any)']     = 'shop_controller/cart/$1';
-$route['add_to_cart']     = 'shop_controller/add_to_cart';
-$route['update_cart']     = 'shop_controller/update_cart';
+$route['(\w{2})/category/(:any)'] = 'shop_controller/category/$2';
+$route['(\w{2})/product/(:any)']  = 'shop_controller/product/$2';
+$route['(\w{2})/search']          = 'shop_controller/search';
+$route['(\w{2})/cart']            = 'shop_controller/cart';
+$route['(\w{2})/cart/(:any)']     = 'shop_controller/cart/$2';
+$route['(\w{2})/add_to_cart']     = 'shop_controller/add_to_cart';
+$route['(\w{2})/update_cart']     = 'shop_controller/update_cart';
 
-$route['profile']        = 'profile';
-$route['profile/(:any)'] = 'profile/$1';
+$route['(\w{2})/profile']        = 'profile';
+$route['(\w{2})/profile/(:any)'] = 'profile/$2';
 
-$route['personal/(:any)'] = 'personal/$1';
+$route['(\w{2})/personal/(:any)'] = 'personal/$2';
 
 $route['media_files/(:any)'] = 'profile/get_media_file/$1';
 
-$route['(:any)'] = 'main_controller/menu_content/$1';
-
+$route['(\w{2})/(:any)'] = 'main_controller/menu_content/$2';
 
 $route['default_controller'] = 'main_controller';
+$route['(\w{2})'] = $route['default_controller'];
 
 $route['404_override'] = 'not_found';
 

@@ -1,4 +1,12 @@
 <?php
+function lang_site_url($url) {
+	if (strpos($url, '4U') !== false) {
+		return site_url($url);
+	}
+	$CI =& get_instance();
+	return site_url($url);
+}
+
 function load_views() {
 	$CI =& get_instance();
 	if (empty($CI->admin_methods)) {
