@@ -44,8 +44,29 @@ class Manage_user extends CI_Controller {
 			->date('created_on', array(
 				'title' => 'Дата регистрации'
 			))
+			->text('active', array(
+				'title' => 'Статус',
+				'func'  => function($row, $params, $that, $CI) {
+					if ($row['active'] == 0) {
+						return '<span class="label label-danger">Неактивированный</span>';
+					} elseif ($row['active'] == 1) {
+						return '<span class="label label-success">Активированный</span>';
+					}
+				}
+		))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
-			->active(array('link' => $this->MAIN_URL.'active/%d'))
+			->btn(array(
+				'func' => function($row, $params, $html, $that, $CI) {
+					if (!$row['status']) {
+						$params['title'] = 'Активировать';
+						$params['icon'] = 'ok';
+					} else {
+						$params['title'] = 'Деактивировать';
+						$params['icon'] = 'ban-circle';
+					}
+					return '<a href="'.site_url($CI->MAIN_URL.'active/'.$row['id']).'" title="'.$params['title'].'"><i class="icon-'.$params['icon'].'"></i> </a>';
+				}
+		))
 			->create(function($CI) {
 				return $CI->admin_user_model->get_all_users();
 			});
