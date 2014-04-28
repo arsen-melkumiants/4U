@@ -75,14 +75,22 @@
 				}
 
 				$.post('/add_to_cart/', {id : id}).done(function(data) {
-					//data;
-				});
-				new PNotify({
-					title : 'Товар добавлен в корзину',
-					text  : 'Товар' + name + ' успешно добавлен в <a href="<?php echo site_url('cart')?>">корзину</a>',
-					icon  : 'icon-shopping-cart',
-					type  : 'success',
-					delay : 3000,
+					if ($.trim(data) == 'Noqty') {
+						new PNotify({
+							title : 'Товар не добавлен в корзину',
+							text  : 'Товар' + name + ' не может быть куплен в связи с его ограниченным либо полным отсутствием в данный момент</a>',
+							type  : 'error',
+							delay : 3000,
+						});
+					} else {
+						new PNotify({
+							title : 'Товар добавлен в корзину',
+							text  : 'Товар' + name + ' успешно добавлен в <a href="<?php echo site_url('cart')?>">корзину</a>',
+							icon  : 'icon-shopping-cart',
+							type  : 'success',
+							delay : 3000,
+						});
+					}
 				});
 			});
 

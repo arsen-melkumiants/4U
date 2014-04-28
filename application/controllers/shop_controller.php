@@ -267,10 +267,15 @@ class Shop_controller extends CI_Controller {
 			return false;
 		}
 		$product_info = $this->shop_model->get_product_info($id);
-		if(empty($product_info)){
+		if (empty($product_info)) {
 			return false;
 		}
 
+		if ($product_info['amount'] < 1) {
+			echo 'Noqty';
+			exit;
+		}
+		
 		$prods = $this->cart->contents();
 		$count = 1;
 		if(!empty($prods)){
