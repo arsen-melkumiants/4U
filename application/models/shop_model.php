@@ -263,7 +263,7 @@ class Shop_model extends CI_Model {
 			'product_id' => $product_id,
 			'main'       => 1
 		))->count_all_results('shop_product_images');
-		if (!$count && !preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
+		if (!$count && preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
 			$insert_array['main'] = 1;
 		}
 
@@ -304,7 +304,7 @@ class Shop_model extends CI_Model {
 					->where('id', $id)
 					->delete('shop_product_images');
 				if ($info['main']) {
-					$this->db->query('UPDATE shop_product_images SET main = 1 WHERE `file_name` REGEXP \'\\.(jpg|jpeg|png|gif)\' LIMIT 1;');
+					$this->db->query('UPDATE shop_product_images SET main = 1 WHERE product_id = '.$info['product_id'].' AND file_name REGEXP \'\\.(jpg|jpeg|png|gif)\' LIMIT 1;');
 				}
 				$this->db
 					->where('id', $info['product_id'])

@@ -4,7 +4,13 @@
 		<h2><?php echo $name?></h2>
 	</div>
 	<div class="slide_content">
-	<?php foreach ($products as $item) {?>
+	<?php
+	$i = 0;
+	foreach ($products as $key => $item) {
+		if ($key % 6) {
+			echo $key;
+		}
+?>
 	<div class="item">
 		<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 		<a href="<?php echo product_url($item['id'], $item['name'])?>">
@@ -23,7 +29,7 @@
 		><?php echo lang('buy')?></button>
 		</div>
 	</div>
-	<?php }?>
+	<?php $i++;}?>
 	</div>
 	<div class="clear"></div>
 </div>

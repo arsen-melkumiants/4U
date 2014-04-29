@@ -24,7 +24,7 @@
 			</a>
 			<div class="info">
 				<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
-				<small>Today, 12:04</small>
+				<small><?php echo date('d.m.Y, H:i', $item['add_date'])?></small>
 				<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>
 			</div>
 			<div class="action">

@@ -485,7 +485,7 @@ class Profile extends CI_Controller {
 						'name'         => $item['file_name'],
 						'url'          => $type == 'image' ? $upload_path_url.$item['file_name'] : $upload_path_url.$item['id'],
 						'thumbnailUrl' => $thumbnail,
-						'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$item['id'],
+						'deleteUrl'    => site_url('profile/delete_'.$type.'/'.$item['id']),
 						'deleteType'   => 'POST',
 						'error'        => null,
 						'sold'         => !empty($item['status'])
@@ -518,7 +518,7 @@ class Profile extends CI_Controller {
 				'name'         => $data['file_name'],
 				'url'          => $type == 'image' ? $upload_path_url.$data['file_name'] : $upload_path_url.$file_id,
 				'thumbnailUrl' => $thumbnail,
-				'deleteUrl'    => base_url().'profile/delete_'.$type.'/'.$file_id,
+				'deleteUrl'    => site_url('profile/delete_'.$type.'/'.$file_id),
 				'deleteType'   => 'POST',
 				'error'        => null,
 			);

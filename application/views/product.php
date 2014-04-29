@@ -65,7 +65,7 @@
 						<ul>
 							<li><?php echo lang('product_amount').': '.$product_info['amount']?>
 							<li>Views: <?php echo $product_info['views']?></li>
-							<li>Added: <?php echo date('d.m.Y, H:i')?></li>
+							<li>Added: <?php echo date('d.m.Y, H:i', $product_info['add_date'])?></li>
 							<li>ID: <?php echo $product_info['id']?></li>
 						</ul>
 					</div>
