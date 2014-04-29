@@ -3,8 +3,11 @@
 $lang['my_profile']                     = 'My profile';
 $lang['profile_changed_success']		= 'The profile has been successfuly changed';
 
-$lang['product']						= 'Product';
+
 $lang['my_sales']                       = 'My sales';
+
+
+$lang['product']						= 'Product';
 $lang['my_products']                    = 'My products';
 $lang['product_add']                    = 'Add product';
 $lang['product_add_header']             = 'Add product';
@@ -34,6 +37,11 @@ $lang['product_added_to_cart']			= 'Product added to cart';
 $lang['product_cannot_be_bought']		= 'cannot be bought cause of lack of it';
 $lang['product_succesfuly_added_to']	= 'successfully added to';
 $lang['product_items']					= 'items';
+$lang['product_views']					= 'Views';
+$lang['product_added']					= 'Added';
+$lang['product_id']						= 'ID';
+$lang['product_seller']					= 'Seller';
+$lang['product_phone']					= 'Phone';
 
 
 $lang['my_stats']                       = 'My stats';
@@ -77,7 +85,9 @@ $lang['cart_phone']						= 'Phone';
 $lang['cart_congratulations']			= 'Congratulations. Your purchase is completed. Want to buy something else?';
 $lang['cart_empty']						= 'There isn\'t any product yet. We are sure you will find everything';
 
+
 $lang['my_cash']						= 'My cash';
+
 
 $lang['category_empty']					= 'Category is empty';
 $lang['logout']                         = 'Logout';
@@ -102,6 +112,9 @@ $lang['description']                    = 'Description';
 $lang['search']							= 'Search';
 $lang['page_doesnt_exist']				= 'Page doesn\'t exist';
 $lang['admin_permission']				= 'You must be an administrator to view this page.';
+$lang['go_to_up']						= 'Go to up';
+$lang['allocate_lot']					= 'Allocate lot';
+$lang['make_vip']						= 'Make VIP';
 
 
 $lang['vip_lots']						= 'VIP lots';

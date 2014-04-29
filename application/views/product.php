@@ -55,18 +55,18 @@
 					<?php if (isset($user_info['id']) && $user_info['id'] == $product_info['author_id']) {?>
 					<div class="actions">
 						<ul>
-							<li><a href="#"><i class="c_icon_up"></i>Go to up</a></li>
-							<li><a href="#"><i class="c_icon_edit"></i>Allocate lot</a></li>
-							<li><a href="#"><i class="c_icon_star"></i>Make VIP</a></li>
+							<li><a href="#"><i class="c_icon_up"></i><?php echo lang('go_to_up')?></a></li>
+							<li><a href="#"><i class="c_icon_edit"></i><?php echo lang('allocate_lot')?></a></li>
+							<li><a href="#"><i class="c_icon_star"></i><?php echo lang('make_vip')?></a></li>
 						</ul>
 					</div>
 					<?php }?>
 					<div class="info">
 						<ul>
 							<li><?php echo lang('product_amount').': '.$product_info['amount']?>
-							<li>Views: <?php echo $product_info['views']?></li>
-							<li>Added: <?php echo date('d.m.Y, H:i', $product_info['add_date'])?></li>
-							<li>ID: <?php echo $product_info['id']?></li>
+							<li><?php echo lang('product_views')?>: <?php echo $product_info['views']?></li>
+							<li><?php echo lang('product_added')?>: <?php echo date('d.m.Y, H:i', $product_info['add_date'])?></li>
+							<li><?php echo lang('product_id')?>: <?php echo $product_info['id']?></li>
 						</ul>
 					</div>
 				</div>
@@ -76,8 +76,8 @@
 			<div class="col-md-12">
 				<div class="seller_info">
 					<ul>
-						<li><span>Seller:</span> <?php echo $product_info['username']?></li>
-						<li><span>Phone:</span> <?php echo $product_info['phone']?></li>
+						<li><span><?php echo lang('product_seller')?>:</span> <?php echo $product_info['username']?></li>
+						<li><span><?php echo lang('product_phone')?>:</span> <?php echo $product_info['phone']?></li>
 					</ul>
 				</div>
 				<div class="description">
