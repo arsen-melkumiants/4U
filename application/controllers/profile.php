@@ -409,9 +409,11 @@ class Profile extends CI_Controller {
 
 		if ($type == 'image') {
 			$this->data['title'] = $this->data['name'] = lang('product_gallery_header');
+			$this->data['descr'] = lang('product_gallery_descr');
 			$this->data['upload_url'] = site_url('profile/upload_gallery/'.$id);
 		} else {
 			$this->data['title'] = $this->data['name'] = lang('product_media_file_header');
+			$this->data['descr'] = lang('product_media_file_descr');
 			$this->data['upload_url'] = site_url('profile/upload_media_files/'.$id);
 		}
 
@@ -439,7 +441,7 @@ class Profile extends CI_Controller {
 			$upload_path_url = base_url('media_files').'/';
 			$config['upload_path'] = FCPATH.'media_files';
 			if ($product_info['type'] == 'licenses') {
-				$config['allowed_types'] = 'jpg|jpeg|png|gif';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|text|txt';
 			} else {
 				$config['allowed_types'] = 'jpg|jpeg|png|gif|avi|mp4|doc|pdf|docx|txt|xls';
 			}
