@@ -40,7 +40,9 @@ class Admin_control_menu_model extends CI_Model
 					'manage_currency'           => 'Список валют'
 				),
 				'Пользователи'                  => array(
-					'manage_user'               => 'Список пользователей',
+					'manage_user'               => 'Список всех пользователей',
+					'manage_user/activated'     => 'Список активированных пользователей',
+					'manage_user/inactivated'   => 'Список неактивированных пользователей',
 				),
 				'extra'                         => 'Дополнительно',
 				'developers'                    => 'О разработчиках',

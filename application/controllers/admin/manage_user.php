@@ -10,7 +10,15 @@ class Manage_user extends CI_Controller {
 
 	public $PAGE_INFO = array(
 		'index'            => array(
-			'header'       => 'Пользователи',
+			'header'       => 'Все пользователи',
+			'header_descr' => 'Список пользователей',
+		),
+		'activated'        => array(
+			'header'       => 'Активированные пользователи',
+			'header_descr' => 'Список пользователей',
+		),
+		'inactivated'      => array(
+			'header'       => 'Неактивированные пользователи',
 			'header_descr' => 'Список пользователей',
 		),
 		'edit'             => array(
@@ -31,7 +39,9 @@ class Manage_user extends CI_Controller {
 		admin_constructor();
 	}
 
-	public function index() {
+	public function index($status = false) {
+		$this->data['status'] = $status;
+
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
 			->text('username', array(
@@ -68,10 +78,18 @@ class Manage_user extends CI_Controller {
 				}
 		))
 			->create(function($CI) {
-				return $CI->admin_user_model->get_all_users();
+				return $CI->admin_user_model->get_all_users($CI->data['status']);
 			});
 
 		load_admin_views();
+	}
+
+	public function inactivated() {
+		$this->index(0);
+	}
+
+	public function activated() {
+		$this->index(1);
 	}
 
 	public function add() {
