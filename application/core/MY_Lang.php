@@ -34,7 +34,7 @@ class MY_Lang extends CI_Lang {
 
 		$index_page    = $config['index_page'];
 		$lang_ignore   = $config['lang_ignore'];
-		$default_abbr  = $config['language_abbr'];
+		$default_abbr  = $config['lang_abbr'];
 		$lang_uri_abbr = $config['lang_uri_abbr'];
 
 		/* get the language abbreviation from uri */
@@ -92,7 +92,7 @@ class MY_Lang extends CI_Lang {
 
 			/* set config language values to match the user language */
 			$config['language'] = $lang_uri_abbr[$lang_abbr];
-			$config['language_abbr'] = $lang_abbr;
+			$config['lang_abbr'] = $lang_abbr;
 
 			/* if abbreviation is not ignored */
 			if ( ! $lang_ignore) {

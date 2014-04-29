@@ -56,7 +56,7 @@ class Manage_category extends CI_Controller {
 
 	public function add() {
 		if(!empty($_POST)){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name_en'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
@@ -81,7 +81,7 @@ class Manage_category extends CI_Controller {
 		set_header_info($category_info);
 
 		if(!empty($_POST)){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $category_info['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $category_info['name_en'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
@@ -128,10 +128,15 @@ class Manage_category extends CI_Controller {
 	private function edit_form($category_info = false) {
 		$this->load->library('form');
 		return $this->form
-			->text('name', array(
-				'value'       => $category_info['name'] ?: false,
+			->text('name_ru', array(
+				'value'       => $category_info['name_ru'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
+				'label'       => 'Название(RU)',
+			))
+			->text('name_en', array(
+				'value'       => $category_info['name_en'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Название(EN)',
 			))
 			->text('alias', array(
 				'value'       => $category_info['alias'] ?: false,

@@ -72,7 +72,7 @@ $config['url_suffix'] = '.html';
 $config['language']	= 'english';
 
 /* default language abbreviation */
-$config['language_abbr'] = 'en';
+$config['lang_abbr'] = 'en';
 
 /* set available language abbreviations */
 $config['lang_uri_abbr'] = array(

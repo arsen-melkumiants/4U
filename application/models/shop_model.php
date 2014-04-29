@@ -8,7 +8,7 @@ class Shop_model extends CI_Model {
 	}
 
 	function get_category_items() {
-		return $this->db->where('status', 1)->order_by('order', 'asc')->get('shop_categories')->result_array();
+		return $this->db->select('*, name_'.$this->config->item('lang_abbr').' as name')->where('status', 1)->order_by('order', 'asc')->get('shop_categories')->result_array();
 	}
 
 	function get_product_categories() {
@@ -53,6 +53,7 @@ class Shop_model extends CI_Model {
 
 	function get_category_info($name) {
 		return $this->db
+			->select('*, name_'.$this->config->item('lang_abbr').' as name')
 			->where(array(
 				'alias'  => $name,
 				'status' => 1,

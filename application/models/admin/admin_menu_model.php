@@ -57,7 +57,7 @@ class Admin_menu_model extends CI_Model {
 					$icon = 'eye-close';
 				}
 				$text .= '<li class="dd-item dd3-item" data-id="'.$item['id'].'">
-					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name'].'
+					<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">'.$item['name_ru'].' ('.$item['name_en'].')
 					<a href="'.site_url($url.$item['id'].'/active').'" title="'.$title.'"><i class="icon-'.$icon.'"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/delete').'" title="Удалить"><i class="icon-trash"></i></a>
 					<a data-toggle="modal" data-target="#ajaxModal" href="'.site_url($url.$item['id'].'/edit').'" title="Редактировать"><i class="icon-pencil"></i></a>
@@ -141,7 +141,7 @@ class Admin_menu_model extends CI_Model {
 	function get_content_list() {
 		$list = array(
 			'content'         => $this->db->select('id, name')->get('content')->result_array(),
-			'shop_categories' => $this->db->select('id, name')->get('shop_categories')->result_array(),
+			'shop_categories' => $this->db->select('id, name_ru as name')->get('shop_categories')->result_array(),
 			'auth'            => array(
 				array('id' => 'login', 'name' => 'Вход'),
 				array('id' => 'registration', 'name' => 'Регистрация'),

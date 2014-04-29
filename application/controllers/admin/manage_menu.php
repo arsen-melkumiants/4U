@@ -78,9 +78,8 @@ class Manage_menu extends CI_Controller {
 		}
 
 		if(!empty($_POST) && $_POST['type'] != 'external'){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name_en'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
-
 			$_POST['menu_id'] = $menu_info['id'];
 		}
 
@@ -105,7 +104,7 @@ class Manage_menu extends CI_Controller {
 		set_header_info($menu_info);
 
 		if(!empty($_POST) && $_POST['type'] != 'external'){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $menu_info['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $menu_info['name_en'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
@@ -172,10 +171,15 @@ class Manage_menu extends CI_Controller {
 		$menu_type = !empty($_POST['type']) ? $_POST['type'] : (!empty($menu_info['type']) ? $menu_info['type'] : key($this->data['select_contents']));
 		$this->load->library('form');
 		$html = $this->form
-			->text('name', array(
-				'value'       => $menu_info['name'] ?: false,
+			->text('name_ru', array(
+				'value'       => $menu_info['name_ru'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
+				'label'       => 'Название(RU)',
+			))
+			->text('name_en', array(
+				'value'       => $menu_info['name_en'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Название(EN)',
 			))
 			->text('alias', array(
 				'value'       => $menu_info['alias'] ?: false,

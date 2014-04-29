@@ -70,7 +70,7 @@ class Menu_model extends CI_Model {
 					$link = site_url($link);
 				}
 				$text .= '<li>';
-				$text .= '<a'.$modal.' href="'.$link.'">'.$icon.$item['name'].'</a>';
+				$text .= '<a'.$modal.' href="'.$link.'">'.$icon.$item['name_'.$this->config->item('lang_abbr')].'</a>';
 				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
 				$text .= '</li>';
 				$num++;
