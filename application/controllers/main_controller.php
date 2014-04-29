@@ -42,10 +42,11 @@ class Main_controller extends CI_Controller {
 			show_404();
 		}
 
-		$menu_info = $this->db->where('alias', $name)->get('menu_items')->row_array();
+		$menu_info = $this->db->select('*, name_'.$this->config->item('lang_abbr').' as name')->where('alias', $name)->get('menu_items')->row_array();
 		if (empty($menu_info)) {
 			show_404();
 		}
+
 		$this->data['title'] = $this->data['header'] = $menu_info['name'];
 
 		if ($menu_info['type'] == 'content') {
