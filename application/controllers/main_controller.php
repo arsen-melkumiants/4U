@@ -22,15 +22,15 @@ class Main_controller extends CI_Controller {
 	public function index() {
 		$this->data['title'] = SITE_NAME;
 
-		$this->data['name'] = 'Strongly recommended';
+		$this->data['name'] = lang('strongly_recommended');
 		$this->data['products'] = $this->shop_model->get_recomended_products(6);
 		$this->data['center_block'] = $this->load->view('product_block', $this->data, true);
 
-		$this->data['name'] = 'Best sales';
+		$this->data['name'] = lang('best_sales');
 		$this->data['products'] = $this->shop_model->get_best_sales_products(6);
 		$this->data['center_block'] .= $this->load->view('product_block', $this->data, true);
 
-		$this->data['name'] = 'New products';
+		$this->data['name'] = lang('new_products');
 		$this->data['products'] = $this->shop_model->get_new_products(6);
 		$this->data['center_block'] .= $this->load->view('product_block', $this->data, true);
 		

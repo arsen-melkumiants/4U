@@ -96,3 +96,6 @@ $lang['page_doesnt_exist']				= 'Страница отсутствует';
 $lang['admin_permission']				= 'Только администратор имеет право на просмотр данной страницы.';
 
 $lang['vip_lots']						= 'VIP лоты';
+$lang['strongly_recommended']			= 'Рекомендуемые';
+$lang['best_sales']						= 'Лучшие продажи';
+$lang['new_products']					= 'Новые продукты';

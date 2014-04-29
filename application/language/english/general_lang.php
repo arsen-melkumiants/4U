@@ -96,3 +96,6 @@ $lang['page_doesnt_exist']				= 'Page doesn\'t exist';
 $lang['admin_permission']				= 'You must be an administrator to view this page.';
 
 $lang['vip_lots']						= 'VIP lots';
+$lang['strongly_recommended']			= 'Strongly recommended';
+$lang['best_sales']						= 'Best sales';
+$lang['new_products']					= 'New products';
