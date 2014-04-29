@@ -409,10 +409,10 @@ class Profile extends CI_Controller {
 
 		if ($type == 'image') {
 			$this->data['title'] = $this->data['name'] = lang('product_gallery_header');
-			$this->data['upload_url'] = base_url('profile/upload_gallery/'.$id);
+			$this->data['upload_url'] = site_url('profile/upload_gallery/'.$id);
 		} else {
 			$this->data['title'] = $this->data['name'] = lang('product_media_file_header');
-			$this->data['upload_url'] = base_url('profile/upload_media_files/'.$id);
+			$this->data['upload_url'] = site_url('profile/upload_media_files/'.$id);
 		}
 
 		if ($product_info['is_locked']) {
