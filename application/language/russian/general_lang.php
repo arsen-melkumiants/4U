@@ -69,6 +69,7 @@ $lang['cart_country']					= 'Страна';
 $lang['cart_zip']						= 'Индекс';
 $lang['cart_phone']						= 'Телефон';
 $lang['cart_congratulations']			= 'Поздравляем. Покупка выполнена успешно. Желаете купить что-нибудь еще?';
+$lang['cart_empty']						= 'Товаров пока нет. Мы уверены, что вы что-нибудь найдете.';
 
 $lang['my_cash']							= 'My cash';
 

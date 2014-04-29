@@ -13,14 +13,14 @@
 		<div class="clear"></div>
 	</div>
 	<div class="cart product_list">
-		<?php echo !empty($table) ? $table : '<h4>There isn\'t any product yet. We are sure you will find everything</h4>'?>
+		<?php echo !empty($table) ? $table : '<h4>'.lang('cart_empty').'</h4>'?>
 	</div>
 	<div class="row">
 		<div class="col-sm-6">
-		<a href="<?php echo site_url('cart/information')?>" class="orange_btn">Next step</a>
+		<a href="<?php echo site_url('cart/information')?>" class="orange_btn"><?php echo lang('next_step')?></a>
 		</div>
 		<div class="col-sm-6">
-			<div class="price_total">Total price <span><i class="c_icon_label"></i> <span><?php echo $this->cart->total();?></span> $</span></div>
+			<div class="price_total"><?php echo lang('orders_total_price')?> <span><i class="c_icon_label"></i> <span><?php echo $this->cart->total();?></span> $</span></div>
 		</div>
 	</div>
 </div>
