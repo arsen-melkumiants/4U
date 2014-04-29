@@ -124,6 +124,17 @@ class Profile extends CI_Controller {
 					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
 				}
 		));
+		if ($type == 'sold') {
+			$this->table
+				->text('qty', array(
+					'title' => lang('product_amount'),
+					'width' => '10%',
+					'func'  => function($row, $params) {
+						return '<div class="price">'.$row['qty'].' items</div>';
+					}
+			));
+		}
+
 		if ($type == 'moderate') {
 			$this->table
 				->btn(array(
@@ -152,18 +163,34 @@ class Profile extends CI_Controller {
 			;
 		$this->data['table'] = $this->table
 			->create(function($CI) {
-				return $CI->db
-					->select('p.*, c.symbol, c.code, i.file_name')
-					->from('shop_products as p')
-					->join('shop_currencies as c', 'p.currency = c.id')
-					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
-					->where(array(
-						'p.author_id' => $CI->data['user_info']['id'],
-					))
-					->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
-					->order_by('id', 'desc')
-					->get();
-			}, array('no_header' => 1, 'class' => 'table'));
+				if ($CI->data['type'] != 'sold') {
+					return $CI->db
+						->select('p.*, c.symbol, c.code, i.file_name')
+						->from('shop_products as p')
+						->join('shop_currencies as c', 'p.currency = c.id')
+						->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+						->where(array(
+							'p.author_id' => $CI->data['user_info']['id'],
+						))
+						->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
+						->order_by('id', 'desc')
+						->get();
+				} else {
+					return $CI->db
+						->select('p.*, c.symbol, c.code, i.file_name, SUM(op.price * op.qty) as price, SUM(op.qty) as qty')
+						->from('shop_products as p')
+						->join('shop_currencies as c', 'p.currency = c.id')
+						->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+						->join('shop_order_products as op', 'p.id = op.product_id')
+						->join('shop_orders as o', 'op.order_id = o.id')
+						->where(array(
+							'p.author_id' => $CI->data['user_info']['id'],
+						))
+						->order_by('id', 'desc')
+						->get();
+				}
+
+				}, array('no_header' => 1, 'class' => 'table'));
 
 		$this->data['center_block'] = $this->load->view('profile/products', $this->data, true);
 
