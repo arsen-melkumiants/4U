@@ -115,6 +115,7 @@ $lang['admin_permission']				= 'Только администратор имее
 $lang['go_to_up']						= 'Поднять вверх';
 $lang['allocate_lot']					= 'Выделите лот';
 $lang['make_vip']						= 'Создать VIP';
+$lang['search_placeholder']				= 'Что вы хотите найти?';
 
 
 $lang['vip_lots']						= 'VIP лоты';

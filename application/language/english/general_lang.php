@@ -115,6 +115,7 @@ $lang['admin_permission']				= 'You must be an administrator to view this page.'
 $lang['go_to_up']						= 'Go to up';
 $lang['allocate_lot']					= 'Allocate lot';
 $lang['make_vip']						= 'Make VIP';
+$lang['search_placeholder']				= 'What are you looking for?';
 
 
 $lang['vip_lots']						= 'VIP lots';
