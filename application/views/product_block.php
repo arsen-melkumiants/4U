@@ -44,10 +44,11 @@ window.onload = function() {
 	$('.slide_content').bxSlider({
 		adaptiveHeight: false,
 		controls:true,
-		auto:true,
-		pause:4000,
+		pager:false,
+		/*auto:true,
+		pause:10000,
 		autoStart:true,
-		autoHover:true,
+		autoHover:true,*/
 	});
 
 
