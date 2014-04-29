@@ -77,7 +77,7 @@
 		<div class="clear"></div>
 		<?php echo pagination($total, $per_page);?>
 		<?php } else {?>
-		<h3 class="empty text-center">Category is empty</h3>
+		<h3 class="empty text-center"><?php echo lang('category_empty') ?></h3>
 		<?php }?>
 		<div class="clear"></div>
 	</div>
