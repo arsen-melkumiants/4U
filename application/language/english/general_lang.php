@@ -27,7 +27,8 @@ $lang['product_add_message_success']    = 'Product has been successfully added a
 $lang['product_delete_message_success'] = 'Deleting was successfully done';
 $lang['product_delete_message_lock']    = 'Deleting of this product is locked in connection with an order for him';
 $lang['product_edit_message_lock']		= 'Editing of this product is locked in connection with an order for him';
-
+$lang['product_danger_message_key_is_not_available']	= 'The license key is not available for product';
+$lang['product_items']					= 'items';
 
 
 $lang['my_stats']                       = 'My stats';
@@ -38,11 +39,21 @@ $lang['bought_products_amount']         = 'Bought products amount';
 $lang['bought_products_expense']        = 'Bought products expense';
 
 
-
+$lang['order']							= 'Order';
 $lang['my_orders']                      = 'My orders';
 $lang['orders_danger_message_pat1']		= 'The product';
 $lang['orders_danger_message_pat2']		= 'doesn\'t have enough amount';
 $lang['orders_success_message']			= 'Ordering successfully received';
+$lang['orders_pending_payment']			= 'Pending payment';
+$lang['orders_paid']					= 'Paid';
+$lang['orders_details']					= 'Order details';
+$lang['orders_danger_message_can_not_pay_part1']	= 'You can not pay this order. The seller doen\'t have product';
+$lang['orders_danger_message_can_not_pay_part2']	= 'in amount of';
+$lang['orders_message_no_product_in_amount']	= 'No product in amount of';
+$lang['orders_pay']						= 'Pay order';
+$lang['orders_total_price']				= 'Total price';
+$lang['orders_payment_success']			= 'Test payment executed successfully';
+
 
 $lang['cart']                           = 'Cart';
 $lang['my_cart']						= 'My cart';
@@ -58,6 +69,8 @@ $lang['cart_country']					= 'Country';
 $lang['cart_zip']						= 'Zip';
 $lang['cart_phone']						= 'Phone';
 $lang['cart_congratulations']			= 'Congratulations. Your purchase is completed. Want to buy something else?';
+
+$lang['my_cash']							= 'My cash';
 
 $lang['logout']                         = 'Logout';
 $lang['add']                            = 'Add';

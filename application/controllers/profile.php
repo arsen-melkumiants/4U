@@ -93,7 +93,7 @@ class Profile extends CI_Controller {
 	}
 
 	function cash() {
-		$this->data['title'] = $this->data['header'] = 'My cash';
+		$this->data['title'] = $this->data['header'] = lang('my_cash');
 
 		load_views();
 	}
@@ -130,7 +130,7 @@ class Profile extends CI_Controller {
 					'title' => lang('product_amount'),
 					'width' => '10%',
 					'func'  => function($row, $params) {
-						return '<div class="price">'.$row['qty'].' items</div>';
+						return '<div class="price">'.$row['qty'].' '.lang('product_items').'</div>';
 					}
 			));
 		}
@@ -223,7 +223,7 @@ class Profile extends CI_Controller {
 			}
 			$this->db->insert('shop_products', $info);
 			$id = $this->db->insert_id();
-			$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
+			$this->session->set_flashdata('success', lang('product_add_message_success'));
 			redirect('profile/product_gallery/'.$id, 'refresh');
 		}
 	}
@@ -262,12 +262,12 @@ class Profile extends CI_Controller {
 			}
 
 			if ($product_info['is_locked']) {
-				set_alert('Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему', false, 'warning');
+				set_alert(lang('product_edit_message_lock'), false, 'warning');
 			}
 
 			if (isset($info['status']) && !$product_info['is_locked'])	{
 				$this->db->where('id', $id)->update('shop_products', $info);
-				$this->session->set_flashdata('success', 'Продукт успешно добавлен и ожидает модерации');
+				$this->session->set_flashdata('success', lang('product_add_message_success'));
 			}
 			redirect(current_url(), 'refresh');
 		}
@@ -280,7 +280,7 @@ class Profile extends CI_Controller {
 			'licenses' => lang('product_licenses'),
 		);
 		$product_categories = $this->shop_model->get_product_categories();
-		array_unshift($product_categories, array('id' => '', 'name' => 'Без категории'));
+		array_unshift($product_categories, array('id' => '', 'name' => lang('product_no_category')));
 		$this->load->library('form');
 		$this->form
 			->text('name', array(
@@ -619,7 +619,7 @@ class Profile extends CI_Controller {
 
 
 	function orders() {
-		$this->data['title'] = $this->data['header'] = 'My orders';
+		$this->data['title'] = $this->data['header'] = lang('my_orders');
 
 		$this->load->library('table');
 		$this->table
@@ -640,13 +640,13 @@ class Profile extends CI_Controller {
 			->date('add_date', array('title' => 'Date', 'width' => '20%'))
 			->btn(array('func' => function($row, $params, $html, $that, $CI) {
 				if ($row['status'] == 0) {
-					return '<span class="label label-default">Pending payment</span>';
+					return '<span class="label label-default">'.lang('orders_pending_payment').'</span>';
 				} elseif ($row['status'] == 1) {
-					return '<span class="label label-success">Paid</span>';
+					return '<span class="label label-success">'.lang('orders_paid').'</span>';
 				}
 			}
 		))
-			->btn(array('link'  => site_url('profile/order_view/%d'), 'title' => 'Order details'));
+			->btn(array('link'  => site_url('profile/order_view/%d'), 'title' => lang('orders_details')));
 
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
@@ -675,7 +675,7 @@ class Profile extends CI_Controller {
 			show_404();
 		}
 
-		$this->data['title'] = $this->data['header'] = 'Order №'.$this->data['order_info']['id'];
+		$this->data['title'] = $this->data['header'] = lang('order').' №'.$this->data['order_info']['id'];
 		$this->data['right_amount'] = true;
 
 		$this->load->library('table');
@@ -712,8 +712,8 @@ class Profile extends CI_Controller {
 			->btn(array('func' => function($row, $params, $html, $that, $CI) {
 				if ($row['amount'] < $row['qty'] && $CI->data['order_info']['status'] == 0) {
 					$CI->data['right_amount'] = false;
-					set_alert('You can not pay this order. The seller doen\'t have product "'.$row['name'].'" in amount of '.$row['qty'], false, 'danger');
-					return '<span class="label label-danger">No product in amount of '.$row['qty'].'</span>';
+					set_alert(lang('orders_danger_message_can_not_pay_part1').' "'.$row['name'].'" '.lang('orders_danger_message_can_not_pay_part2').' '.$row['qty'], false, 'danger');
+					return '<span class="label label-danger">'.lang('orders_message_no_product_in_amount').' '.$row['qty'].'</span>';
 				}
 			}
 		));
@@ -732,9 +732,9 @@ class Profile extends CI_Controller {
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
 		if ($this->data['right_amount'] && $this->data['order_info']['status'] == 0) {
-			$this->data['center_block'] .= '<a href="'.site_url('profile/test_payment/'.$id).'" class="btn" title="">Pay order</a>';
+			$this->data['center_block'] .= '<a href="'.site_url('profile/test_payment/'.$id).'" class="btn" title="">'.lang('orders_pay').'</a>';
 		}
-		$this->data['center_block'] .= '<span class="price_total">Total price <span><i class="c_icon_label"></i> <span>'.$this->data['order_info']['total_price'].'</span> $</span></span>';
+		$this->data['center_block'] .= '<span class="price_total">'.lang('orders_total_price').' <span><i class="c_icon_label"></i> <span>'.$this->data['order_info']['total_price'].'</span> $</span></span>';
 
 		load_views();
 	}
@@ -775,7 +775,7 @@ class Profile extends CI_Controller {
 					->get('shop_product_media_files')
 					->result_array();
 				if (empty($license_products) || count($license_products) != $item['qty']) {
-					$this->session->set_flashdata('danger', 'The license key is not avaliable for product "'.$item['name'].'"');
+					$this->session->set_flashdata('danger', lang('product_danger_message_key_is_not_available').' "'.$item['name'].'"');
 					redirect('profile/orders', 'refresh');
 				}
 
@@ -805,7 +805,7 @@ class Profile extends CI_Controller {
 
 		$this->db->trans_complete();
 
-		$this->session->set_flashdata('success', 'Тестовый платеж успешно произведён');
+		$this->session->set_flashdata('success', lang('orders_payment_success'));
 		redirect('profile/view_order/'.$id, 'refresh');
 	}
 }
