@@ -16,7 +16,7 @@ class Admin_product_model extends CI_Model {
 	}
 
 	function get_product_categories() {
-		$categories = $this->db->get('shop_categories')->result_array();
+		$categories = $this->db->select('*, name_ru as name')->get('shop_categories')->result_array();
 		if (empty($categories)) {
 			return false;
 		}
