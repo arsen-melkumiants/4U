@@ -28,7 +28,23 @@
 		<div class="top_block">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-3 relative">
+						<div class="lang_block dropdown">
+							<?php $langs = array('en' => 'Eng', 'ru' => 'Rus')?>
+							<a href="#" data-toggle="dropdown" class="dropdown current"><?php echo $langs[$this->config->item('lang_abbr')]?></a>
+							<ul class="dropdown-menu">
+								<?php foreach($langs as $abbr => $lang) {
+									$current = $this->config->item('lang_abbr');
+									if (strpos(current_url(), '/'.$current.'/') !== false) {
+										$link = str_replace('/'.$current.'/', '/'.$abbr.'/', current_url());
+									} else {
+										$link = base_url($abbr);
+									}
+								?>
+									<li><a href="<?php echo $link?>"><?php echo $lang ?></a></li>
+								<?php }?>
+							</ul>
+						</div>
 						<a href="/" class="logo"></a>
 					</div>
 					<div class="col-md-9">
