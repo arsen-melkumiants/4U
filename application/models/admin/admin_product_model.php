@@ -8,11 +8,11 @@ class Admin_product_model extends CI_Model {
 	}
 
 	function get_all_products() {
-		return $this->db->order_by('id', 'desc')->get('shop_products');
+		return $this->db->where('status <', 3)->order_by('id', 'desc')->get('shop_products');
 	}
 
 	function get_product_info($id) {
-		return $this->db->where('id', $id)->get('shop_products')->row_array();
+		return $this->db->where(array('id' => $id, 'status <' => 3))->get('shop_products')->row_array();
 	}
 
 	function get_product_categories() {

@@ -63,6 +63,7 @@
 					<?php }?>
 					<div class="info">
 						<ul>
+							<li><?php echo lang('product_amount').': '.$product_info['amount']?>
 							<li>Views: <?php echo $product_info['views']?></li>
 							<li>Added: <?php echo date('d.m.Y, H:i')?></li>
 							<li>ID: <?php echo $product_info['id']?></li>
@@ -73,9 +74,9 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<div class="saller_info">
+				<div class="seller_info">
 					<ul>
-					<li><span>Seller:</span> <?php echo $product_info['username']?></li>
+						<li><span>Seller:</span> <?php echo $product_info['username']?></li>
 						<li><span>Phone:</span> <?php echo $product_info['phone']?></li>
 					</ul>
 				</div>

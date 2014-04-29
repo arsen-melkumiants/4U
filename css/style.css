@@ -208,10 +208,10 @@ ul {padding-left: 0;}
 .product .actions li a:hover {text-decoration: underline;} 
 .product .info {text-align: left;margin-top: 50px;} 
 .product .info li {list-style: none;color: #838383;} 
-.product .saller_info {border-top: 1px solid #c9c9c9;border-bottom: 1px solid #c9c9c9;padding: 20px 0;}
-.product .saller_info ul {margin: 0;}
-.product .saller_info li {list-style: none;color: #d74b21;}
-.product .saller_info li span {color: #972d0d;}
+.product .seller_info {border-top: 1px solid #c9c9c9;border-bottom: 1px solid #c9c9c9;padding: 20px 0;}
+.product .seller_info ul {margin: 0;}
+.product .seller_info li {list-style: none;color: #d74b21;}
+.product .seller_info li span {color: #972d0d;}
 .product .description h2 {color: #f27141;font-size: 20px;}
 
 .files_list {border-top: 1px solid #c9c9c9;padding-top: 15px;margin: 15px 0;}

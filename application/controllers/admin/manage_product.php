@@ -177,6 +177,39 @@ class Manage_product extends CI_Controller {
 			->create(array('action' => current_url()));
 	}
 
+	public function delete($id = false, $type = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+
+		$product_info = $this->admin_product_model->get_product_info($id);
+
+		if (empty($product_info)) {
+			custom_404();
+		}
+		set_header_info($product_info);
+		
+		if ($this->IS_AJAX) {
+			if (isset($_POST['delete'])) {
+				$this->db->where('id', $id)->update($this->DB_TABLE, array('status' => 3));
+				$this->session->set_flashdata('danger', 'Удаление успешно выполено');
+				echo 'refresh';
+			} else {
+				$this->load->library('form');
+				$this->data['center_block'] = $this->form
+					->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+					->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
+					->create(array('action' => current_url(), 'btn_offset' => 4));
+				echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+			}
+		} else {
+			$this->db->where('id', $id)->update($this->DB_TABLE, array('status' => 3));
+			$this->session->set_flashdata('danger', 'Удаление успешно выполено');
+			redirect($this->MAIN_URL, 'refresh');
+		}
+
+	}
+
 	public function active($id = false) {
 		if (empty($id)) {
 			custom_404();
