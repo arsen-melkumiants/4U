@@ -86,6 +86,7 @@ $lang['cart_zip']						= 'Zip';
 $lang['cart_phone']						= 'Phone';
 $lang['cart_congratulations']			= 'Congratulations. Your purchase is completed. Want to buy something else?';
 $lang['cart_empty']						= 'There isn\'t any product yet. We are sure you will find everything';
+$lang['cart_pay_advice']				= 'Or you can pay your order';
 
 
 $lang['my_cash']						= 'My cash';
@@ -118,6 +119,7 @@ $lang['go_to_up']						= 'Go to up';
 $lang['allocate_lot']					= 'Allocate lot';
 $lang['make_vip']						= 'Make VIP';
 $lang['search_placeholder']				= 'What are you looking for?';
+$lang['here']                           = 'Here';
 
 
 $lang['vip_lots']						= 'VIP lots';

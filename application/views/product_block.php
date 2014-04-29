@@ -21,7 +21,7 @@
 					</div>
 				</a>
 				<div class="action">
-					<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>
+					<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 					<button class="orange_btn add_to_cart" 
 						data-name="<?php echo $item['name']?>" 
 						data-id="<?php echo $item['id']?>" 

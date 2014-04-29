@@ -46,7 +46,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="text-center">
-				<div class="price"><?php echo $product_info['price'].' '.$product_info['symbol']?></div>
+				<div class="price"><?php echo floatval($product_info['price']).' '.$product_info['symbol']?></div>
 					<button class="orange_btn add_to_cart" 
 						data-name="<?php echo $product_info['name']?>" 
 						data-id="<?php echo $product_info['id']?>" 

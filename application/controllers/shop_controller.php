@@ -164,7 +164,7 @@ class Shop_controller extends CI_Controller {
 						'title' => 'Price',
 						'width' => '20%',
 						'func'  => function($row, $params) {
-							return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].' '.$row['symbol'].'</div>';
+							return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['price']).' '.$row['symbol'].'</div>';
 						}
 				))
 					->btn(array(
@@ -253,9 +253,10 @@ class Shop_controller extends CI_Controller {
 			$this->data['order_items'] = !empty($orders) ? $orders : '';
 			$this->data['products'] = $this->shop_model->get_product_info($ids);
 
-			$this->confirm_order($this->data);
+			$order_id = $this->confirm_order($this->data);
 
 			$this->data['center_block'] = '<h4>'.lang('cart_congratulations').'</h4>';
+			$this->data['center_block'] .= '<h4>'.lang('cart_pay_advice').' <a class="orange_btn" href="'.site_url('profile/order_view/'.$order_id).'">'.lang('here').'</a></h4>';
 			$this->data['center_block'] = $this->load->view('cart/confirm', $this->data, true);
 		}        
 		load_views();
@@ -448,6 +449,7 @@ class Shop_controller extends CI_Controller {
 			$this->email->message($this->load->view('email/create_order', $email_info ,true));
 
 			//			$this->email->send();
+			return $order_id;
 		}
 	}
 }

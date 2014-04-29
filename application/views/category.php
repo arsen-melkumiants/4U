@@ -25,7 +25,7 @@
 			<div class="info">
 				<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 				<small><?php echo date('d.m.Y, H:i', $item['add_date'])?></small>
-				<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>
+				<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 			</div>
 			<div class="action">
 				<?php if (isset($user_info['id']) && $user_info['id'] == $item['author_id']) {?>
@@ -53,7 +53,7 @@
 				</div>
 			</a>
 			<div class="action">
-				<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>
+				<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 				<button class="orange_btn add_to_cart"
 					data-name="<?php echo $item['name']?>"
 					data-id="<?php echo $item['id']?>"
@@ -64,7 +64,7 @@
 		<?php } else {?>
 		<div class="item list">
 			<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
-			<div class="price"><i class="c_icon_label"></i><?php echo $item['price'].' '.$item['symbol']?></div>
+			<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 			<button class="orange_btn add_to_cart"
 				data-name="<?php echo $item['name']?>"
 				data-id="<?php echo $item['id']?>"

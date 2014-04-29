@@ -86,6 +86,7 @@ $lang['cart_zip']						= 'Индекс';
 $lang['cart_phone']						= 'Телефон';
 $lang['cart_congratulations']			= 'Поздравляем. Покупка выполнена успешно. Желаете купить что-нибудь еще?';
 $lang['cart_empty']						= 'Товаров пока нет. Мы уверены, что вы что-нибудь найдете.';
+$lang['cart_pay_advice']				= 'Или вы можете оплатить свой заказ';
 
 
 $lang['my_cash']						= 'Мои средства';
@@ -118,6 +119,7 @@ $lang['go_to_up']						= 'Поднять вверх';
 $lang['allocate_lot']					= 'Выделите лот';
 $lang['make_vip']						= 'Создать VIP';
 $lang['search_placeholder']				= 'Что вы хотите найти?';
+$lang['here']                           = 'Здесь';
 
 
 $lang['vip_lots']						= 'VIP лоты';

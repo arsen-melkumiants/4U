@@ -62,10 +62,10 @@ class Profile extends CI_Controller {
 
 		$this->data['stats'] = array(
 			'active_sales'            => $this->db->where(array('author_id' => $user_id, 'status' => 1))->get('shop_products')->num_rows(),
-			'sold_products_amount'    => !empty($sold_stats['amount']) ? $sold_stats['amount'] : 0,
-			'sold_products_profit'    => (!empty($sold_stats['price']) ? $sold_stats['price'] : 0).' $',
-			'bought_products_amount'  => !empty($bought_stats['amount']) ? $bought_stats['amount'] : 0,
-			'bought_products_expense' => (!empty($bought_stats['price']) ? $bought_stats['price'] : 0).' $',
+			'sold_products_amount'    => !empty($sold_stats['amount']) ? floatval($sold_stats['amount']) : 0,
+			'sold_products_profit'    => (!empty($sold_stats['price']) ? floatval($sold_stats['price']) : 0).' $',
+			'bought_products_amount'  => !empty($bought_stats['amount']) ? floatval($bought_stats['amount']) : 0,
+			'bought_products_expense' => (!empty($bought_stats['price']) ? floatval($bought_stats['price']) : 0).' $',
 		);
 
 		$allowed_fields = array(
@@ -121,7 +121,7 @@ class Profile extends CI_Controller {
 				'title' => lang('product_price'),
 				'width' => '20%',
 				'func'  => function($row, $params) {
-					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['price']).' '.$row['symbol'].'</div>';
 				}
 		));
 		if ($type == 'sold') {
@@ -636,7 +636,7 @@ class Profile extends CI_Controller {
 				'title' => 'Price',
 				'width' => '30%',
 				'func'  => function($row, $params) {
-					return '<div class="price"><i class="c_icon_label"></i>'.$row['total_price'].' '.$row['symbol'].'</div>';
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['total_price']).' '.$row['symbol'].'</div>';
 				}
 		))
 			->date('add_date', array('title' => 'Date', 'width' => '20%'))
@@ -701,14 +701,14 @@ class Profile extends CI_Controller {
 				'title' => 'Count',
 				'width' => '20%',
 				'func'  => function($row, $params) {
-					return $row['qty'].' '.($row['qty'] > 1 ? 'items' : 'item');
+					return $row['qty'].' '.lang('product_items');
 				}
 		))
 			->text('price', array(
 				'title' => 'Price',
 				'width' => '20%',
 				'func'  => function($row, $params) {
-					return '<div class="price"><i class="c_icon_label"></i>'.$row['price'].$row['symbol'].'</div>';
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['price']).' '.$row['symbol'].'</div>';
 				}
 		))
 			->btn(array('func' => function($row, $params, $html, $that, $CI) {
