@@ -19,7 +19,7 @@
 				<div class="image">
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/small_thumb/'.$item['file_name'].'" />' : '';?>
 					<div class="bg"></div>
-					<div class="bg_text">Read more</div>
+					<div class="bg_text"><?php echo lang('read_more')?></div>
 				</div>
 			</a>
 			<div class="info">
@@ -38,7 +38,7 @@
 					data-name="<?php echo $item['name']?>"
 					data-id="<?php echo $item['id']?>"
 					data-href="<?php echo product_url($item['id'], $item['name'])?>"
-					>Buy</button>
+					><?php echo lang('buy')?></button>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -49,7 +49,7 @@
 				<div class="image">
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/small_thumb/'.$item['file_name'].'" />' : '';?>
 					<div class="bg"></div>
-					<div class="bg_text">Read more</div>
+					<div class="bg_text"><?php echo lang('read_more')?></div>
 				</div>
 			</a>
 			<div class="action">
@@ -58,7 +58,7 @@
 					data-name="<?php echo $item['name']?>"
 					data-id="<?php echo $item['id']?>"
 					data-href="<?php echo product_url($item['id'], $item['name'])?>"
-					>Buy</button>
+					><?php echo lang('buy')?></button>
 			</div>
 		</div>
 		<?php } else {?>
@@ -69,7 +69,7 @@
 				data-name="<?php echo $item['name']?>"
 				data-id="<?php echo $item['id']?>"
 				data-href="<?php echo product_url($item['id'], $item['name'])?>"
-				>Buy</button>
+				><?php echo lang('buy')?></button>
 			<div class="clear"></div>
 		</div>
 		<?php } ?>

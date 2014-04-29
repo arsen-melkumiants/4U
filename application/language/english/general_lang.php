@@ -55,4 +55,9 @@ $lang['stop']                           = 'Stop';
 $lang['cancel']                         = 'Cancel';
 $lang['finish']                         = 'Finish';
 $lang['add_files']                      = 'Add files';
-
+$lang['sold']                           = 'Sold';
+$lang['moderate']                       = 'On moderation';
+$lang['active']                         = 'Active';
+$lang['buy']                            = 'Buy';
+$lang['read_more']                      = 'Read more';
+$lang['description']                    = 'Description';

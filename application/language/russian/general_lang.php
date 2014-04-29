@@ -56,4 +56,9 @@ $lang['stop']                           = 'Остановить';
 $lang['cancel']                         = 'Отменить';
 $lang['finish']                         = 'Завершение';
 $lang['add_files']                      = 'Добавить файлы';
-
+$lang['sold']                           = 'Продано';
+$lang['moderate']                       = 'На модерации';
+$lang['active']                         = 'Активные';
+$lang['buy']                            = 'Купить';
+$lang['read_more']                      = 'Подробнее';
+$lang['description']                    = 'Описание';

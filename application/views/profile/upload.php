@@ -158,13 +158,13 @@ window.onload = function() {
 				{% if (!i && !o.options.autoUpload) { %}
 					<button class="btn btn-primary start" disabled>
 						<i class="glyphicon glyphicon-upload"></i>
-						<span>Start</span>
+						<span><?php echo lang('start')?></span>
 					</button>
 					{% } %}
 				{% if (!i) { %}
 					<button class="btn btn-warning cancel">
 						<i class="glyphicon glyphicon-ban-circle"></i>
-						<span>Cancel</span>
+						<span><?php echo lang('cancel')?></span>
 					</button>
 					{% } %}
 				<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar" style="width:0%;"></div></div>
@@ -192,10 +192,10 @@ window.onload = function() {
 					{% } %}
 				</p>
 				{% if (file.error) { %}
-					<div><span class="label label-danger">Error</span> {%=file.error%}</div>
+					<div><span class="label label-danger"><?php echo lang('error')?></span> {%=file.error%}</div>
 					{% } %}
 				{% if (file.sold) { %}
-					<div><span class="label label-warning">Sold</span></div>
+					<div><span class="label label-warning"><?php echo lang('sold')?></span></div>
 					{% } %}
 			</td>
 			<td>
@@ -205,12 +205,12 @@ window.onload = function() {
 				{% if (file.deleteUrl) { %}
 					<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
 						<i class="glyphicon glyphicon-trash"></i>
-						<span>Delete</span>
+						<span><?php echo lang('delete')?></span>
 					</button>
 					{% } else { %}
 					<button class="btn btn-warning cancel">
 						<i class="glyphicon glyphicon-ban-circle"></i>
-						<span>Cancel</span>
+						<span><?php echo lang('cancel')?></span>
 					</button>
 					{% } %}
 			</td>
