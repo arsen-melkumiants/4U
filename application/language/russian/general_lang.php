@@ -1,6 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $lang['my_profile']                     = 'Мой профиль';
+$lang['profile_changed_success']		= 'Профиль успешно изменен';
 
 $lang['my_sales']                       = 'Мои лоты';
 $lang['my_products']                    = 'Мои товары';
@@ -79,5 +80,6 @@ $lang['read_more']                      = 'Подробнее';
 $lang['description']                    = 'Описание';
 $lang['search']							= 'Поиск';
 $lang['page_doesnt_exist']				= 'Страница отсутствует';
+$lang['admin_permission']				= 'Только администратор имеет право на просмотр данной страницы.';
 
 $lang['vip_lots']						= 'VIP лоты';

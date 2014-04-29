@@ -38,7 +38,7 @@ class Personal extends CI_Controller {
 		if (!$this->ion_auth->logged_in()) {
 			redirect(ADM_URL.'auth/login', 'refresh');
 		} elseif (!$this->ion_auth->is_admin())	{
-			return show_error('You must be an administrator to view this page.');
+			return show_error(lang('admin_permission'));
 		} else {
 			redirect('', 'refresh');
 		}
@@ -205,7 +205,7 @@ class Personal extends CI_Controller {
 			);
 
 			$this->db->where('id', $user_info['id'])->update('users', $update_array);
-			$this->session->set_flashdata('success', 'The profile has been successfuly changed');
+			$this->session->set_flashdata('success', lang('profile_changed_success'));
 
 			if ($this->input->is_ajax_request()) {
 				echo 'refresh';exit;
