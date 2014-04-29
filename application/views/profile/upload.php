@@ -69,9 +69,9 @@ window.onload = function() {
 		<h2><?php echo $name?></h2>
 		<div class="steps_block">
 			<ul>
-				<li class="active"><a href="<?php echo site_url('profile/edit_product/'.$id)?>"><span>Edit</span></a></li>
-				<li class="active"><a href="<?php echo site_url('profile/product_gallery/'.$id)?>"><span>Gallery</span></a></li>
-				<li<?php echo $type != 'image' ? ' class="active"' : ''?>><a href="<?php echo site_url('profile/product_media_files/'.$id)?>"><span>Media</span></a></li>
+				<li class="active"><a href="<?php echo site_url('profile/edit_product/'.$id)?>"><span><?php echo lang('edit')?></span></a></li>
+				<li class="active"><a href="<?php echo site_url('profile/product_gallery/'.$id)?>"><span><?php echo lang('product_gallery')?></span></a></li>
+				<li<?php echo $type != 'image' ? ' class="active"' : ''?>><a href="<?php echo site_url('profile/product_media_files/'.$id)?>"><span><?php echo lang('product_media')?></span></a></li>
 			</ul>
 		</div>
 		<div class="clear"></div>
@@ -85,16 +85,16 @@ window.onload = function() {
 				<!-- The fileinput-button span is used to style the file input field as button -->
 				<span class="btn btn-success fileinput-button">
 					<i class="glyphicon glyphicon-plus"></i>
-					<span>Add files...</span>
+					<span><?php echo lang('add_files')?>...</span>
 					<input type="file" name="userfile" multiple>
 				</span>
 				<button type="submit" class="btn btn-primary start">
 					<i class="glyphicon glyphicon-upload"></i>
-					<span>Start</span>
+					<span><?php echo lang('start')?></span>
 				</button>
 				<button type="reset" class="btn btn-warning cancel">
 					<i class="glyphicon glyphicon-ban-circle"></i>
-					<span>Cancel</span>
+					<span><?php echo lang('cancel')?></span>
 				</button>
 				<!-- The global file processing state -->
 				<span class="fileupload-process"></span>
@@ -133,11 +133,11 @@ window.onload = function() {
 	<?php } ?>
 */ ?>
 	<?php if ($type == 'image') {?>
-	<a class="btn btn-primary" href="<?php echo site_url('profile/edit_product/'.$id)?>">Previous step</a>
-	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/product_media_files/'.$id)?>">Next step</a>
+	<a class="btn btn-primary" href="<?php echo site_url('profile/edit_product/'.$id)?>"><?php echo lang('prev_step')?></a>
+	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/product_media_files/'.$id)?>"><?php echo lang('next_step')?></a>
 	<?php } else {?>
-	<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>">Previous step</a>
-	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/products/moderate')?>">Finish</a>
+	<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>"><?php echo lang('prev_step')?></a>
+	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/products/moderate')?>"><?php echo lang('finish')?></a>
 	<?php } ?>
 </div>
 <!-- The template to display files available for upload -->

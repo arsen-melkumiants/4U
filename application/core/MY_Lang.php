@@ -43,6 +43,10 @@ class MY_Lang extends CI_Lang {
 		if (strpos($URI->uri_string, '4U') !== false) {
 			return true;
 		}
+		
+		if (preg_match('/^media_files\//ui', $URI->uri_string)) {
+			return true;
+		}
 
 		/* adjust the uri string leading slash */
 		$URI->uri_string = preg_replace("|^\/?|", '/', $URI->uri_string);
@@ -68,7 +72,6 @@ class MY_Lang extends CI_Lang {
 
 				/* remove the invalid abbreviation */
 				$URI->uri_string = preg_replace("|^\/?$uri_abbr\/?|", '', $URI->uri_string);
-
 				/* redirect */
 				header('Location: '.$config['base_url'].$index_page.$URI->uri_string);
 				exit;
@@ -110,6 +113,8 @@ class MY_Lang extends CI_Lang {
 			if ( ! $lang_ignore) {                   
 
 				/* check and set the uri identifier to the default value */    
+				$lang_abbr = $IN->cookie($config['cookie_prefix'].'user_lang');
+				$default_abbr = !empty($lang_abbr) ? $lang_abbr : default_abbr;
 				$index_page .= empty($index_page) ? $default_abbr : "/$default_abbr";
 
 				if (strlen($lang_abbr) == 2) {

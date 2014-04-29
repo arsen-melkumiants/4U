@@ -310,10 +310,10 @@ class Profile extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => lang('product_content'),
 			))
-			->btn(array('value' => empty($product_info) ? lang('product_add') : lang('update')));
+			->btn(array('value' => empty($product_info) ? lang('add') : lang('edit')));
 		if (!empty($product_info)) {
 			$this->form
-				->link(array('name' => 'Next step', 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
+				->link(array('name' => lang('next_step'), 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
 			//->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
 			//->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
 		}
@@ -328,7 +328,7 @@ class Profile extends CI_Controller {
 		}
 		if (empty($product_info) || $product_info['is_locked']) {
 			if ($product_info['is_locked']) {
-				$this->session->set_flashdata('danger', 'Удаление данного продукта заблокированно в свзяи с выполенинем заказа по нему');
+				$this->session->set_flashdata('danger', lang('product_delete_message_lock'));
 			}
 			if ($this->input->is_ajax_request()) {
 				echo 'refresh';
@@ -338,24 +338,24 @@ class Profile extends CI_Controller {
 			}
 		}
 
-		$this->data['title'] = $this->data['header'] = 'Deleting of "'.$product_info['name'].'"';
+		$this->data['title'] = $this->data['header'] = lang('product_delete_header').' "'.$product_info['name'].'"';
 
 		if ($this->input->is_ajax_request()) {
 			if (isset($_POST['delete'])) {
 				$this->db->where('id', $id)->update('shop_products', array('status' => 3));
-				$this->session->set_flashdata('success', 'Удаление успешно выполено');
+				$this->session->set_flashdata('success', lang('product_delete_message_success'));
 				echo 'refresh';
 			} else {
 				$this->load->library('form');
 				$this->data['center_block'] = $this->form
-					->btn(array('name' => 'cancel', 'value' => 'Cancel', 'class' => 'btn-default', 'modal' => 'close'))
-					->btn(array('name' => 'delete', 'value' => 'Delete', 'class' => 'btn-danger'))
+					->btn(array('name' => 'cancel', 'value' => lang('cancel'), 'class' => 'btn-default', 'modal' => 'close'))
+					->btn(array('name' => 'delete', 'value' => lang('delete'), 'class' => 'btn-danger'))
 					->create(array('action' => current_url(), 'btn_offset' => 3));
 				echo $this->load->view('ajax', $this->data, true);
 			}
 		} else {
 			$this->db->where('id', $id)->update('shop_products', array('status' => 3));
-			$this->session->set_flashdata('success', 'Удаление успешно выполено');
+			$this->session->set_flashdata('success', lang('product_delete_message_success'));
 			redirect('profile/products', 'refresh');
 		}
 	}
@@ -381,15 +381,15 @@ class Profile extends CI_Controller {
 		}
 
 		if ($type == 'image') {
-			$this->data['title'] = $this->data['name'] = 'Product gallery';
+			$this->data['title'] = $this->data['name'] = lang('product_gallery_header');
 			$this->data['upload_url'] = base_url('profile/upload_gallery/'.$id);
 		} else {
-			$this->data['title'] = $this->data['name'] = 'Product files';
+			$this->data['title'] = $this->data['name'] = lang('product_media_file_header');
 			$this->data['upload_url'] = base_url('profile/upload_media_files/'.$id);
 		}
 
 		if ($product_info['is_locked']) {
-			set_alert('Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему', false, 'warning');
+			set_alert(lang('product_edit_message_lock'), false, 'warning');
 		}
 
 		$this->data['center_block'] = $this->load->view('profile/upload', $this->data, true);
@@ -430,7 +430,7 @@ class Profile extends CI_Controller {
 		if (!$this->upload->do_upload() || $product_info['is_locked']) {
 			$error = $this->upload->display_errors();
 			if ($product_info['is_locked']) {
-				$error = 'Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему';
+				$error = lang('product_edit_message_lock');
 				$data = $this->upload->data();
 				@unlink($data['full_path']);
 			}
