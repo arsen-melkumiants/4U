@@ -40,7 +40,11 @@
 <?php after_load('js', '/js/slider/slick.min.js');?>
 <?php after_load('css', '/js/slider/slick.css');?>
 <script>
-	window.onload = function() {
-		$('.slide_content').carousel();
+window.onload = function() {
+	if(typeof load_slider === 'undefined' || !load_slider) {
+		var load_slider = true;
+			$('.slide_content');
+		});
 	}
+}
 </script>
