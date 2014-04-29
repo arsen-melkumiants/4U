@@ -25,7 +25,7 @@ $lang['product_gallery']                = 'Gallery';
 $lang['product_add_message_success']    = 'Product has been successfully added and is waiting for moderation';
 $lang['product_delete_message_success'] = 'Deleting was successfully done';
 $lang['product_delete_message_lock']    = 'Deleting of this product is locked in connection with an order for him';
-$lang['product_edit_message_lock']    = 'Editing of this product is locked in connection with an order for him';
+$lang['product_edit_message_lock']		= 'Editing of this product is locked in connection with an order for him';
 
 
 
@@ -39,8 +39,24 @@ $lang['bought_products_expense']        = 'Bought products expense';
 
 
 $lang['my_orders']                      = 'My orders';
+$lang['orders_danger_message_pat1']		= 'The product';
+$lang['orders_danger_message_pat2']		= 'doesn\'t have enough amount';
+$lang['orders_success_message']			= 'Ordering successfully received';
 
 $lang['cart']                           = 'Cart';
+$lang['my_cart']						= 'My cart';
+$lang['cart_information']				= 'Information';
+$lang['cart_payment']					= 'Payment';
+$lang['cart_name']						= 'Name';
+$lang['cart_email']						= 'Email';
+$lang['cart_company']					= 'Company';
+$lang['cart_address']					= 'Address';
+$lang['cart_city']						= 'City';
+$lang['cart_state']						= 'State';
+$lang['cart_country']					= 'Country';
+$lang['cart_zip']						= 'Zip';
+$lang['cart_phone']						= 'Phone';
+$lang['cart_congratulations']			= 'Congratulations. Your purchase is completed. Want to buy something else?';
 
 $lang['logout']                         = 'Logout';
 $lang['add']                            = 'Add';
@@ -61,3 +77,6 @@ $lang['active']                         = 'Active';
 $lang['buy']                            = 'Buy';
 $lang['read_more']                      = 'Read more';
 $lang['description']                    = 'Description';
+$lang['search']							= 'Search';
+
+$lang['vip_lots']						= 'VIP lots';

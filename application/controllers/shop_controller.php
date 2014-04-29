@@ -44,12 +44,12 @@ class Shop_controller extends CI_Controller {
 		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
 
 		//VIP
-		$this->data['name'] = 'VIP lots';
+		$this->data['name'] = lang('vip_lots');
 		$this->data['products']     = $this->shop_model->get_vip_products(3);
 		$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
 
 		$this->data['name']  = $this->data['category_info']['name'];
-		$this->data['title'] = 'Категория "'.$this->data['name'].'"';
+		$this->data['title'] = lang('product_category').' "'.$this->data['name'].'"';
 
 		$this->data['per_page']     = 9;
 		$this->data['total']        = $this->shop_model->count_products_by_category($this->data['category_info']['id']);
@@ -67,11 +67,11 @@ class Shop_controller extends CI_Controller {
 		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
 
 		//VIP
-		$this->data['name'] = 'VIP lots';
+		$this->data['name'] = lang('vip_lots');
 		$this->data['products']     = $this->shop_model->get_vip_products(3);
 		$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
 
-		$this->data['title'] = $this->data['name'] = 'Поиск "'.$query.'"';
+		$this->data['title'] = $this->data['name'] = lang('search').' "'.$query.'"';
 
 		$this->data['per_page']     = 9;
 		$this->data['total']        = $this->shop_model->count_search_products($query);
@@ -117,10 +117,10 @@ class Shop_controller extends CI_Controller {
 		}
 
 		$this->data['links'] = array(
-			'orders'       => 'My cart',
-			'information'  => 'Information',
-			'payment'      => 'Payment',
-			'confirmation' => 'Finish',
+			'orders'       => lang('my_cart'),
+			'information'  => lang('cart_information'),
+			'payment'      => lang('cart_payment'),
+			'confirmation' => lang('finish'),
 		);
 		$this->data['cur_step'] = $step;
 		if (!isset($this->data['links'][$step])) {
@@ -201,17 +201,17 @@ class Shop_controller extends CI_Controller {
 
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
-				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => 'Name', 'value' => $fields['username']))
-				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => 'Email', 'value' => $fields['email']))
-				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Company', 'value' => $fields['company']))
-				->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Address', 'value' => $fields['address']))
-				->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'City', 'value' => $fields['city']))
-				->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'State', 'value' => $fields['state']))
-				->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Country', 'value' => $fields['country']))
-				->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => 'Zip', 'value' => $fields['zip']))
-				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => 'Phone', 'value' => $fields['phone']))
+				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_name'), 'value' => $fields['username']))
+				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_email'), 'value' => $fields['email']))
+				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_company'), 'value' => $fields['company']))
+				->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_address'), 'value' => $fields['address']))
+				->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_city'), 'value' => $fields['city']))
+				->text('state', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_state'), 'value' => $fields['state']))
+				->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_country'), 'value' => $fields['country']))
+				->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => lang('cart_zip'), 'value' => $fields['zip']))
+				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => land('cart_phone'), 'value' => $fields['phone']))
 				->func(function($params) {
-					return '<button type="submit" class="orange_btn">Next step</button>';
+					return '<button type="submit" class="orange_btn">'.lang('next_step').'</button>';
 				})
 					->create(array('action' => current_url(), 'error_inline' => 'true'));
 			if ($this->form_validation->run() != false) {
@@ -231,7 +231,7 @@ class Shop_controller extends CI_Controller {
 			$this->data['center_block'] = $this->form
 				->hidden('confirm', 1)
 				->func(function($params) {
-					return '<button type="submit" class="orange_btn">Finish</button>';
+					return '<button type="submit" class="orange_btn">'.lang('finish').'</button>';
 				})
 					->create(array('action' => site_url('cart/confirmation')));
 			$this->data['center_block'] = $this->load->view('cart/payment', $this->data, true);
@@ -255,7 +255,7 @@ class Shop_controller extends CI_Controller {
 
 			$this->confirm_order($this->data);
 
-			$this->data['center_block'] = '<h4>Congratulations. your purchase is completed. Want to buy something else?</h4>';
+			$this->data['center_block'] = '<h4>'.lang('cart_congratulations').'</h4>';
 			$this->data['center_block'] = $this->load->view('cart/confirm', $this->data, true);
 		}        
 		load_views();
@@ -421,7 +421,7 @@ class Shop_controller extends CI_Controller {
 			foreach ($order_products as $rowid => $item) {
 				if ($item['type'] == 'licenses') {
 					if (!isset($license_files[$item['product_id']]) || $license_files[$item['product_id']] < $item['qty']) {
-						$this->session->set_flashdata('danger', 'The product "'.$item['name'].'" doesn\'t have enough amount');
+						$this->session->set_flashdata('danger', lang('orders_danger_message_pat1').' "'.$item['name'].'" '.lang('orders_danger_message_pat2'));
 						$this->cart->update(array('rowid' => $rowid, 'qty'   => isset($license_files[$item['product_id']]) ? $license_files[$item['product_id']] : 0));
 						redirect('cart', 'refresh');
 						break;
@@ -444,7 +444,7 @@ class Shop_controller extends CI_Controller {
 			$this->email->to($info['email']); 
 			$this->email->cc(SITE_EMAIL); 
 
-			$this->email->subject('Заказ успешно принят');
+			$this->email->subject(lang('orders_success_message'));
 			$this->email->message($this->load->view('email/create_order', $email_info ,true));
 
 			//			$this->email->send();

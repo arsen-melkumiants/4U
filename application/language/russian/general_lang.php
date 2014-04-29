@@ -29,7 +29,6 @@ $lang['product_edit_message_lock']      = 'Редактирование данн
 
 
 
-
 $lang['my_stats']                       = 'Моя статистика';
 $lang['active_sales']                   = 'Активные лоты';
 $lang['sold_products_amount']           = 'Количество проданных товаров';
@@ -40,8 +39,24 @@ $lang['bought_products_expense']        = 'Затраты при покупке 
 
 
 $lang['my_orders']                      = 'Мои заказы';
+$lang['orders_danger_message_pat1']		= 'Продукт';
+$lang['orders_danger_message_pat2']		= 'не имеет количества';
+$lang['orders_success_message']			= 'Заказ успешно принят';
 
 $lang['cart']                           = 'Корзина';
+$lang['my_cart']						= 'Моя корзина';
+$lang['cart_information']				= 'Информация';
+$lang['cart_payment']					= 'Оплата';
+$lang['cart_name']						= 'Имя';
+$lang['cart_email']						= 'Email';
+$lang['cart_company']					= 'Компания';
+$lang['cart_address']					= 'Адрес';
+$lang['cart_city']						= 'Город';
+$lang['cart_state']						= 'Штат/Регион';
+$lang['cart_country']					= 'Страна';
+$lang['cart_zip']						= 'Индекс';
+$lang['cart_phone']						= 'Телефон';
+$lang['cart_congratulations']			= 'Поздравляем. Покупка выполнена успешно. Желаете купить что-нибудь еще?';
 
 $lang['logout']                         = 'Выход';
 $lang['add']                            = 'Добавить';
@@ -62,3 +77,6 @@ $lang['active']                         = 'Активные';
 $lang['buy']                            = 'Купить';
 $lang['read_more']                      = 'Подробнее';
 $lang['description']                    = 'Описание';
+$lang['search']							= 'Поиск';
+
+$lang['vip_lots']						= 'VIP лоты';
