@@ -114,7 +114,7 @@ class MY_Lang extends CI_Lang {
 
 				/* check and set the uri identifier to the default value */    
 				$lang_abbr = $IN->cookie($config['cookie_prefix'].'user_lang');
-				$default_abbr = !empty($lang_abbr) ? $lang_abbr : default_abbr;
+				$default_abbr = !empty($lang_abbr) ? $lang_abbr : $default_abbr;
 				$index_page .= empty($index_page) ? $default_abbr : "/$default_abbr";
 
 				if (strlen($lang_abbr) == 2) {
@@ -124,8 +124,10 @@ class MY_Lang extends CI_Lang {
 				}
 
 				/* redirect */
-				header('Location: '.$config['base_url'].$index_page.$URI->uri_string);
-				exit;
+				if (($index_page == 'en' && $URI->uri_string != '/') || $index_page != 'en') {
+					header('Location: '.$config['base_url'].$index_page.$URI->uri_string);
+					exit;
+				}
 			}
 
 			/* set the language_abbreviation cookie */                
