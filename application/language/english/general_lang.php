@@ -78,5 +78,6 @@ $lang['buy']                            = 'Buy';
 $lang['read_more']                      = 'Read more';
 $lang['description']                    = 'Description';
 $lang['search']							= 'Search';
+$lang['page_doesnt_exist']				= 'Page doesn\'t exist';
 
 $lang['vip_lots']						= 'VIP lots';

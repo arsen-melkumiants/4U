@@ -17,7 +17,7 @@ class Not_found extends CI_Controller {
     }
 
 	public function index() {
-		$this->data['title'] = $this->data['header'] = 'Page doesn\'t exist';
+		$this->data['title'] = $this->data['header'] = lang('page_doesnt_exist');
 		
 		$this->output->set_status_header('404');
 		$this->data['center_block'] = '<h1 class="text_404">404</h1>';

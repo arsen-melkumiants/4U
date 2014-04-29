@@ -78,5 +78,6 @@ $lang['buy']                            = 'Купить';
 $lang['read_more']                      = 'Подробнее';
 $lang['description']                    = 'Описание';
 $lang['search']							= 'Поиск';
+$lang['page_doesnt_exist']				= 'Страница отсутствует';
 
 $lang['vip_lots']						= 'VIP лоты';
