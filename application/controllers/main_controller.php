@@ -31,7 +31,7 @@ class Main_controller extends CI_Controller {
 		$this->data['center_block'] .= $this->load->view('product_block', $this->data, true);
 
 		$this->data['name'] = lang('new_products');
-		$this->data['products'] = $this->shop_model->get_new_products(6);
+		$this->data['products'] = $this->shop_model->get_new_products(18);
 		$this->data['center_block'] .= $this->load->view('product_block', $this->data, true);
 		
 		load_views();
