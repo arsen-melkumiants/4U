@@ -37,14 +37,24 @@
 	<div class="clear"></div>
 </div>
 <?php } ?>
-<?php after_load('js', '/js/slider/slick.min.js');?>
-<?php after_load('css', '/js/slider/slick.css');?>
+<?php after_load('js', '/js/slider/bxslider.min.js');?>
+<?php after_load('css', '/js/slider/bxslider.css');?>
 <script>
 window.onload = function() {
-	if(typeof load_slider === 'undefined' || !load_slider) {
+	$('.slide_content').bxSlider({
+		adaptiveHeight: false,
+		controls:true,
+		auto:true,
+		pause:4000,
+		autoStart:true,
+		autoHover:true,
+	});
+
+
+	/*if(typeof load_slider === 'undefined' || !load_slider) {
 		var load_slider = true;
 			$('.slide_content');
 		});
-	}
+	}*/
 }
 </script>
