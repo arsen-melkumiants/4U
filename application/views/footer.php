@@ -78,14 +78,14 @@
 					if ($.trim(data) == 'Noqty') {
 						new PNotify({
 							title : '<?php echo lang('product_not_added_to_cart')?>',
-							text  : '<?php echo lang('product')?> '+ name + '<?php echo lang('product_cannot_be_bought')?> </a>',
+							text  : '<?php echo lang('product')?> '+ name + ' <?php echo lang('product_cannot_be_bought')?> </a>',
 							type  : 'error',
 							delay : 3000,
 						});
 					} else {
 						new PNotify({
-							title : <?php echo lang('product_added_to_cart')?>,
-							text  : <?php echo lang('product')?> + name + ' <?php echo lang('product_succesfuly_added_to')?> <a href="<?php echo site_url('cart')?>"><?php echo lang('to_cart')?></a>',
+							title : '<?php echo lang('product_added_to_cart')?>',
+							text  : '<?php echo lang('product')?> ' + name + ' <?php echo lang('product_succesfuly_added_to')?> <a href="<?php echo site_url('cart')?>"><?php echo lang('to_cart')?></a>',
 							icon  : 'icon-shopping-cart',
 							type  : 'success',
 							delay : 3000,
