@@ -77,15 +77,15 @@
 				$.post('<?php echo site_url('add_to_cart')?>', {id : id}).done(function(data) {
 					if ($.trim(data) == 'Noqty') {
 						new PNotify({
-							title : 'Товар не добавлен в корзину',
-							text  : 'Товар' + name + ' не может быть куплен в связи с его ограниченным либо полным отсутствием в данный момент</a>',
+							title : '<?php echo lang('product_not_added_to_cart')?>',
+							text  : '<?php echo lang('product')?> '+ name + '<?php echo lang('product_cannot_be_bought')?> </a>',
 							type  : 'error',
 							delay : 3000,
 						});
 					} else {
 						new PNotify({
-							title : 'Товар добавлен в корзину',
-							text  : 'Товар' + name + ' успешно добавлен в <a href="<?php echo site_url('cart')?>">корзину</a>',
+							title : <?php echo lang('product_added_to_cart')?>,
+							text  : <?php echo lang('product')?> + name + ' <?php echo lang('product_succesfuly_added_to')?> <a href="<?php echo site_url('cart')?>"><?php echo lang('to_cart')?></a>',
 							icon  : 'icon-shopping-cart',
 							type  : 'success',
 							delay : 3000,

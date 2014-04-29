@@ -3,6 +3,7 @@
 $lang['my_profile']                     = 'My profile';
 $lang['profile_changed_success']		= 'The profile has been successfuly changed';
 
+$lang['product']						= 'Product';
 $lang['my_sales']                       = 'My sales';
 $lang['my_products']                    = 'My products';
 $lang['product_add']                    = 'Add product';
@@ -28,6 +29,10 @@ $lang['product_delete_message_success'] = 'Deleting was successfully done';
 $lang['product_delete_message_lock']    = 'Deleting of this product is locked in connection with an order for him';
 $lang['product_edit_message_lock']		= 'Editing of this product is locked in connection with an order for him';
 $lang['product_danger_message_key_is_not_available']	= 'The license key is not available for product';
+$lang['product_not_added_to_cart']		= 'Product is not added to the cart';
+$lang['product_added_to_cart']			= 'Product added to cart';
+$lang['product_cannot_be_bought']		= 'cannot be bought cause of lack of it';
+$lang['product_succesfuly_added_to']	= 'successfully added to';
 $lang['product_items']					= 'items';
 
 
@@ -56,6 +61,7 @@ $lang['orders_payment_success']			= 'Test payment executed successfully';
 
 
 $lang['cart']                           = 'Cart';
+$lang['to_cart']						= 'cart';
 $lang['my_cart']						= 'My cart';
 $lang['cart_information']				= 'Information';
 $lang['cart_payment']					= 'Payment';
@@ -96,6 +102,7 @@ $lang['description']                    = 'Description';
 $lang['search']							= 'Search';
 $lang['page_doesnt_exist']				= 'Page doesn\'t exist';
 $lang['admin_permission']				= 'You must be an administrator to view this page.';
+
 
 $lang['vip_lots']						= 'VIP lots';
 $lang['strongly_recommended']			= 'Strongly recommended';
