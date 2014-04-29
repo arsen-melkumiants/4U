@@ -7,7 +7,10 @@ class Admin_user_model extends CI_Model {
 		$this->load->database();
 	}
 
-	function get_all_users() {
+	function get_all_users($active = false) {
+		if ($active !== false) {
+			$this->db->where('active', $active);
+		}
 		return $this->db->select('*, active as status')->get('users');
 	}
 

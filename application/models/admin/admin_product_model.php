@@ -7,8 +7,13 @@ class Admin_product_model extends CI_Model {
 		$this->load->database();
 	}
 
-	function get_all_products() {
-		return $this->db->where('status <', 3)->order_by('id', 'desc')->get('shop_products');
+	function get_all_products($status = false) {
+		if ($status !== false) {
+			$this->db->where('status', $status);
+		} else {
+			$this->db->where('status <', 3);
+		}
+		return $this->db->order_by('id', 'desc')->get('shop_products');
 	}
 
 	function get_product_info($id) {

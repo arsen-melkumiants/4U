@@ -8,7 +8,7 @@ class Admin_control_menu_model extends CI_Model
 	{
 		parent::__construct();
 		$this->load->database();
-		
+
 		$this->menus = array(
 			'top'                               => array(
 				'Сайт'                          => array(
@@ -29,7 +29,10 @@ class Admin_control_menu_model extends CI_Model
 				'Магазин'                       => array(
 					'manage_category'           => 'Список категорий',
 					'1'                         => '',
-					'manage_product'            => 'Список товаров',
+					'manage_product'            => 'Список всех товаров',
+					'manage_product/moderate'   => 'Продукты на модерацию',
+					'manage_product/activated'  => 'Активные продукты',
+					'manage_product/rejected'   => 'Продукты непрошедшие модерацию',
 					'2'                         => '',
 					//'manage_order/all'          => 'Список заказов',
 					//'manage_order/settings'     => 'Настройки заказов',
@@ -43,7 +46,7 @@ class Admin_control_menu_model extends CI_Model
 				'developers'                    => 'О разработчиках',
 			),
 		);
-		
+
 	}
 	
 	function get_control_menu($name = false){

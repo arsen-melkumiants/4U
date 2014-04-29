@@ -10,7 +10,19 @@ class Manage_product extends CI_Controller {
 
 	public $PAGE_INFO = array(
 		'index'            => array(
-			'header'       => 'Продукты',
+			'header'       => 'Все продукты',
+			'header_descr' => 'Список продуктов',
+		),
+		'moderate'         => array(
+			'header'       => 'Продукты на модерацию',
+			'header_descr' => 'Список продуктов',
+		),
+		'activated'        => array(
+			'header'       => 'Активные продукты',
+			'header_descr' => 'Список продуктов',
+		),
+		'rejected'         => array(
+			'header'       => 'Продукты непрошедшие модерацию',
 			'header_descr' => 'Список продуктов',
 		),
 		'add'              => array(
@@ -39,8 +51,10 @@ class Manage_product extends CI_Controller {
 		admin_constructor();
 	}
 
-	public function index() {
+	public function index($status = false) {
 		$product_categories = $this->admin_product_model->get_product_categories();
+
+		$this->data['status'] = $status;
 
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
@@ -65,16 +79,28 @@ class Manage_product extends CI_Controller {
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
 			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1))
 //			->active(array('link' => $this->MAIN_URL.'active/%d'))
-			->btn(array(
+			/*->btn(array(
 				'link'   => $this->MAIN_URL.'add',
 				'name'   => 'Добавить',
 				'header' => true,
-			))
+			))*/
 			->create(function($CI) {
-				return $CI->admin_product_model->get_all_products();
+				return $CI->admin_product_model->get_all_products($CI->data['status']);
 			});
 
 		load_admin_views();
+	}
+
+	public function moderate() {
+		$this->index(0);
+	}
+
+	public function activated() {
+		$this->index(1);
+	}
+
+	public function rejected() {
+		$this->index(2);
 	}
 
 	public function add() {
