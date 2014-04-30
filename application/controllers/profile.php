@@ -808,6 +808,6 @@ class Profile extends CI_Controller {
 		$this->db->trans_complete();
 
 		$this->session->set_flashdata('success', lang('orders_payment_success'));
-		redirect('profile/view_order/'.$id, 'refresh');
+		redirect('profile/order_view/'.$id, 'refresh');
 	}
 }
