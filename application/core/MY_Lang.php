@@ -124,10 +124,10 @@ class MY_Lang extends CI_Lang {
 				}
 
 				/* redirect */
-				if (($index_page == 'en' && $URI->uri_string != '/') || $index_page != 'en') {
+				//if (($index_page == 'en' && $URI->uri_string != '/') || $index_page != 'en') {
 					header('Location: '.$config['base_url'].$index_page.$URI->uri_string);
 					exit;
-				}
+				//}
 			}
 
 			/* set the language_abbreviation cookie */                
