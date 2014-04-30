@@ -357,3 +357,9 @@ table.gallery .preview img {max-width: 80px;}
 .orders th ,
 .orders td {font-size: 16px;}
 .orders td .number {font-size: 16px;}
+
+.bx-controls {position: absolute;right: 15px;top: -72px;width: 60px;}
+.bx-wrapper .bx-controls .bx-controls-direction a {width: 20px;height: 30px;top: 0;margin: 0;}
+.bx-wrapper .bx-controls .bx-controls-direction a:hover {background-position: center;}
+.bx-controls a.bx-prev {left: 0;background: url(../img/left_arrow.png) no-repeat center;}
+.bx-controls a.bx-next {right: 0;background: url(../img/right_arrow.png) no-repeat center;}
