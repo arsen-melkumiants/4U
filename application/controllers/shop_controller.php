@@ -86,10 +86,26 @@ class Shop_controller extends CI_Controller {
 			show_404();
 		}
 
-		$this->data['product_info'] = $this->shop_model->get_product_info($id);
+		$this->data['product_info'] = $this->db
+			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name')
+			->from('shop_products as p')
+			->join('shop_currencies as c', 'p.currency = c.id')
+			->join('users as u', 'p.author_id = u.id', 'left')
+			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+			->where('p.id', $id)
+			->get()
+			->row_array();
 
 		if (empty($this->data['product_info'])) {
 			show_404();
+		}
+
+		if (!$this->ion_auth->is_admin()) {
+			if (!$this->ion_auth->logged_in() && $this->data['product_info']['status'] != 1) {
+				show_404();
+			} elseif ($this->ion_auth->logged_in() && $this->data['product_info']['author_id'] != $this->data['user_info']['id']) {
+				show_404();
+			}
 		}
 
 		$alias = url_title(translitIt($this->data['product_info']['name']), 'underscore', TRUE); 

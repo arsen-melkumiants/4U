@@ -69,10 +69,14 @@ $config['url_suffix'] = '.html';
 | than english.
 |
 */
-$config['language']	= 'english';
 
-/* default language abbreviation */
-$config['lang_abbr'] = 'en';
+if (strpos($_SERVER['QUERY_STRING'], '4U') !== false) {
+	$config['language']	= 'russian';
+	$config['lang_abbr'] = 'ru';
+} else {
+	$config['language']	= 'english';
+	$config['lang_abbr'] = 'en';
+}
 
 /* set available language abbreviations */
 $config['lang_uri_abbr'] = array(
