@@ -8,11 +8,11 @@ class Admin_content_model extends CI_Model {
 	}
 
 	function get_all_content() {
-		return $this->db->order_by('id', 'desc')->get('content');
+		return $this->db->select('*, name_ru as name')->order_by('id', 'desc')->get('content');
 	}
 
 	function get_content_info($id) {
-		return $this->db->where('id', $id)->get('content')->row_array();
+		return $this->db->select('*, name_ru as name')->where('id', $id)->get('content')->row_array();
 	}
 
 	function get_content_categories($only_resource = false) {

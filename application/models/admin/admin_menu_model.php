@@ -140,7 +140,7 @@ class Admin_menu_model extends CI_Model {
 
 	function get_content_list() {
 		$list = array(
-			'content'         => $this->db->select('id, name')->get('content')->result_array(),
+			'content'         => $this->db->select('id, name_ru as name')->get('content')->result_array(),
 			'shop_categories' => $this->db->select('id, name_ru as name')->get('shop_categories')->result_array(),
 			'auth'            => array(
 				array('id' => 'login', 'name' => 'Вход'),

@@ -60,10 +60,14 @@ class Manage_content extends CI_Controller {
 
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
-			->text('name', array(
-				'title'   => 'Имя',
-				'p_width' => 50
-			))
+			->text('cat_id', array(
+				'title' => 'Категория',
+				'width' => '50%',
+				'extra' => $content_categories ,
+				'func'  => function($row, $params) {
+					return $row['name_ru'].' ('.$row['name_en'].')';
+				}
+		))
 			->text('cat_id', array(
 				'title' => 'Категория',
 				'extra' => $content_categories ,
@@ -95,7 +99,7 @@ class Manage_content extends CI_Controller {
 
 	public function add() {
 		if(!empty($_POST)){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $_POST['name_en'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
@@ -120,7 +124,7 @@ class Manage_content extends CI_Controller {
 		set_header_info($content_info);
 
 		if(!empty($_POST)){
-			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $content_info['name'];
+			$alias = !empty($_POST['alias']) ? $_POST['alias'] : $content_info['name_en'];
 			$_POST['alias'] = url_title(translitIt($alias), 'underscore', TRUE);
 		}
 
@@ -138,10 +142,15 @@ class Manage_content extends CI_Controller {
 		array_unshift($content_categories, array('id' => 0, 'name' => 'Без категории'));
 		$this->load->library('form');
 		return $this->form
-			->text('name', array(
-				'value'       => $content_info['name'] ?: false,
+			->text('name_ru', array(
+				'value'       => $content_info['name_ru'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Имя',
+				'label'       => 'Название(RU)',
+			))
+			->text('name_en', array(
+				'value'       => $content_info['name_en'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Название(EN)',
 			))
 			->text('alias', array(
 				'value'       => $content_info['alias'] ?: false,
@@ -155,10 +164,15 @@ class Manage_content extends CI_Controller {
 				'options'     => $content_categories,
 				'search'      => true,
 			))
-			->textarea('content', array(
-				'value'       => $content_info['content'] ?: false,
+			->textarea('content_ru', array(
+				'value'       => $content_info['content_ru'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => 'Текст',
+				'label'       => 'Текст(RU)',
+			))
+			->textarea('content_en', array(
+				'value'       => $content_info['content_en'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Текст(EN)',
 			))
 			->text('keywords', array(
 				'value'       => $content_info['keywords'] ?: false,
