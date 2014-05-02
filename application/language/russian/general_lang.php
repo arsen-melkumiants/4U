@@ -44,9 +44,9 @@ $lang['product_added']                               = 'Добавлен';
 $lang['product_id']                                  = 'Номер';
 $lang['product_seller']                              = 'Продавец';
 $lang['product_phone']                               = 'Телефон';
-$lang['product_deleted']                             = 'Телефон';
-$lang['product_on_moderate']                         = 'Телефон';
-$lang['product_rejected']                            = 'Телефон';
+$lang['product_deleted']                             = 'Данный продукт удален';
+$lang['product_on_moderate']                         = 'Данный продукт на модерации';
+$lang['product_rejected']                            = 'Данный продукт не прошел модерацию';
 
 
 $lang['my_stats']                                    = 'Моя статистика';
