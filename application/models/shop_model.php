@@ -394,4 +394,22 @@ class Shop_model extends CI_Model {
 		}
 		return $success;
 	}
+
+
+	//PAYMENTS
+
+	function log_payment($user_id, $type_name, $type_id = 0, $amount, $currency = 1) {
+		if (empty($user_id) || empty($type_name) || empty($amount) || empty($currency)) {
+			return false;
+		}
+
+		$this->db->insert('shop_user_payment_logs', array(
+			'user_id'   => $user_id,
+			'type_name' => $type_name,
+			'type_id'   => $type_id,
+			'amount'    => $amount,
+			'currency'  => $currency,
+		));
+		return $this->db->insert_id();
+	}
 }

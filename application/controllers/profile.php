@@ -795,7 +795,7 @@ class Profile extends CI_Controller {
 			}
 		}
 
-		$this->db->trans_start();
+		$this->db->trans_begin();
 
 		if (!empty($license_files)) {
 			$this->db->update_batch('shop_product_media_files', $license_files, 'id');
@@ -805,7 +805,8 @@ class Profile extends CI_Controller {
 		$this->db->update_batch('shop_products', $update_array, 'id');
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
 
-		$this->db->trans_complete();
+		$payment_id = $this->shop_model->log_payment($this->data['user_info']['id'], 'pay_order', $order_info['id'], $order_info['total_price']);
+		$this->db->trans_commit();
 
 		$this->session->set_flashdata('success', lang('orders_payment_success'));
 		redirect('profile/order_view/'.$id, 'refresh');
