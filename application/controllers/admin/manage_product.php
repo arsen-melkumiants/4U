@@ -37,6 +37,14 @@ class Manage_product extends CI_Controller {
 			'header'       => 'Удаление продукта "%name"',
 			'header_descr' => false,
 		),
+		'orders'           => array(
+			'header'       => 'Все заказы',
+			'header_descr' => 'Список заказов',
+		),
+		'order_view'       => array(
+			'header'       => 'Заказ №"%order_id"',
+			'header_descr' => 'Список заказанных продуктов',
+		),
 	);
 
 	function __construct() {
@@ -321,4 +329,95 @@ class Manage_product extends CI_Controller {
 		}	
 	}
 
+	public function orders() {
+		$this->load->library('table');
+		$this->data['center_block'] = $this->table
+			->text('id', array(
+				'title' => 'Номер',
+				'width' => '20%'
+			))
+			->date('add_date', array(
+				'title' => 'Дата создания'
+			))
+			->date('username', array(
+				'title' => 'Покупатель',
+				'func'  => function($row, $params) {
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
+				}
+			))
+			->text('total_amount', array(
+				'title' => 'Количество товаров',
+			))
+			->text('total_price', array(
+				'title' => 'Цена',
+				'func'  => function($row, $params) {
+					return $row['total_price'].' '.$row['symbol'];
+				}
+		))
+			->text('status', array(
+				'title' => 'Статус',
+				'func'  => function($row, $params, $that, $CI) {
+					if ($row['status'] == 0) {
+						return '<span class="label label-warning">Неоплаченый</span>';
+					} elseif ($row['status'] == 1) {
+						return '<span class="label label-success">Оплаченый</span>';
+					}
+				}
+		))
+			->btn(array('link' => $this->MAIN_URL.'order_view/%d', 'icon' => 'list', 'title' => 'Детали заказа'))
+			->create(function($CI) {
+				return $CI->admin_product_model->get_orders();
+			});
+
+		load_admin_views();
+	}
+
+	public function order_view($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+		$order_info = $this->admin_product_model->get_order_info($id);
+
+		if (empty($order_info)) {
+			custom_404();
+		}
+		$this->data['id'] = $id;
+		set_header_info(array('order_id' => $id));
+		$product_categories = $this->admin_product_model->get_product_categories();
+		$this->load->library('table');
+		$this->data['center_block'] = $this->table
+			->text('name', array(
+				'title'   => 'Имя',
+				'p_width' => 50
+			))
+			->text('cat_id', array(
+				'title' => 'Категория',
+				'extra' => $product_categories ,
+				'func'  => function($row, $params) {
+					if (isset($params['extra'][$row['cat_id']]['name'])) {
+						return '<span class="label label-info">'.$params['extra'][$row['cat_id']]['name'].'</span>';
+					} else {
+						return '<span class="label label-warning">Отсутствует</span>';
+					}
+				}
+		))
+			->text('qty', array(
+				'title'   => 'Количество',
+				'p_width' => 10
+			))
+			->text('price', array(
+				'title' => 'Цена',
+				'func'  => function($row, $params) {
+					return $row['price'].' '.$row['symbol'];
+				}
+		))
+			->date('add_date', array(
+				'title' => 'Дата создания'
+			))
+			->create(function($CI) {
+				return $CI->admin_product_model->get_order_info($CI->data['id']);
+			});
+
+		load_admin_views();
+	}
 }

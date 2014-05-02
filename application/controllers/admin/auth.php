@@ -443,11 +443,11 @@ class Auth extends CI_Controller {
 	}
 
 	//edit a user
-	function edit_user($id)
-	{
+	function edit_user($id)	{
 		$this->data['header'] = 'Редактирование доступа';
 		$this->data['header_descr'] = 'Редактирование настроек и доступа администратора';
 		$this->data['title'] = $this->data['header'];
+		admin_constructor();
 
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
@@ -461,14 +461,14 @@ class Auth extends CI_Controller {
 		//validate form input
 		$this->load->library('form');
 		$this->form
-			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_validation_fname_label')))
-			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Company'))
-			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Address'))
-			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'City'))
-			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'State'))
-			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Country'))
-			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Zip'))
-			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Phone'))
+			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => 'Имя'))
+			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => 'Компания'))
+			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Адрес'))
+			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Город'))
+			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Штат'))
+			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => 'Страна'))
+			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Индекс'))
+			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => 'Телефон'))
 			->separator()
 			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
 			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));

@@ -34,7 +34,7 @@ class Admin_control_menu_model extends CI_Model
 					'manage_product/activated'  => 'Активные продукты',
 					'manage_product/rejected'   => 'Продукты непрошедшие модерацию',
 					'2'                         => '',
-					//'manage_order/all'          => 'Список заказов',
+					'manage_product/orders'     => 'Список заказов',
 					//'manage_order/settings'     => 'Настройки заказов',
 					'3'                         => '',
 					'manage_currency'           => 'Список валют'
@@ -81,7 +81,7 @@ class Admin_control_menu_model extends CI_Model
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					  </button>
-					  <a href="../" class="navbar-brand">4U</a>
+					  <a href="'.base_url(ADM_URL).'" class="navbar-brand">4U</a>
 					</div>
 					<nav class="collapse navbar-collapse general_menu" role="navigation">
 					  <ul class="nav navbar-nav">';
