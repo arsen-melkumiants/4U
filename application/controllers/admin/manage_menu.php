@@ -218,11 +218,11 @@ class Manage_menu extends CI_Controller {
 				'inputs'      => array('Нет', 'Да'),
 				'label'       => 'Всплывающим окном',
 			))
-			->text('custom', array(
+/*			->text('custom', array(
 				'value'       => $menu_info['custom'] ?: false,
 				'valid_rules' => 'trim|xss_clean',
 				'label'       => 'Свободное поле',
-			))
+			))*/
 			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
 

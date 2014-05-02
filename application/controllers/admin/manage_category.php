@@ -65,7 +65,7 @@ class Manage_category extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
-			admin_method('add', $this->DB_TABLE, array('except_fields' => array('add_date')));
+			admin_method('add', $this->DB_TABLE, array('except_fields' => array('add_date', 'author_id')));
 		}
 	}
 
@@ -143,7 +143,7 @@ class Manage_category extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean|'.(!$category_info['id'] ? 'is_unique[shop_categories.alias]' : 'is_unique_without[shop_categories.alias.'.$category_info['id'].']'),
 				'label'       => 'Ссылка',
 			))
-			->btn(array('value' => 'Изменить'))
+			->btn(array('value' => !empty($category_info) ? 'Изменить' : 'Добавить'))
 			->create(array('action' => current_url()));
 	}
 	
