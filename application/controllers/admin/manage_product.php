@@ -45,6 +45,10 @@ class Manage_product extends CI_Controller {
 			'header'       => 'Заказ №"%order_id"',
 			'header_descr' => 'Список заказанных продуктов',
 		),
+		'payments'         => array(
+			'header'       => 'Финансовые операции',
+			'header_descr' => 'Список операций всех пользователей',
+		),
 	);
 
 	function __construct() {
@@ -427,6 +431,49 @@ class Manage_product extends CI_Controller {
 			))
 			->create(function($CI) {
 				return $CI->admin_product_model->get_order_info($CI->data['id']);
+			});
+
+		load_admin_views();
+	}
+	
+	function payments() {
+
+		$this->load->library('table');
+		$this->table
+			->text('type_name', array(
+				'title' => 'Тип операции',
+				'func'  => function($row, $params, $that, $CI) {
+					return lang('finance_'.$row['type_name']);
+				}
+		))
+			->text('type_id', array(
+				'title' => 'Номер объекта операции<br />(заказ, продукт и т.д.)',
+				'width' => '20%',
+			))
+			->date('username', array(
+				'title' => 'Пользователь',
+				'func'  => function($row, $params) {
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
+				}
+			))
+			->text('amount', array(
+				'title' => 'Количество',
+				'func'  => function($row, $params) {
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
+				}
+		))
+			->date('date', array(
+				'title' => lang('date'),
+			));
+		$this->data['center_block'] = $this->table
+			->create(function($CI) {
+				return $CI->db
+					->select('l.*, c.symbol, c.code, u.username')
+					->from('shop_user_payment_logs as l')
+					->join('shop_currencies as c', 'l.currency = c.id')
+					->join('users as u', 'l.user_id = u.id')
+					->order_by('l.id', 'desc')
+					->get();
 			});
 
 		load_admin_views();

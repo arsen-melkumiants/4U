@@ -37,6 +37,7 @@ class Admin_control_menu_model extends CI_Model
 					'manage_product/orders'     => 'Список заказов',
 					//'manage_order/settings'     => 'Настройки заказов',
 					'3'                         => '',
+					'manage_product/payments'   => 'Платежные операции',
 					'manage_currency'           => 'Список валют'
 				),
 				'Пользователи'                  => array(
