@@ -2,6 +2,7 @@
 html{height: 100%;}
 body{position: relative;min-height: 100%;margin:0;font-family: Verdana, Geneva, sans-serif;}
 h1 {font-size: 28px;color: #f27141;}
+h4 b {font-size: 18px;}
 hr {height: 3px;background: #f2916d;}
 input,
 .btn:focus,
@@ -157,7 +158,7 @@ ul {padding-left: 0;}
 
 .custom_block .horizontal.item {float: none;width: auto;text-align: left;margin: 10px;}
 .custom_block .horizontal.item .image {float: left;width: 27%;margin: 0;height: 140px;}
-.custom_block .horizontal.item h4 {margin-bottom: 3px;}
+.custom_block .horizontal.item h4 {margin-bottom: 3px;text-align: left;height: auto;}
 .custom_block .horizontal.item .info {float: left;margin-left: 15px;}
 .custom_block .horizontal.item .price {float: none;text-align: left;font-size: 24px;margin-bottom: 5px;}
 .custom_block .horizontal.item .price i {display: none;}
@@ -169,11 +170,11 @@ ul {padding-left: 0;}
 .custom_block .list.item {float: none;width: auto;text-align: left;margin: 10px;border-bottom: 1px solid #c9c9c9;padding: 0 2%;}
 .custom_block .list.item h4 {height: auto;float: left;width:55%;text-align: left;}
 
-.right_block {padding: 50px 0;}
+.right_block {padding: 30px 0 50px;}
 .right_block .title {margin-bottom: 15px;border: 0;border-bottom: 1px solid #f2f2f2;margin: 0;}
 .right_block .title.stars > * {display: inline;}
 .right_block .title.stars:before,
-.right_block .title.stars:after {content: '★';font-size: 18px;position: relative;top: -4px;color: #f27141;padding: 0 5px;background: none;}
+.right_block .title.stars:after {display: inline;content: '★';font-size: 18px;position: relative;top: -4px;color: #f27141;padding: 0 5px;background: none;}
 .right_block .custom_block .item {width: 100%;float: none;border-color: #fff;}
 
 .breadcrumps {float: left;margin-top: 8px;}

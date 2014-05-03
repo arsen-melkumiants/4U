@@ -15,7 +15,7 @@ $lang['product_edit_header']                         = 'Edit product';
 $lang['product_delete_header']                       = 'Deleting of';
 $lang['product_gallery_header']                      = 'Gallery';
 $lang['product_gallery_descr']                       = 'In the gallery, you can place the images of the product and attach additional information files like text files';
-$lang['product_media_file_header']                   = 'Media files';
+$lang['product_media_file_header']                   = 'Uploading products';
 $lang['product_media_file_descr']                    = 'In the media files located the product or the product license key. If the type of product, "license", the amount it will be installed in accordance with the number of files';
 $lang['product_name']                                = 'Name';
 $lang['product_price']                               = 'Price';
@@ -132,6 +132,8 @@ $lang['search_placeholder']                          = 'What are you looking for
 $lang['here']                                        = 'Here';
 $lang['number']                                      = 'Number';
 $lang['date']                                        = 'Date';
+$lang['available_formats']                           = 'Available file formats';
+$lang['max_size']                                    = 'Max file size';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

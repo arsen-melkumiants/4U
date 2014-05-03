@@ -20,6 +20,8 @@ class Shop_model extends CI_Model {
 			$result[$item['id']] = $item;
 		}
 
+		$result = $this->get_struct_categories($result);
+
 		return $result;
 	}
 
@@ -49,6 +51,21 @@ class Shop_model extends CI_Model {
 		}
 		$text .= '</ul>';
 		return $num ? $text : ($id ? false : $text);
+	}
+
+	function get_struct_categories($all_branch, $id = 0, $padding = '') {
+		$ids = array();
+		foreach ($all_branch as $key => $item) {
+			if ($item['parent_id'] == $id) {
+				$item['name'] = $padding.$item['name'];
+				$ids[$item['id']] = $item;
+				$result = $this->get_struct_categories($all_branch, $item['id'], $padding.'-&nbsp;');
+				if(!empty($result)) {
+					$ids = $ids + $result;
+				}
+			}
+		}
+		return $ids;
 	}
 
 	function get_category_info($name) {

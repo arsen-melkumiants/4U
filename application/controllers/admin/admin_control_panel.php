@@ -143,7 +143,7 @@ class Admin_control_panel extends CI_Controller {
 			$this->data['header'] = 'Последние товары';
 		}
 		$this->data['limit']  = $limit;
-		$this->MAIN_URL       = ADM_URL.'manage_user/';
+		$this->MAIN_URL       = ADM_URL.'manage_product/';
 		$this->data['status'] = $status;
 
 		$this->load->library('table');

@@ -179,6 +179,8 @@ class Personal extends CI_Controller {
 			redirect('', 'refresh');
 		}
 
+		$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
+
 		$user_info = $this->ion_auth->user()->row_array();
 		$this->data['center_block'] = $this->form
 			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))

@@ -15,7 +15,7 @@ $lang['product_edit_header']                         = 'Редактирован
 $lang['product_delete_header']                       = 'Удаление';
 $lang['product_gallery_header']                      = 'Галерея';
 $lang['product_gallery_descr']                       = 'В галереи можно размещать изображения товара а также прикреплять дополнительные информационные файлы такие как .txt';
-$lang['product_media_file_header']                   = 'Медиа-файлы';
+$lang['product_media_file_header']                   = 'Загрузка товара';
 $lang['product_media_file_descr']                    = 'В медиа-файлах размещается сам продукт либо лицензионные ключи продуктов. Если тип товара "лицензии", то количество его будет устанавливаться в соответствии с количеством файлов';
 $lang['product_name']                                = 'Название';
 $lang['product_price']                               = 'Цена';
@@ -132,6 +132,8 @@ $lang['search_placeholder']                          = 'Что вы хотите
 $lang['here']                                        = 'Здесь';
 $lang['number']                                      = 'Номер';
 $lang['date']                                        = 'Дата';
+$lang['available_formats']                           = 'Разрешенные форматы файлов';
+$lang['max_size']                                    = 'Максимальный размер файла';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

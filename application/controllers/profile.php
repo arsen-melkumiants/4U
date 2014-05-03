@@ -402,12 +402,22 @@ class Profile extends CI_Controller {
 		}
 
 		if ($type == 'image') {
+			$allowed_types = 'jpg|jpeg|png|gif|txt|text|rtx|rtf|doc|docx|xlsx|word|xl';
 			$this->data['title'] = $this->data['name'] = lang('product_gallery_header');
 			$this->data['descr'] = lang('product_gallery_descr');
+			$this->data['descr'] .= '<br /><b>'.lang('available_formats').':</b> '.str_replace('|',', ', $allowed_types);
+			$this->data['descr'] .= '<br /><b>'.lang('max_size').':</b> 5 Mb';
 			$this->data['upload_url'] = site_url('profile/upload_gallery/'.$id);
 		} else {
 			$this->data['title'] = $this->data['name'] = lang('product_media_file_header');
+			if ($product_info['type'] == 'licenses') {
+				$allowed_types = 'jpg|jpeg|png|gif|text|txt';
+			} else {
+				$allowed_types = 'jpg|jpeg|png|gif|doc|pdf|docx|txt|xls|mpeg|mpg|mpe|qt|mov|avi|movie|wmv';
+			}
 			$this->data['descr'] = lang('product_media_file_descr');
+			$this->data['descr'] .= '<br /><b>'.lang('available_formats').':</b> '.str_replace('|',', ', $allowed_types);
+			$this->data['descr'] .= '<br /><b>'.lang('max_size').':</b> 10 Gb';
 			$this->data['upload_url'] = site_url('profile/upload_media_files/'.$id);
 		}
 
@@ -437,7 +447,7 @@ class Profile extends CI_Controller {
 			if ($product_info['type'] == 'licenses') {
 				$config['allowed_types'] = 'jpg|jpeg|png|gif|text|txt';
 			} else {
-				$config['allowed_types'] = 'jpg|jpeg|png|gif|avi|mp4|doc|pdf|docx|txt|xls';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|doc|pdf|docx|txt|xls|mpeg|mpg|mpe|qt|mov|avi|movie|wmv';
 			}
 			$config['max_size']      = '10000000000';
 		}
