@@ -409,7 +409,32 @@ class Shop_model extends CI_Model {
 			'type_id'   => $type_id,
 			'amount'    => $amount,
 			'currency'  => $currency,
+			'date'      => time(),
 		));
 		return $this->db->insert_id();
+	}
+
+	function get_user_balance($user_id = false) {
+		if (empty($user_id)) {
+			$user_id = $this->data['user_info']['id'];
+		}
+
+		$user_balance = $this->db
+			->select('SUM(l.amount) as amount, l.currency, c.symbol, c.code')
+			->from('shop_user_payment_logs as l')
+			->join('shop_currencies as c', 'l.currency = c.id')
+			->where('l.user_id', $user_id)
+			->group_by('l.currency')
+			->get()
+			->result_array();
+
+		if (empty($user_balance)) {
+			$user_balance[0] = array(
+				'amount' => 0,
+				'symbol' => '$',
+			);
+		}
+
+		return $user_balance;
 	}
 }

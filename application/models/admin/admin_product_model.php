@@ -13,7 +13,12 @@ class Admin_product_model extends CI_Model {
 		} else {
 			$this->db->where('status <', 3);
 		}
-		return $this->db->order_by('id', 'desc')->get('shop_products');
+		return $this->db
+			->select('p.*, u.username')
+			->from('shop_products as p')
+			->join('users as u', 'p.author_id = u.id')
+			->order_by('id', 'desc')
+			->get();
 	}
 
 	function get_product_info($id) {

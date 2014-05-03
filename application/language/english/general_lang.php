@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $lang['my_profile']                                  = 'My profile';
-$lang['profile_changed_success']                     = 'The profile has been successfuly changed';
+$lang['profile_changed_success']                     = 'The profile has been successfully changed';
 
 
 $lang['my_sales']                                    = 'My sales';
@@ -92,7 +92,14 @@ $lang['cart_empty']                                  = 'There isn\'t any product
 $lang['cart_pay_advice']                             = 'Or you can pay your order';
 
 
-$lang['my_cash']                                     = 'My cash';
+$lang['my_finance']                                  = 'My finance';
+$lang['finance_pay_order']                           = 'Pay order';
+$lang['finance_income_product']                      = 'Income from product';
+$lang['finance_balance']                             = 'Account balance';
+$lang['finance_fill_up']                             = 'Fill up account';
+$lang['finance_draw_out']                            = 'Withdraw from account';
+$lang['finance_fill_up_message_success']             = 'The account has been successfully filled up';
+$lang['finance_no_money_message']                    = 'Not enough money in the account. Please, refill';
 
 
 $lang['category_empty']                              = 'Category is empty';
@@ -123,6 +130,8 @@ $lang['allocate_lot']                                = 'Allocate lot';
 $lang['make_vip']                                    = 'Make VIP';
 $lang['search_placeholder']                          = 'What are you looking for?';
 $lang['here']                                        = 'Here';
+$lang['number']                                      = 'Number';
+$lang['date']                                        = 'Date';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

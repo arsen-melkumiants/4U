@@ -129,7 +129,7 @@ class Manage_user extends CI_Controller {
 			->text('username', array(
 				'value'       => $user_info['username'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean|max_length[150]',
-				'label'       => 'Администратор' 
+				'label'       => 'Имя'
 			))
 			->text('company', array(
 				'value'       => $user_info['company'] ?: false,

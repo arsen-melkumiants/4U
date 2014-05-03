@@ -92,7 +92,14 @@ $lang['cart_empty']                                  = 'Товаров пока 
 $lang['cart_pay_advice']                             = 'Или вы можете оплатить свой заказ';
 
 
-$lang['my_cash']                                     = 'Мои средства';
+$lang['my_finance']                                  = 'Мои средства';
+$lang['finance_pay_order']                           = 'Оплата заказа';
+$lang['finance_income_product']                      = 'Доход по товару';
+$lang['finance_balance']                             = 'Текущий баланс';
+$lang['finance_fill_up']                             = 'Пополнение счета';
+$lang['finance_draw_out']                            = 'Снятие со счета';
+$lang['finance_fill_up_message_success']             = 'Счет успешно пополнен';
+$lang['finance_no_money_message']                    = 'Не достаточно средств на счету. Пожалуйста, пополните';
 
 
 $lang['category_empty']                              = 'Категория пуста';
@@ -123,6 +130,8 @@ $lang['allocate_lot']                                = 'Выделите лот'
 $lang['make_vip']                                    = 'Создать VIP';
 $lang['search_placeholder']                          = 'Что вы хотите найти?';
 $lang['here']                                        = 'Здесь';
+$lang['number']                                      = 'Номер';
+$lang['date']                                        = 'Дата';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

@@ -81,6 +81,12 @@ class Manage_product extends CI_Controller {
 					}
 				}
 		))
+			->date('username', array(
+				'title' => 'Владелец',
+				'func'  => function($row, $params) {
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['author_id']).'">'.$row['username'].'</a>';
+				}
+			))
 			->date('add_date', array(
 				'title' => 'Дата создания'
 			))
@@ -158,6 +164,11 @@ class Manage_product extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean|numeric',
 				'symbol'	  => '$',
 				'label'       => 'Цена',
+			))
+			->text('amount', array(
+				'value'       => $product_info['amount'] ?: false,
+				'valid_rules' => 'required|trim|xss_clean|is_natural_no_zero',
+				'label'       => 'Количество',
 			))
 			/*->select('currency', array(
 				'value'       => $product_info['currency'] ?: false,

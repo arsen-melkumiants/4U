@@ -27,7 +27,6 @@ class Profile extends CI_Controller {
 			'shop_model',
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
-		//$this->data['left_block'] = $this->shop_model->get_categories();
 		$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
 		$this->data['user_info'] = $this->ion_auth->user()->row_array();
 
@@ -88,12 +87,6 @@ class Profile extends CI_Controller {
 
 		$this->data['labels'] = $allowed_fields;
 		$this->data['center_block'] = $this->load->view('profile/info', $this->data, true);
-
-		load_views();
-	}
-
-	function cash() {
-		$this->data['title'] = $this->data['header'] = lang('my_cash');
 
 		load_views();
 	}
@@ -186,11 +179,12 @@ class Profile extends CI_Controller {
 						->where(array(
 							'p.author_id' => $CI->data['user_info']['id'],
 						))
-						->order_by('id', 'desc')
+						->group_by('p.id')
+						->order_by('op.id', 'desc')
 						->get();
 				}
 
-				}, array('no_header' => 1, 'class' => 'table'));
+			}, array('no_header' => 1, 'class' => 'table'));
 
 		$this->data['center_block'] = $this->load->view('profile/products', $this->data, true);
 
@@ -626,14 +620,14 @@ class Profile extends CI_Controller {
 		$this->load->library('table');
 		$this->table
 			->text('id', array(
-				'title' => 'Number',
+				'title' => lang('number'),
 				'width' => '20%',
 				'func'  => function($row, $params) {
 					return '<a class="number" href="'.site_url('profile/order_view/'.$row['id']).'">'.$row['id'].'</a>';
 				}
 		))
 			->text('total_price', array(
-				'title' => 'Price',
+				'title' => lang('orders_total_price'),
 				'width' => '30%',
 				'func'  => function($row, $params) {
 					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['total_price']).' '.$row['symbol'].'</div>';
@@ -698,14 +692,14 @@ class Profile extends CI_Controller {
 				}
 		))
 			->text('qty', array(
-				'title' => 'Count',
+				'title' => lang('product_amount'),
 				'width' => '20%',
 				'func'  => function($row, $params) {
 					return $row['qty'].' '.lang('product_items');
 				}
 		))
 			->text('price', array(
-				'title' => 'Price',
+				'title' => lang('product_price'),
 				'width' => '20%',
 				'func'  => function($row, $params) {
 					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['price']).' '.$row['symbol'].'</div>';
@@ -752,8 +746,15 @@ class Profile extends CI_Controller {
 			show_404();
 		}
 
+		$user_balance = $this->shop_model->get_user_balance();
+		if ($order_info['total_price'] > $user_balance[0]['amount'] || $order_info['currency'] != $user_balance[0]['currency']) {
+			$this->session->set_flashdata('danger', lang('finance_no_money_message'));
+			redirect('profile/order_view/'.$id, 'refresh');
+
+		}
+
 		$order_products = $this->db
-			->select('op.*, p.amount')
+			->select('op.*, p.amount, p.author_id')
 			->from('shop_order_products as op')
 			->join('shop_products as p', 'p.id = op.product_id')
 			->where('op.order_id', $id)
@@ -770,6 +771,12 @@ class Profile extends CI_Controller {
 				'amount' => $item['amount'] - $item['qty'],
 			);
 
+			$user_profit[] = array(
+				'user_id'    => $item['author_id'],
+				'amount'     => $item['qty'] * $item['price'],
+				'product_id' => $item['product_id'],
+			);
+
 			if ($item['type'] == 'licenses') {
 				$license_products = $this->db
 					->where(array('product_id' => $item['product_id'], 'status' => 0))
@@ -778,7 +785,7 @@ class Profile extends CI_Controller {
 					->result_array();
 				if (empty($license_products) || count($license_products) != $item['qty']) {
 					$this->session->set_flashdata('danger', lang('product_danger_message_key_is_not_available').' "'.$item['name'].'"');
-					redirect('profile/orders', 'refresh');
+					redirect('profile/order_view/'.$id, 'refresh');
 				}
 
 				foreach ($license_products as $file) {
@@ -805,10 +812,79 @@ class Profile extends CI_Controller {
 		$this->db->update_batch('shop_products', $update_array, 'id');
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
 
-		$payment_id = $this->shop_model->log_payment($this->data['user_info']['id'], 'pay_order', $order_info['id'], $order_info['total_price']);
+		foreach ($user_profit as $item) {
+			$this->shop_model->log_payment($item['user_id'], 'income_product', $item['product_id'], $item['amount']);
+		}
+		$this->shop_model->log_payment($this->data['user_info']['id'], 'pay_order', $order_info['id'], -$order_info['total_price']);
 		$this->db->trans_commit();
 
 		$this->session->set_flashdata('success', lang('orders_payment_success'));
 		redirect('profile/order_view/'.$id, 'refresh');
 	}
+
+
+
+	function finance() {
+		$this->data['title'] = $this->data['header'] = lang('my_finance');
+
+		$this->data['balance'] = $this->shop_model->get_user_balance();
+		$this->data['center_block'] = $this->load->view('profile/finance', $this->data, true);
+
+		$this->load->library('table');
+		$this->table
+			->text('type_name', array(
+				'title' => lang('finance_type'),
+				'width' => '50%',
+				'func'  => function($row, $params, $that, $CI) {
+					return lang('finance_'.$row['type_name']);
+				}
+		))
+			->text('amount', array(
+				'title' => lang('price'),
+				'width' => '30%',
+				'func'  => function($row, $params) {
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
+				}
+		))
+			->date('date', array(
+				'title' => lang('date'),
+			));
+		$this->data['center_block'] .= $this->table
+			->create(function($CI) {
+				return $CI->db
+					->select('l.*, c.symbol, c.code')
+					->from('shop_user_payment_logs as l')
+					->join('shop_currencies as c', 'l.currency = c.id')
+					->where('l.user_id', $CI->data['user_info']['id'])
+					->order_by('l.id', 'desc')
+					->get();
+			}, array('no_header' => 1, 'class' => 'table product_list orders'));
+
+		load_views();
+	}
+
+	function fill_up() {
+		$this->data['title'] = $this->data['header'] = lang('finance_fill_up');
+
+		$this->load->library('form');
+		$this->data['center_block'] = $this->form
+			->text('amount', array(
+				'valid_rules' => 'required|trim|xss_clean|price',
+				'symbol'      => '$',
+				'icon_post'   => true,
+				'label'       => lang('product_amount'),
+			))
+			->btn(array('value' => lang('finance_fill_up')))
+			->create(array('action' => current_url(), 'error_inline' => 'true'));
+
+		if ($this->form_validation->run() != FALSE) {
+			$this->shop_model->log_payment($this->data['user_info']['id'], 'fill_up', 0, $this->input->post('amount'));
+			$this->session->set_flashdata('success', lang('finance_fill_up_message_success'));
+			redirect('profile/finance', 'refresh');
+
+		}
+
+		load_views();
+	}
+
 }

@@ -112,6 +112,16 @@ class Shop_controller extends CI_Controller {
 			}
 		}
 
+		$status_list = array(
+			'0' => 'product_on_moderate',
+			'2' => 'product_rejected',
+			'3' => 'product_deleted',
+		);
+
+		if (isset($status_list[$this->data['product_info']['status']])) {
+			set_alert(lang($status_list[$this->data['product_info']['status']]), false, 'danger');
+		}
+
 		$alias = url_title(translitIt($this->data['product_info']['name']), 'underscore', TRUE); 
 		if ($alias != $name) {
 			redirect('product/'.$id.'/'.$alias, 'refresh');

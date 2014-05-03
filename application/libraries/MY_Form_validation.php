@@ -24,17 +24,13 @@ class MY_Form_validation extends CI_Form_validation {
 	}
 
 
-	/**
-	 * Numeric equal or greater than 0
-	 *
-	 * @access	public
-	 * @param	string
-	 * @return	bool
-	 */
 	public function price($str) {
-		return (bool)preg_match( '/^[\+]?[0-9]*\.?[0-9]+$/', $str);
-	}
+		if (floatval($str) == 0) {
+			return false;
+		}
 
+		return (bool)preg_match('/^[\+]?[0-9]*\.?[0-9]+$/', $str);
+	}
 
 	/**
 	 * Match one field to another without current row
