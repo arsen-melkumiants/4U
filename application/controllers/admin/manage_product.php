@@ -90,13 +90,13 @@ class Manage_product extends CI_Controller {
 				'func'  => function($row, $params) {
 					return '<a href="'.site_url('4U/manage_user/edit/'.$row['author_id']).'">'.$row['username'].'</a>';
 				}
-			))
+		))
 			->date('add_date', array(
 				'title' => 'Дата создания'
 			))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
 			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1))
-//			->active(array('link' => $this->MAIN_URL.'active/%d'))
+			//			->active(array('link' => $this->MAIN_URL.'active/%d'))
 			/*->btn(array(
 				'link'   => $this->MAIN_URL.'add',
 				'name'   => 'Добавить',
@@ -237,7 +237,7 @@ class Manage_product extends CI_Controller {
 			custom_404();
 		}
 		set_header_info($product_info);
-		
+
 		if ($this->IS_AJAX) {
 			if (isset($_POST['delete'])) {
 				$this->db->where('id', $id)->update($this->DB_TABLE, array('status' => 3));
@@ -359,7 +359,7 @@ class Manage_product extends CI_Controller {
 				'func'  => function($row, $params) {
 					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
 				}
-			))
+		))
 			->text('total_amount', array(
 				'title' => 'Количество товаров',
 			))
@@ -380,11 +380,45 @@ class Manage_product extends CI_Controller {
 				}
 		))
 			->btn(array('link' => $this->MAIN_URL.'order_view/%d', 'icon' => 'list', 'title' => 'Детали заказа'))
+			->btn(array(
+				'func' => function($row, $params, $html, $that, $CI) {
+					if (!$row['status']) {
+						$params['title'] = 'Неоплачен';
+						$params['icon'] = 'ban-circle';
+					} else {
+						$params['title'] = 'Оплачен';
+						$params['icon'] = 'ok';
+					}
+					return '<a href="'.site_url($CI->MAIN_URL.'order_pay/'.$row['id']).'" title="'.$params['title'].'"><i class="icon-'.$params['icon'].'"></i> </a>';
+				}
+		))
 			->create(function($CI) {
 				return $CI->admin_product_model->get_orders();
 			});
 
 		load_admin_views();
+	}
+
+	public function order_pay($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+		$order_info = $this->db->where('id', $id)->get('shop_orders')->row_array();
+
+		if (empty($order_info)) {
+			custom_404();
+		}
+		set_header_info(array('order_id' => $id));
+
+		$this->load->model('shop_model');
+
+		if (!$order_info['status']) {
+			$this->shop_model->pay_order($id, true);
+		} else {
+			$this->shop_model->rollback_order($id);
+		}
+
+		redirect(ADM_URL.strtolower(__CLASS__).'/orders', 'refresh');
 	}
 
 	public function order_view($id = false) {
@@ -435,7 +469,7 @@ class Manage_product extends CI_Controller {
 
 		load_admin_views();
 	}
-	
+
 	function payments() {
 
 		$this->load->library('table');
@@ -455,7 +489,7 @@ class Manage_product extends CI_Controller {
 				'func'  => function($row, $params) {
 					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
 				}
-			))
+		))
 			->text('amount', array(
 				'title' => 'Количество',
 				'func'  => function($row, $params) {

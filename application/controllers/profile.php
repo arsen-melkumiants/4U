@@ -765,72 +765,8 @@ class Profile extends CI_Controller {
 
 		}
 
-		$order_products = $this->db
-			->select('op.*, p.amount, p.author_id')
-			->from('shop_order_products as op')
-			->join('shop_products as p', 'p.id = op.product_id')
-			->where('op.order_id', $id)
-			->order_by('op.id', 'desc')
-			->get()
-			->result_array();
-		foreach ($order_products as $item) {
-			if ($item['amount'] < $item['qty']) {
-				redirect('profile/orders', 'refresh');
-			}
+		$this->shop_model->pay_order($id);
 
-			$update_array[$item['product_id']] = array(
-				'id'     => $item['product_id'],
-				'amount' => $item['amount'] - $item['qty'],
-			);
-
-			$user_profit[] = array(
-				'user_id'    => $item['author_id'],
-				'amount'     => $item['qty'] * $item['price'],
-				'product_id' => $item['product_id'],
-			);
-
-			if ($item['type'] == 'licenses') {
-				$license_products = $this->db
-					->where(array('product_id' => $item['product_id'], 'status' => 0))
-					->limit($item['qty'])
-					->get('shop_product_media_files')
-					->result_array();
-				if (empty($license_products) || count($license_products) != $item['qty']) {
-					$this->session->set_flashdata('danger', lang('product_danger_message_key_is_not_available').' "'.$item['name'].'"');
-					redirect('profile/order_view/'.$id, 'refresh');
-				}
-
-				foreach ($license_products as $file) {
-					$license_files[$file['id']] = array(
-						'id'     => $file['id'],
-						'status' => 1,
-					);
-				}
-
-				$order_products_update[$item['id']] = array(
-					'id'       => $item['id'],
-					'file_ids' => implode(',', array_keys($license_files)),
-				);
-			}
-		}
-
-		$this->db->trans_begin();
-
-		if (!empty($license_files)) {
-			$this->db->update_batch('shop_product_media_files', $license_files, 'id');
-			$this->db->update_batch('shop_order_products', $order_products_update, 'id');
-		}
-
-		$this->db->update_batch('shop_products', $update_array, 'id');
-		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
-
-		foreach ($user_profit as $item) {
-			$this->shop_model->log_payment($item['user_id'], 'income_product', $item['product_id'], $item['amount']);
-		}
-		$this->shop_model->log_payment($this->data['user_info']['id'], 'pay_order', $order_info['id'], -$order_info['total_price']);
-		$this->db->trans_commit();
-
-		$this->session->set_flashdata('success', lang('orders_payment_success'));
 		redirect('profile/order_view/'.$id, 'refresh');
 	}
 

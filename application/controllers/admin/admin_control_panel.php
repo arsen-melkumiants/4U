@@ -216,6 +216,18 @@ class Admin_control_panel extends CI_Controller {
 				}
 		))
 			->btn(array('link' => $this->MAIN_URL.'order_view/%d', 'icon' => 'list', 'title' => 'Детали заказа'))
+			->btn(array(
+				'func' => function($row, $params, $html, $that, $CI) {
+					if (!$row['status']) {
+						$params['title'] = 'Неоплачен';
+						$params['icon'] = 'ban-circle';
+					} else {
+						$params['title'] = 'Оплачен';
+						$params['icon'] = 'ok';
+					}
+					return '<a href="'.site_url($CI->MAIN_URL.'order_pay/'.$row['id']).'" title="'.$params['title'].'"><i class="icon-'.$params['icon'].'"></i> </a>';
+				}
+		))
 			->create(function($CI) {
 				$CI->db->limit($CI->data['limit']);
 				return $CI->admin_product_model->get_orders();
