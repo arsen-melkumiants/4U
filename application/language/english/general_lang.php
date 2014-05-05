@@ -134,6 +134,10 @@ $lang['number']                                      = 'Number';
 $lang['date']                                        = 'Date';
 $lang['available_formats']                           = 'Available file formats';
 $lang['max_size']                                    = 'Max file size';
+$lang['first']										 = 'First';
+$lang['previous']									 = 'Previous';
+$lang['next']										 = 'Next';
+$lang['last']										 = 'Last';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

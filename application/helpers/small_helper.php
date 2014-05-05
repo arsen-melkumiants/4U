@@ -153,11 +153,11 @@ function pagination($total = false, $per_page = false, $size = 5){
 	$cur_page = empty($_GET['page']) ? 1 : $_GET['page'];
 	$text = '<div class="pagination"><ul>';
 	if ($cur_page < 2) {
-		$text .= '<li class="disabled"><a>First</a></li>';
-		$text .= '<li class="disabled"><a>← Previous</a></li>';
+		$text .= '<li class="disabled"><a>Previous</a></li>';
+		$text .= '<li class="disabled"><a>← '.lang('previous').'</a></li>';
 	} else {
 		$text .= '<li><a href="?page=1">First</a></li>';
-		$text .= '<li><a href="?page='.($cur_page-1).'">← Previous</a></li>';
+		$text .= '<li><a href="?page='.($cur_page-1).'">← '.lang('previous').'</a></li>';
 	}
 
 	if ($cur_page >= $size - floor($size / 2) && ($pages - $cur_page) >= ceil($size / 2)) {
@@ -184,11 +184,11 @@ function pagination($total = false, $per_page = false, $size = 5){
 	}
 
 	if($cur_page >= $pages){
-		$text .= '<li class="disabled"><a>Next → </a></li>';
-		$text .= '<li class="disabled"><a>Last</a></li>';
+		$text .= '<li class="disabled"><a>'.lang('next').' → </a></li>';
+		$text .= '<li class="disabled"><a>'.lang('last').'</a></li>';
 	}else{
-		$text .= '<li><a href="?page='.($cur_page+1).'">Next → </a></li>';
-		$text .= '<li><a href="?page='.$pages.'">Last</a></li>';
+		$text .= '<li><a href="?page='.($cur_page+1).'">'.lang('next').' → </a></li>';
+		$text .= '<li><a href="?page='.$pages.'">'.lang('last').'</a></li>';
 	}
 	$text .= '</ul></div>';
 

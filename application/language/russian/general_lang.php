@@ -135,6 +135,10 @@ $lang['number']                                      = 'Номер';
 $lang['date']                                        = 'Дата';
 $lang['available_formats']                           = 'Разрешенные форматы файлов';
 $lang['max_size']                                    = 'Максимальный размер файла';
+$lang['first']										 = 'Первая';
+$lang['previous']									 = 'Предыдущая';
+$lang['next']										 = 'Следующая';
+$lang['last']										 = 'Последняя';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';
