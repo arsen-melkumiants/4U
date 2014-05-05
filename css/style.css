@@ -171,7 +171,7 @@ ul {padding-left: 0;}
 .custom_block .list.item h4 {height: auto;float: left;width:55%;text-align: left;}
 
 .right_block {padding: 30px 0 50px;}
-.right_block .title {margin-bottom: 15px;border: 0;border-bottom: 1px solid #f2f2f2;margin: 0;}
+.right_block .title {margin: 0 0 15px 0;border: 0;border-bottom: 1px solid #f2f2f2;padding: 15px 0;text-align: center;}
 .right_block .title.stars > * {display: inline;}
 .right_block .title.stars:before,
 .right_block .title.stars:after {display: inline;content: '★';font-size: 18px;position: relative;top: -4px;color: #f27141;padding: 0 5px;background: none;}
