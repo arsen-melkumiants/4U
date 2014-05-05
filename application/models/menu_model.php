@@ -59,6 +59,15 @@ class Menu_model extends CI_Model {
 
 					if ($item['item_id'] == 'profile') {
 						$link = $item['item_id'];
+					} elseif ($item['item_id'] == 'balance') {
+						if (!is_object($this->ion_auth) || !$this->ion_auth->logged_in()) { 
+							return false;
+						}
+						$link = 'profile/finance';
+						$user_info = $this->ion_auth->user()->row_array();
+						$this->load->model('shop_model');
+						$balance = $this->shop_model->get_user_balance($user_info['id']);
+						$item['name_'.$this->config->item('lang_abbr')] = $item['name_'.$this->config->item('lang_abbr')].': '.floatval($balance[0]['amount']).' '.$balance[0]['symbol'];
 					} else {
 						$link = 'personal/'.$item['item_id'];
 					}
@@ -66,7 +75,7 @@ class Menu_model extends CI_Model {
 					$link = $url.$item['alias'];
 				}
 				
-				if ($item['type'] != 'external') {
+				if ($item['type'] != 'external' || $link != '#') {
 					$link = site_url($link);
 				}
 				$text .= '<li>';

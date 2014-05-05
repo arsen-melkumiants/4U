@@ -147,6 +147,7 @@ class Admin_menu_model extends CI_Model {
 				array('id' => 'registration', 'name' => 'Регистрация'),
 				array('id' => 'profile', 'name' => 'Профиль'),
 				array('id' => 'logout', 'name' => 'Выход'),
+				array('id' => 'balance', 'name' => 'Баланс'),
 			),
 		);
 
