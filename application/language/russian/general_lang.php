@@ -70,7 +70,7 @@ $lang['orders_danger_message_can_not_pay_part1']     = 'Вы не можете �
 $lang['orders_danger_message_can_not_pay_part2']     = 'в количестве';
 $lang['orders_message_no_product_in_amount']         = 'Товара нет в наличии';
 $lang['orders_pay']                                  = 'Оплатить заказ';
-$lang['orders_total_price']                          = 'Итого';
+$lang['orders_total_price']                          = 'Завершение';
 $lang['orders_payment_success']                      = 'Тестовый платеж успешно выполнен';
 
 
