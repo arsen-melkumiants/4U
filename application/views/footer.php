@@ -112,7 +112,24 @@
 				}
 				return false;
 			});
+
+
+			var set_block_height = function() {
+				if ($(window).height() < $(document).height()) {
+					return false;
+				}
+				var center_offset = $('.center_block').offset();
+				var total_height = $(window).height() - $('.footer_block').height() + 50 - center_offset.top;
+				$('.center_block').css('min-height', total_height);
+			};
+
+			set_block_height();
+
+			$(window).resize(function() {
+				set_block_height();
+			});
 		});
+
 		</script>
 
 		<div class="footer_block">
