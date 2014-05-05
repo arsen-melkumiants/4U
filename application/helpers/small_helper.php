@@ -153,10 +153,10 @@ function pagination($total = false, $per_page = false, $size = 5){
 	$cur_page = empty($_GET['page']) ? 1 : $_GET['page'];
 	$text = '<div class="pagination"><ul>';
 	if ($cur_page < 2) {
-		$text .= '<li class="disabled"><a>Previous</a></li>';
+		$text .= '<li class="disabled"><a>'.lang('first').'</a></li>';
 		$text .= '<li class="disabled"><a>← '.lang('previous').'</a></li>';
 	} else {
-		$text .= '<li><a href="?page=1">First</a></li>';
+		$text .= '<li><a href="?page=1">'.lang('first').'</a></li>';
 		$text .= '<li><a href="?page='.($cur_page-1).'">← '.lang('previous').'</a></li>';
 	}
 
