@@ -65,6 +65,7 @@ $lang['create_user_state_label']                               = 'State';
 $lang['create_user_zip_label']                                 = 'Zip';
 $lang['create_user_email_label']                               = 'Email';
 $lang['create_user_phone_label']                               = 'Phone';
+$lang['create_user_url_label']                                 = 'URL';
 $lang['create_user_password_label']                            = 'Password';
 $lang['create_user_password_confirm_label']                    = 'Confirm Password';
 $lang['create_user_submit_btn']                                = 'Sign Up';

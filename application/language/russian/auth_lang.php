@@ -68,6 +68,7 @@ $lang['create_user_state_label']                             = 'Штат/Рег�
 $lang['create_user_zip_label']                                 = 'Индекс';
 $lang['create_user_email_label']                               = 'Email';
 $lang['create_user_phone_label']                               = 'Телефон';
+$lang['create_user_url_label']                                 = 'Страница(URL)';
 $lang['create_user_password_label']                            = 'Пароль';
 $lang['create_user_password_confirm_label']                    = 'Подтверждение пароля';
 $lang['create_user_submit_btn']                                = 'Регистрация';

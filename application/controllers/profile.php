@@ -77,6 +77,7 @@ class Profile extends CI_Controller {
 			'country'  => lang('create_user_country_label'),
 			'zip'      => lang('create_user_zip_label'),
 			'phone'    => lang('create_user_phone_label'),
+			'url'      => lang('create_user_url_label'),
 		);
 
 		foreach ($this->data['user_info'] as $key => $field) {

@@ -138,6 +138,7 @@ class Personal extends CI_Controller {
 			->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_country_label')))
 			->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_zip_label')))
 			->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_phone_label')))
+			->text('url', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_url_label')))
 			->btn(array('value' => lang('create_user_submit_btn')))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
@@ -191,6 +192,7 @@ class Personal extends CI_Controller {
 			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_country_label')))
 			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_zip_label')))
 			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_phone_label')))
+			->text('url', array('value' => $user_info['url'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_url_label')))
 			->btn(array('value' => lang('edit_user_submit_btn')))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
@@ -204,6 +206,7 @@ class Personal extends CI_Controller {
 				'country'  => $this->input->post('country'),
 				'zip'      => $this->input->post('zip'),
 				'phone'    => $this->input->post('phone'),
+				'url'      => $this->input->post('url'),
 			);
 
 			$this->db->where('id', $user_info['id'])->update('users', $update_array);
