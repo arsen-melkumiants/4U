@@ -87,9 +87,12 @@ $lang['cart_state']                                  = 'State';
 $lang['cart_country']                                = 'Country';
 $lang['cart_zip']                                    = 'Zip';
 $lang['cart_phone']                                  = 'Phone';
-$lang['cart_congratulations']                        = 'Congratulations. Your purchase is completed. Want to buy something else?';
 $lang['cart_empty']                                  = 'There isn\'t any product yet. We are sure you will find everything';
-$lang['cart_pay_advice']                             = 'Or you can pay your order';
+
+//$lang['cart_congratulations']                        = 'Congratulations. Your purchase is completed. Want to buy something else?';
+$lang['cart_congratulations']                        = 'You have done your online order in store %site_name.<br />%order_id. Please specify number when you pay it.';
+//$lang['cart_pay_advice']                             = 'Or you can pay your order';
+$lang['cart_pay_advice']                             = 'You can pay for your order via:<br />1) Internal purse %pay_btn<br />2) Webmoney: Z221549442988 <br />3) Puxum: nu@netumyla.net <br />4) EpayServices: A343913';
 
 
 $lang['my_finance']                                  = 'My finance';
@@ -134,10 +137,10 @@ $lang['number']                                      = 'Number';
 $lang['date']                                        = 'Date';
 $lang['available_formats']                           = 'Available file formats';
 $lang['max_size']                                    = 'Max file size';
-$lang['first']										 = 'First';
-$lang['previous']									 = 'Previous';
-$lang['next']										 = 'Next';
-$lang['last']										 = 'Last';
+$lang['first']                                       = 'First';
+$lang['previous']                                    = 'Previous';
+$lang['next']                                        = 'Next';
+$lang['last']                                        = 'Last';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

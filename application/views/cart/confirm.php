@@ -12,5 +12,7 @@
 		</div>
 		<div class="clear"></div>
 	</div>
-	<?php echo $center_block ?>
+	<div class="confirm_info">
+		<?php echo $center_block ?>
+	</div>
 </div>

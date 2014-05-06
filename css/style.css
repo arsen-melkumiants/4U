@@ -318,6 +318,8 @@ dt, dd {line-height: 2.5;}
 .product_list .active_block .label {display: inline-block;font-size: 12px;padding: 4px 10px;vertical-align: top;}
 
 .product_list h4 {color: #e44436;padding: 20px 0;text-align: center;}
+.product_list h4 a {font-size: 18px;}
+.product_list h4 .orange_btn {font-size: 14px;}
 table.gallery .preview img {max-width: 80px;}
 
 
@@ -357,6 +359,8 @@ table.gallery .preview img {max-width: 80px;}
 .cart .count span {color: #f27141;line-height: 20px;font-weight: bold;font-size: 30px;cursor: pointer;position: relative;top: 4px;}
 .price_total,
 .price_total *{font-size: 16px;}
+.confirm_info {width: 80%;}
+.confirm_info h4 {text-align: justify;}
 
 .orders th ,
 .orders td {font-size: 16px;}

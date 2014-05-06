@@ -413,7 +413,7 @@ class Manage_product extends CI_Controller {
 		$this->load->model('shop_model');
 
 		if (!$order_info['status']) {
-			$this->shop_model->pay_order($id, true);
+			$this->shop_model->pay_order($id, $order_info, true);
 		} else {
 			$this->shop_model->rollback_order($id);
 		}

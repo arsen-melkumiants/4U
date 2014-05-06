@@ -455,8 +455,8 @@ class Shop_model extends CI_Model {
 		return $user_balance;
 	}
 
-	function pay_order($id = false, $admin_payment = false) {
-		if (empty($id)) {
+	function pay_order($id = false, $order_info = false, $admin_payment = false) {
+		if (empty($id) || empty($order_info)) {
 			return false;
 		}
 

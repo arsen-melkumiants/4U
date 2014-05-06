@@ -635,7 +635,7 @@ class Profile extends CI_Controller {
 				'title' => lang('number'),
 				'width' => '20%',
 				'func'  => function($row, $params) {
-					return '<a class="number" href="'.site_url('profile/order_view/'.$row['id']).'">'.$row['id'].'</a>';
+					return '<a class="number" href="'.site_url('profile/order_view/'.$row['id']).'">'.lang('order').' №'.$row['id'].'</a>';
 				}
 		))
 			->text('total_price', array(
@@ -758,6 +758,10 @@ class Profile extends CI_Controller {
 			show_404();
 		}
 
+		if ($order_info['status']) {
+			redirect('profile/order_view/'.$id, 'refresh');
+		}
+
 		$user_balance = $this->shop_model->get_user_balance();
 		if ($order_info['total_price'] > $user_balance[0]['amount'] || $order_info['currency'] != $user_balance[0]['currency']) {
 			$this->session->set_flashdata('danger', lang('finance_no_money_message'));
@@ -765,7 +769,7 @@ class Profile extends CI_Controller {
 
 		}
 
-		$this->shop_model->pay_order($id);
+		$this->shop_model->pay_order($id, $order_info);
 
 		redirect('profile/order_view/'.$id, 'refresh');
 	}

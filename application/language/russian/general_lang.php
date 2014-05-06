@@ -88,9 +88,12 @@ $lang['cart_state']                                  = 'Штат/Регион';
 $lang['cart_country']                                = 'Страна';
 $lang['cart_zip']                                    = 'Индекс';
 $lang['cart_phone']                                  = 'Телефон';
-$lang['cart_congratulations']                        = 'Поздравляем. Покупка выполнена успешно. Желаете купить что-нибудь еще?';
 $lang['cart_empty']                                  = 'Ваша корзина пуста.';
-$lang['cart_pay_advice']                             = 'Или вы можете оплатить свой заказ';
+
+//$lang['cart_congratulations']                        = 'Поздравляем. Покупка выполнена успешно. Желаете купить что-нибудь еще?';
+$lang['cart_congratulations']                        = 'Вы сделали интернет-заказ в магазине %site_name<br />%order_id. Пожалуйста указывайте его при оплате.';
+//$lang['cart_pay_advice']                             = 'Или вы можете оплатить свой заказ';
+$lang['cart_pay_advice']                             = 'Вы можете оплатить свой заказ с помощью:<br />1) Внутрений кошелёк %pay_btn<br />2) Webmoney: Z221549442988<br />3) Puxum: nu@netumyla.net<br />4) EpayServices: A343913';
 
 
 $lang['my_finance']                                  = 'Мой счет';
@@ -135,10 +138,10 @@ $lang['number']                                      = 'Номер';
 $lang['date']                                        = 'Дата';
 $lang['available_formats']                           = 'Разрешенные форматы файлов';
 $lang['max_size']                                    = 'Максимальный размер файла';
-$lang['first']										 = 'Первая';
-$lang['previous']									 = 'Предыдущая';
-$lang['next']										 = 'Следующая';
-$lang['last']										 = 'Последняя';
+$lang['first']                                       = 'Первая';
+$lang['previous']                                    = 'Предыдущая';
+$lang['next']                                        = 'Следующая';
+$lang['last']                                        = 'Последняя';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

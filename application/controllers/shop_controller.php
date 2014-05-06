@@ -285,8 +285,13 @@ class Shop_controller extends CI_Controller {
 
 			$order_id = $this->confirm_order($this->data);
 
-			$this->data['center_block'] = '<h4>'.lang('cart_congratulations').'</h4>';
-			$this->data['center_block'] .= '<h4>'.lang('cart_pay_advice').' <a class="orange_btn" href="'.site_url('profile/order_view/'.$order_id).'">'.lang('here').'</a></h4>';
+			$replace = array(
+				'%site_name' => SITE_NAME,
+				'%order_id'  => '<a href="'.site_url('profile/order_view/'.$order_id).'">'.lang('order').' №'.$order_id.'</a>',
+			);
+
+			$this->data['center_block'] = str_replace(array_keys($replace), $replace, '<h4>'.lang('cart_congratulations').'</h4>');
+			$this->data['center_block'] .= str_replace('%pay_btn', '<a class="orange_btn" href="'.site_url('profile/test_payment/'.$order_id).'">'.lang('here').'</a>', '<h4>'.lang('cart_pay_advice').'</h4>');
 			$this->data['center_block'] = $this->load->view('cart/confirm', $this->data, true);
 		}        
 		load_views();
@@ -415,6 +420,8 @@ class Shop_controller extends CI_Controller {
 			'status'      => 0,
 		);
 
+		$this->db->trans_begin();
+
 		$this->db->insert('shop_orders',$info);
 		$order_id = intval($this->db->insert_id());
 		if (!empty($order_id)) {            
@@ -461,6 +468,10 @@ class Shop_controller extends CI_Controller {
 			}
 
 			$this->db->insert_batch('shop_order_products', $order_products);
+
+			//$this->db->trans_rollback();
+			//return $order_id;
+			$this->db->trans_commit();
 
 			$email_info = array(
 				'order_id'  => $order_id,
