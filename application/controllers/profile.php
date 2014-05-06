@@ -159,7 +159,7 @@ class Profile extends CI_Controller {
 			->create(function($CI) {
 				if ($CI->data['type'] != 'sold') {
 					return $CI->db
-						->select('p.*, c.symbol, c.code, i.file_name')
+						->select('p.*, c.symbol, c.code, i.file_name, i.folder')
 						->from('shop_products as p')
 						->join('shop_currencies as c', 'p.currency = c.id')
 						->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
@@ -171,7 +171,7 @@ class Profile extends CI_Controller {
 						->get();
 				} else {
 					return $CI->db
-						->select('p.*, c.symbol, c.code, i.file_name, SUM(op.price * op.qty) as price, SUM(op.qty) as qty')
+						->select('p.*, c.symbol, c.code, i.file_name, i.folder, SUM(op.price * op.qty) as price, SUM(op.qty) as qty')
 						->from('shop_products as p')
 						->join('shop_currencies as c', 'p.currency = c.id')
 						->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
@@ -437,15 +437,16 @@ class Profile extends CI_Controller {
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
 		}
+		$folder = $product_info['author_id'];
 
 		if ($type == 'image') {
-			$upload_path_url         = base_url('uploads/gallery').'/';
-			$config['upload_path']   = FCPATH.'uploads/gallery';
+			$upload_path_url         = base_url('uploads/gallery/'.$folder).'/';
+			$config['upload_path']   = FCPATH.'uploads/gallery/'.$folder;
 			$config['allowed_types'] = 'jpg|jpeg|png|gif|txt|text|rtx|rtf|doc|docx|xlsx|word|xl';
 			$config['max_size']      = '5000000';
 		} else {
 			$upload_path_url = base_url('media_files').'/';
-			$config['upload_path'] = FCPATH.'media_files';
+			$config['upload_path'] = FCPATH.'media_files/'.$folder;
 			if ($product_info['type'] == 'licenses') {
 				$config['allowed_types'] = 'jpg|jpeg|png|gif|text|txt';
 			} else {
@@ -504,6 +505,7 @@ class Profile extends CI_Controller {
 
 		} else {
 			$data = $this->upload->data();
+			$data['folder'] = $this->data['user_info']['id'].'/';
 			if ($type == 'image') {
 				$file_id = $this->shop_model->add_product_image($id, $data);
 				$this->load->library('image_lib');
@@ -552,7 +554,7 @@ class Profile extends CI_Controller {
 		}
 
 		$success = ($type == 'image') ? $this->shop_model->delete_image($id) : $this->shop_model->delete_file($id);
-		$file = $product_file['file_name'];
+		$file = $product_file['folder'].'/'.$product_file['file_name'];
 
 		$info = array(
 			'success' => $success,
@@ -620,7 +622,7 @@ class Profile extends CI_Controller {
 			}
 		}
 
-		header('X-Sendfile: '.FCPATH.'media_files/'.$product_file['file_name']);
+		header('X-Sendfile: '.FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name']);
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename="'.$product_file['file_name'].'"');
 		exit;
@@ -730,7 +732,7 @@ class Profile extends CI_Controller {
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				return $CI->db
-					->select('op.*, p.amount, c.symbol, c.code, i.file_name')
+					->select('op.*, p.amount, c.symbol, c.code, i.file_name, i.folder')
 					->from('shop_order_products as op')
 					->join('shop_products as p', 'p.id = op.product_id')
 					->join('shop_currencies as c', 'p.currency = c.id')

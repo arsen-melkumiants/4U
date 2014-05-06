@@ -308,10 +308,11 @@ class Manage_product extends CI_Controller {
 		if (empty($product_info)) {
 			redirect($this->MAIN_URL, 'refresh');
 		}
+		$folder = $product_info['author_id'];
 		$this->load->model('shop_model');
 
 		if ($type == 'image') {
-			$upload_path_url = base_url('uploads/gallery').'/';
+			$upload_path_url = base_url('uploads/gallery/'.$folder).'/';
 		} else {
 			$upload_path_url = base_url('media_files').'/';
 		}

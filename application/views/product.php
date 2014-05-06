@@ -21,7 +21,7 @@
 				if (!empty($images)) {
 					foreach ($images as $item) {
 						if ($item['main']) {
-							$main_image = '<a href="'.base_url('uploads/gallery/'.$item['file_name']).'"><img src="'.base_url('uploads/gallery/'.$item['file_name']).'" /></a>';
+							$main_image = '<a href="'.base_url('uploads/gallery/'.$item['folder'].$item['file_name']).'"><img src="'.base_url('uploads/gallery/'.$item['folder'].$item['file_name']).'" /></a>';
 							break;
 						}
 					}
@@ -38,7 +38,7 @@
 										continue;
 									}
 									?>
-									<li><a href="<?php echo base_url('uploads/gallery/'.$item['file_name']);?>"><img src="<?php echo base_url('uploads/gallery/small_thumb/'.$item['file_name']);?>" /></a></li>
+									<li><a href="<?php echo base_url('uploads/gallery/'.$item['folder'].$item['file_name']);?>"><img src="<?php echo base_url('uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name']);?>" /></a></li>
 					<?php }}}?>
 					</ul>
 					<div class="clear"></div>

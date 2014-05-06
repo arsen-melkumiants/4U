@@ -122,7 +122,7 @@ class Shop_model extends CI_Model {
 
 	function get_recomended_products($limit = 6) {
 		return $this->db
-			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name')
+			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name, i.folder')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('users as u', 'p.author_id = u.id')
@@ -135,7 +135,7 @@ class Shop_model extends CI_Model {
 
 	function get_best_sales_products($limit = 6) {
 		return $this->db
-			->select('SUM(o.qty) as num, p.*, c.symbol, c.code, i.file_name')
+			->select('SUM(o.qty) as num, p.*, c.symbol, c.code, i.file_name, i.folder')
 			->from('shop_order_products as o')
 			->join('shop_products as p', 'p.id = o.product_id')
 			->join('shop_currencies as c', 'p.currency = c.id')
@@ -168,7 +168,7 @@ class Shop_model extends CI_Model {
 			$this->db->limit($limit, $offset);
 		}
 		return $this->db
-			->select('p.*, c.symbol, c.code, i.file_name')
+			->select('p.*, c.symbol, c.code, i.file_name, i.folder')
 			->get()
 			->result_array();
 	}
@@ -198,7 +198,7 @@ class Shop_model extends CI_Model {
 			$this->db->limit($limit, $offset);
 		}
 		return $this->db
-			->select('p.*, c.symbol, c.code, i.file_name')
+			->select('p.*, c.symbol, c.code, i.file_name, i.folder')
 			->get()
 			->result_array();
 	}
@@ -223,7 +223,7 @@ class Shop_model extends CI_Model {
 
 	function get_product_info($id = false) {
 		$this->db
-			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name')
+			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name, i.folder')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('users as u', 'p.author_id = u.id')
@@ -275,6 +275,9 @@ class Shop_model extends CI_Model {
 			'product_id' => $product_id,
 			'file_name'  => $data['file_name'],
 		);
+		if (isset($data['folder'])) {
+			$insert_array['folder'] = $data['folder'];
+		}
 		//Choose main image
 		$count = $this->db->where(array(
 			'product_id' => $product_id,
@@ -311,9 +314,9 @@ class Shop_model extends CI_Model {
 		}
 		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
-			$success = unlink(FCPATH.'uploads/gallery/'.$info['file_name']);
+			$success = unlink(FCPATH.'uploads/gallery/'.$info['folder'].$info['file_name']);
 			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $info['file_name'])) {
-				$success = unlink(FCPATH.'uploads/gallery/small_thumb/'.$info['file_name']);
+				$success = unlink(FCPATH.'uploads/gallery/'.$info['folder'].'small_thumb/'.$info['file_name']);
 			}
 
 			if ($success) {
@@ -360,6 +363,9 @@ class Shop_model extends CI_Model {
 			'product_id' => $product_id,
 			'file_name'  => $data['file_name'],
 		);
+		if (isset($data['folder'])) {
+			$insert_array['folder'] = $data['folder'];
+		}
 		$this->db->insert('shop_product_media_files', $insert_array);
 		$file_id = $this->db->insert_id();
 
@@ -400,7 +406,7 @@ class Shop_model extends CI_Model {
 		}
 		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
-			$success = unlink(FCPATH.'media_files/'.$info['file_name']);
+			$success = unlink(FCPATH.'media_files/'.$info['folder'].$info['file_name']);
 
 			if ($success) {
 				$this->db
