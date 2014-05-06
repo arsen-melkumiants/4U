@@ -415,7 +415,7 @@ class Profile extends CI_Controller {
 				$allowed_types = 'jpg|jpeg|png|gif|text|txt';
 			} else {
 				//$allowed_types = 'jpg|jpeg|png|gif|doc|pdf|docx|txt|xls|mpeg|mpg|mpe|qt|mov|avi|movie|wmv';
-				$allowed_types = 'avi|wmv|mpg|mpeg|mp4|m2t|m2ts|mkv|mov|flv';
+				$allowed_types = 'avi|wmv|mpg|mpeg|mp4|m2t|m2ts|mkv|mov|flv|jpg|jpeg|cr2|psd|gif|bmp|tif|tga|cdr|ai|dwg|eps|raw|png|al|ps|plt|dxf|pdf|svg|svgz|zip|rar';
 			}
 			$this->data['descr'] = lang('product_media_file_descr');
 			$this->data['descr'] .= '<br /><b>'.lang('available_formats').':</b> '.str_replace('|',', ', $allowed_types);
@@ -450,7 +450,7 @@ class Profile extends CI_Controller {
 				$config['allowed_types'] = 'jpg|jpeg|png|gif|text|txt';
 			} else {
 				//$config['allowed_types'] = 'jpg|jpeg|png|gif|doc|pdf|docx|txt|xls|mpeg|mpg|mpe|qt|mov|avi|movie|wmv';
-				$config['allowed_types'] = 'avi|wmv|mpg|mpeg|mp4|m2t|m2ts|mkv|mov|flv';
+				$config['allowed_types'] = 'avi|wmv|mpg|mpeg|mp4|m2t|m2ts|mkv|mov|flv|jpg|jpeg|cr2|psd|gif|bmp|tif|tga|cdr|ai|dwg|eps|raw|png|al|ps|plt|dxf|pdf|svg|svgz|zip|rar';
 			}
 			$config['max_size']      = '10000000000';
 		}
