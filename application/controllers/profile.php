@@ -842,4 +842,91 @@ class Profile extends CI_Controller {
 		load_views();
 	}
 
+	function payment_accounts() {
+		$this->data['title'] = $this->data['header'] = lang('finance_payment_accounts');
+
+		$this->load->library('table');
+		$this->table
+			->text('name')
+			->text('value')
+			->btn(array(
+				'link'  => 'profile/delete_account/%d',
+				'class' => 'delete',
+				'title' => lang('delete'),
+				'modal' => true,
+			))
+			;
+		$this->data['center_block'] = $this->table
+			->create(function($CI) {
+				return $CI->db
+					->where(array(
+						'user_id' => $CI->data['user_info']['id'],
+						'status'  => 0,
+					))
+					->order_by('id', 'desc')
+					->get('user_payment_accounts');
+			}, array('no_header' => 1, 'class' => 'table product_list orders'));
+
+
+		$this->data['center_block'] .= $this->form
+			->text('name', array('valid_rules' => 'required|trim|xss_clean|max_length[200]', 'label' => lang('finance_account_name')))
+			->text('value', array('valid_rules' => 'required|trim|xss_clean|max_length[200]', 'label' => lang('finance_account_value')))
+			->btn(array('value' => lang('add')))
+			->create(array('action' => current_url(), 'error_inline' => 'true'));
+
+		if ($this->form_validation->run() != FALSE) {
+			$this->db->insert('user_payment_accounts', array(
+				'name'    => $this->input->post('name'),
+				'value'   => $this->input->post('value'),
+				'user_id' => $this->data['user_info']['id'],
+			));
+			$this->session->set_flashdata('success', lang('finance_add_account_message_success'));
+			redirect('profile/payment_accounts', 'refresh');
+		}
+
+		load_views();
+	}
+
+	function delete_account($id = false) {
+		$id = intval($id);
+		$account_info = $this->db
+			->where(array(
+				'id' => $id,
+				'user_id' => $this->data['user_info']['id'],
+				'status'  => 0,
+			))
+			->get('user_payment_accounts')
+			->row_array();
+
+		if (empty($account_info)) {
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';
+				exit;
+			} else {
+				redirect('profile/payment_accounts', 'refresh');
+			}
+		}
+
+		$this->data['title'] = $this->data['header'] = lang('finance_delete_account').' "'.$account_info['name'].'"';
+
+		if ($this->input->is_ajax_request()) {
+			if (isset($_POST['delete'])) {
+				$this->db->where('id', $id)->update('user_payment_accounts', array('status' => 1));
+				$this->session->set_flashdata('success', lang('finance_delete_account_message_success'));
+				echo 'refresh';
+			} else {
+				$this->load->library('form');
+				$this->data['center_block'] = $this->form
+					->btn(array('name' => 'cancel', 'value' => lang('cancel'), 'class' => 'btn-default', 'modal' => 'close'))
+					->btn(array('name' => 'delete', 'value' => lang('delete'), 'class' => 'btn-danger'))
+					->create(array('action' => current_url(), 'btn_offset' => 3));
+				echo $this->load->view('ajax', $this->data, true);
+			}
+		} else {
+			$this->db->where('id', $id)->update('user_payment_accounts', array('status' => 1));
+			$this->session->set_flashdata('success', lang('finance_delete_account_message_success'));
+			redirect('profile/products', 'refresh');
+		}
+	}
+
 }

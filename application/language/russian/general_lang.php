@@ -104,6 +104,12 @@ $lang['finance_fill_up']                             = 'Пополнение с�
 $lang['finance_draw_out']                            = 'Вывод денег';
 $lang['finance_fill_up_message_success']             = 'Счет успешно пополнен';
 $lang['finance_no_money_message']                    = 'Не достаточно средств на счету. Пожалуйста, пополните';
+$lang['finance_payment_accounts']                    = 'Платежные счета';
+$lang['finance_account_name']                        = 'Название';
+$lang['finance_account_value']                       = 'Номер';
+$lang['finance_add_account_message_success']         = 'Платежный счет успешно создан';
+$lang['finance_delete_account']                      = 'Удаление';
+$lang['finance_delete_account_message_success']      = 'Удаление платежного счета успешно выполнено';
 
 
 $lang['category_empty']                              = 'Категория пуста';

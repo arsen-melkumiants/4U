@@ -103,6 +103,12 @@ $lang['finance_fill_up']                             = 'Fill up account';
 $lang['finance_draw_out']                            = 'Withdraw from account';
 $lang['finance_fill_up_message_success']             = 'The account has been successfully filled up';
 $lang['finance_no_money_message']                    = 'Not enough money in the account. Please, refill';
+$lang['finance_payment_accounts']                    = 'Payment accounts';
+$lang['finance_account_name']                        = 'Name';
+$lang['finance_account_value']                       = 'Account number';
+$lang['finance_add_account_message_success']         = 'Payment account has been successfully created';
+$lang['finance_delete_account']                      = 'Delete';
+$lang['finance_delete_account_message_success']      = 'Payment account has been successfully deleted';
 
 
 $lang['category_empty']                              = 'Category is empty';

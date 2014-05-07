@@ -25,6 +25,10 @@ class Manage_user extends CI_Controller {
 			'header'       => 'Редактирование пользователя "%username"',
 			'header_descr' => 'Редактирование информации о пользователе',
 		),
+		'payment_accounts'             => array(
+			'header'       => 'Платежные счета пользователя "%username"',
+			'header_descr' => 'Список всех платежных счетов пользователя',
+		),
 	);
 
 	function __construct() {
@@ -65,6 +69,7 @@ class Manage_user extends CI_Controller {
 				}
 		))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
+			->btn(array('link' => $this->MAIN_URL.'payment_accounts/%d', 'icon' => 'list', 'title' => 'Список платежных счетов пользователя'))
 			->btn(array(
 				'func' => function($row, $params, $html, $that, $CI) {
 					if (!$row['status']) {
@@ -191,4 +196,65 @@ class Manage_user extends CI_Controller {
 		redirect($this->MAIN_URL, 'refresh');
 	}
 
+	public function payment_accounts($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+
+		$user_info = $this->admin_user_model->get_user_info($id);
+
+		if (empty($user_info )) {
+			custom_404();
+		}
+		set_header_info($user_info);
+
+		$this->data['user_info'] = $user_info;
+
+		$this->load->library('table');
+		$this->data['center_block'] = $this->table
+			->text('name', array('title' => 'Название'))
+			->text('value', array('title' => 'Номер'))
+			->btn(array(
+				'func' => function($row, $params, $html, $that, $CI) {
+					if (!$row['status']) {
+						$params['title'] = 'Актиный';
+						$params['icon'] = 'ok';
+					} else {
+						$params['title'] = 'Неактивный';
+						$params['icon'] = 'ban-circle';
+					}
+					return '<a href="'.site_url($CI->MAIN_URL.'active_payment_account/'.$row['id']).'" title="'.$params['title'].'"><i class="icon-'.$params['icon'].'"></i> </a>';
+				}
+		))
+			->create(function($CI) {
+				return $CI->db
+					->where(array(
+						'user_id' => $CI->data['user_info']['id'],
+					))
+					->order_by('id', 'desc')
+					->get('user_payment_accounts');
+			});
+
+		load_admin_views();
+	}
+
+	public function active_payment_account($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+
+		$account_info = $this->db->where('id', $id)->get('user_payment_accounts')->row_array();
+
+		if (empty($account_info )) {
+			custom_404();
+		}
+
+		if (!empty($account_info['id'])) {
+			$active = isset($account_info['status']) ? $account_info['status'] : 1;
+			$active = abs($active - 1);
+			$this->db->where('id', $account_info['id'])->update('user_payment_accounts', array('status' => $active));
+			$this->session->set_flashdata('success', 'Данные успешно обновлены');
+		}
+		redirect($this->MAIN_URL.'payment_accounts/'.$account_info['user_id'], 'refresh');
+	}
 }
