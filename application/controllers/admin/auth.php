@@ -4,6 +4,9 @@ class Auth extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		//$this->config->set_item('cookie_path', '/'.ADM_URL);
+		$this->config->set_item('sess_cookie_name', 'a_session');
+
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
 		$this->load->helper('url');
@@ -17,7 +20,7 @@ class Auth extends CI_Controller {
 
 		$this->lang->load('auth');
 		$this->load->helper('language');
-		
+
 		set_alert($this->session->flashdata('success'), false, 'success');
 		set_alert($this->session->flashdata('danger'), false, 'danger');
 	}

@@ -33,6 +33,8 @@ class Manage_user extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		$this->config->set_item('sess_cookie_name', 'a_session');
+
 		$this->load->library('ion_auth');
 		if (!$this->ion_auth->is_admin()) {
 			redirect(ADM_URL.'auth/login');
