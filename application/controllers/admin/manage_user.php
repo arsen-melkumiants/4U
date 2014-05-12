@@ -53,7 +53,7 @@ class Manage_user extends CI_Controller {
 		$this->data['center_block'] = $this->table
 			->text('username', array(
 				'title' => 'Имя',
-				'width' => '50%',
+				'width' => '30%',
 			))
 			->date('last_login', array(
 				'title' => 'Дата последней авторизации',
