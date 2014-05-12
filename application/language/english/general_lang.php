@@ -47,6 +47,7 @@ $lang['product_phone']                               = 'Phone';
 $lang['product_deleted']                             = 'The product has been deleted';
 $lang['product_on_moderate']                         = 'The product is still being on moderation';
 $lang['product_rejected']                            = 'The product hasn\'t been passed moderation';
+$lang['product_already_bought']                      = 'The product has been bought by you';
 
 
 $lang['my_stats']                                    = 'My stats';

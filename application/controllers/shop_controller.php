@@ -112,6 +112,22 @@ class Shop_controller extends CI_Controller {
 			}
 		}
 
+
+		if ($this->ion_auth->logged_in()) {
+			$is_bought = $this->db
+				->from('shop_order_products as op')
+				->join('shop_orders as o', 'op.order_id = o.id')
+				->where(array(
+					'op.product_id' => $id,
+					'o.status'      => 1,
+				))
+				->get()
+				->num_rows();
+			if ($is_bought) {
+				set_alert(lang('product_already_bought'), false, 'warning');
+			}
+		}
+
 		$status_list = array(
 			'0' => 'product_on_moderate',
 			'2' => 'product_rejected',

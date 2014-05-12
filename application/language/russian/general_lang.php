@@ -48,6 +48,7 @@ $lang['product_phone']                               = 'Телефон';
 $lang['product_deleted']                             = 'Товар удален';
 $lang['product_on_moderate']                         = 'Товар на модерации';
 $lang['product_rejected']                            = 'Товар не прошел модерацию';
+$lang['product_already_bought']                      = 'Данный товар уже был куплен Вами';
 
 $lang['my_stats']                                    = 'Статистика';
 
