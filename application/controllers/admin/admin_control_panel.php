@@ -62,16 +62,22 @@ class Admin_control_panel extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean|valid_email',
 				'label'       => 'Почта сайта',
 			))
+			->text('WITHDRAWAL_COMMISSION', array(
+				'value'       => (defined('WITHDRAWAL_COMMISSION') ? WITHDRAWAL_COMMISSION : ''),
+				'valid_rules' => 'required|trim|xss_clean|numeric',
+				'label'       => 'Комиссия по выводу денег',
+				'symbol'      => '%',
+			))
 			->btn(array('offset' => 3, 'value' => 'Изменить'))
 			->create();
 
 		if ($this->form_validation->run() == FALSE) {
-
 			$this->load->view(ADM_FOLDER.'header', $this->data);
 			$this->load->view(ADM_FOLDER.'s_page', $this->data);
 			$this->load->view(ADM_FOLDER.'footer', $this->data);
 		} else {
 			$data = $this->input->post();
+			$data['WITHDRAWAL_COMMISSION'] = abs(round($data['WITHDRAWAL_COMMISSION'], 2));
 			$add_sets = '';
 			foreach($data as $key => $row) {
 				if(strtolower($key) == 'submit') {

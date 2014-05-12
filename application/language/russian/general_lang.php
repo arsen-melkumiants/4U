@@ -106,10 +106,15 @@ $lang['finance_fill_up_message_success']             = 'Счет успешно 
 $lang['finance_no_money_message']                    = 'Не достаточно средств на счету. Пожалуйста, пополните';
 $lang['finance_payment_accounts']                    = 'Платежные счета';
 $lang['finance_account_name']                        = 'Название';
-$lang['finance_account_value']                       = 'Номер';
+$lang['finance_account_number']                      = 'Номер';
 $lang['finance_add_account_message_success']         = 'Платежный счет успешно создан';
 $lang['finance_delete_account']                      = 'Удаление';
 $lang['finance_delete_account_message_success']      = 'Удаление платежного счета успешно выполнено';
+$lang['finance_withdrawal_requests']                 = 'Запросы на вывод денег';
+$lang['finance_add_withdrawal_requests_success']     = 'Запрос успешно отправлен';
+$lang['finance_delete_withdrawal_request']           = 'Удаление запроса';
+$lang['finance_delete_withdrawal_request_success']   = 'Удаление запроса успешно выполнено';
+$lang['finance_withdrawal_commission_message']       = 'Комисcия за снятие денег';
 
 
 $lang['category_empty']                              = 'Категория пуста';
@@ -148,6 +153,7 @@ $lang['first']                                       = 'Первая';
 $lang['previous']                                    = 'Предыдущая';
 $lang['next']                                        = 'Следующая';
 $lang['last']                                        = 'Последняя';
+$lang['commission']                                  = 'Комиссия';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

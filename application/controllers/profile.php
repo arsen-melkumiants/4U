@@ -842,63 +842,109 @@ class Profile extends CI_Controller {
 		load_views();
 	}
 
-	function payment_accounts() {
-		$this->data['title'] = $this->data['header'] = lang('finance_payment_accounts');
+	function withdrawal_requests() {
+		$this->data['title'] = $this->data['header'] = lang('finance_withdrawal_requests');
 
 		$this->load->library('table');
 		$this->table
+			->text('amount', array(
+				'title' => lang('price'),
+				'func'  => function($row, $params) {
+					return '№'.$row['id'];
+				}
+		))
 			->text('name')
-			->text('value')
+			->text('number')
+			->text('amount', array(
+				'title' => lang('price'),
+				'func'  => function($row, $params) {
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
+				}
+		))
+			->text('commission', array(
+				'title' => lang('commission'),
+				'func'  => function($row, $params) {
+					return '<div class="price">'.lang('commission').': <i class="c_icon_label"></i>-'.floatval($row['commission']).' '.$row['symbol'].'</div>';
+				}
+		))
+			->date('date', array(
+				'title' => lang('date'),
+			))
 			->btn(array(
-				'link'  => 'profile/delete_account/%d',
+				'link'  => 'profile/delete_withdrawal_request/%d',
 				'class' => 'delete',
 				'title' => lang('delete'),
 				'modal' => true,
 			))
 			;
+
+		$amount_list = array_flip(array('130','200','300','400','500','600','700','800','900','1000','1500','2000','2500','3000'));
+		foreach ($amount_list as $key => $value) {
+			$amount_list[$key] = $key.' $';
+		}
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
-				return $CI->db
-					->where(array(
-						'user_id' => $CI->data['user_info']['id'],
-						'status'  => 0,
-					))
-					->order_by('id', 'desc')
-					->get('user_payment_accounts');
+				return $CI->shop_model->get_withdrawal_requests();
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
 
+		if (isset($_POST['amount']) && !isset($amount_list[$_POST['amount']])) {
+			$_POST['amount'] = '';
+		}
 		$this->data['center_block'] .= $this->form
-			->text('name', array('valid_rules' => 'required|trim|xss_clean|max_length[200]', 'label' => lang('finance_account_name')))
-			->text('value', array('valid_rules' => 'required|trim|xss_clean|max_length[200]', 'label' => lang('finance_account_value')))
+			->select('name', array(
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => lang('finance_account_name'),
+				'options'     => array('Webmoney' => 'Webmoney', 'Paxum' => 'Paxum'),
+			))
+			->text('number', array('valid_rules' => 'required|trim|xss_clean|max_length[70]', 'label' => lang('finance_account_number')))
+			->select('amount', array(
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => lang('product_amount'),
+				'options'     => $amount_list,
+			))
 			->btn(array('value' => lang('add')))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
+		//Commission
+		$commission = defined('WITHDRAWAL_COMMISSION') ? WITHDRAWAL_COMMISSION : 0;
+		set_alert('<b>'.lang('finance_withdrawal_commission_message').': '.$commission.'%</b>', false, 'warning');
+
 		if ($this->form_validation->run() != FALSE) {
-			$this->db->insert('user_payment_accounts', array(
-				'name'    => $this->input->post('name'),
-				'value'   => $this->input->post('value'),
-				'user_id' => $this->data['user_info']['id'],
+			$user_balance = $this->shop_model->get_user_balance();
+			if ($this->input->post('amount') + $commission > $user_balance[0]['amount']) {
+				$this->session->set_flashdata('danger', lang('finance_no_money_message'));
+				redirect('profile/withdrawal_requests', 'refresh');
+			}
+
+			$this->db->insert('shop_user_withdrawal_requests', array(
+				'name'       => $this->input->post('name'),
+				'number'     => $this->input->post('number'),
+				'amount'     => $this->input->post('amount'),
+				'currency'   => 1,
+				'commission' => $this->input->post('amount') / 100 * $commission,
+				'user_id'    => $this->data['user_info']['id'],
+				'add_date'   => time(),
 			));
-			$this->session->set_flashdata('success', lang('finance_add_account_message_success'));
-			redirect('profile/payment_accounts', 'refresh');
+			$this->session->set_flashdata('success', lang('finance_add_withdrawal_requests_success'));
+			redirect('profile/withdrawal_requests', 'refresh');
 		}
 
 		load_views();
 	}
 
-	function delete_account($id = false) {
+	function delete_withdrawal_request($id = false) {
 		$id = intval($id);
-		$account_info = $this->db
+		$request_info = $this->db
 			->where(array(
-				'id' => $id,
+				'id'      => $id,
 				'user_id' => $this->data['user_info']['id'],
 				'status'  => 0,
 			))
-			->get('user_payment_accounts')
+			->get('shop_user_withdrawal_requests')
 			->row_array();
 
-		if (empty($account_info)) {
+		if (empty($request_info)) {
 			if ($this->input->is_ajax_request()) {
 				echo 'refresh';
 				exit;
@@ -907,12 +953,12 @@ class Profile extends CI_Controller {
 			}
 		}
 
-		$this->data['title'] = $this->data['header'] = lang('finance_delete_account').' "'.$account_info['name'].'"';
+		$this->data['title'] = $this->data['header'] = lang('finance_delete_withdrawal_request').' №'.$request_info['id'];
 
 		if ($this->input->is_ajax_request()) {
 			if (isset($_POST['delete'])) {
-				$this->db->where('id', $id)->update('user_payment_accounts', array('status' => 1));
-				$this->session->set_flashdata('success', lang('finance_delete_account_message_success'));
+				$this->db->where('id', $id)->update('shop_user_withdrawal_requests', array('status' => 2));
+				$this->session->set_flashdata('success', lang('finance_delete_withdrawal_request_success'));
 				echo 'refresh';
 			} else {
 				$this->load->library('form');
@@ -923,9 +969,9 @@ class Profile extends CI_Controller {
 				echo $this->load->view('ajax', $this->data, true);
 			}
 		} else {
-			$this->db->where('id', $id)->update('user_payment_accounts', array('status' => 1));
-			$this->session->set_flashdata('success', lang('finance_delete_account_message_success'));
-			redirect('profile/products', 'refresh');
+			$this->db->where('id', $id)->update('shop_user_withdrawal_requests', array('status' => 2));
+			$this->session->set_flashdata('success', lang('finance_delete_withdrawal_request_success'));
+			redirect('profile/withdrawal_requests', 'refresh');
 		}
 	}
 

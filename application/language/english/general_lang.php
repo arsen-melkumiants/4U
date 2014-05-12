@@ -105,10 +105,15 @@ $lang['finance_fill_up_message_success']             = 'The account has been suc
 $lang['finance_no_money_message']                    = 'Not enough money in the account. Please, refill';
 $lang['finance_payment_accounts']                    = 'Payment accounts';
 $lang['finance_account_name']                        = 'Name';
-$lang['finance_account_value']                       = 'Account number';
+$lang['finance_account_number']                      = 'Account number';
 $lang['finance_add_account_message_success']         = 'Payment account has been successfully created';
 $lang['finance_delete_account']                      = 'Delete';
 $lang['finance_delete_account_message_success']      = 'Payment account has been successfully deleted';
+$lang['finance_withdrawal_requests']                 = 'Requests for withdrawal of money';
+$lang['finance_add_withdrawal_requests_success']     = 'Request has been successfully sent';
+$lang['finance_delete_withdrawal_request']           = 'Delete request';
+$lang['finance_delete_withdrawal_request_success']   = 'Request has been successfully deleted';
+$lang['finance_withdrawal_commission_message']       = 'Commission for withdrawal of money';
 
 
 $lang['category_empty']                              = 'Category is empty';
@@ -147,6 +152,7 @@ $lang['first']                                       = 'First';
 $lang['previous']                                    = 'Previous';
 $lang['next']                                        = 'Next';
 $lang['last']                                        = 'Last';
+$lang['commission']                                  = 'Commission';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

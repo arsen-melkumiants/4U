@@ -89,6 +89,7 @@ class Admin_methods {
 				$this->CI->db->where('id', $data['id'])->delete($table);
 				$this->CI->session->set_flashdata('danger', 'Удаление успешно выполено');
 				echo 'refresh';
+				exit;
 			} else {
 				$this->CI->load->library('form');
 				$this->CI->data['center_block'] = $this->CI->form

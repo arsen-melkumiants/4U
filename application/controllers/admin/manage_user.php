@@ -79,7 +79,7 @@ class Manage_user extends CI_Controller {
 				}
 		))
 			->edit(array('link' => $this->MAIN_URL.'edit/%d'))
-			->btn(array('link' => $this->MAIN_URL.'payment_accounts/%d', 'icon' => 'list', 'title' => 'Список платежных счетов пользователя'))
+			//->btn(array('link' => $this->MAIN_URL.'payment_accounts/%d', 'icon' => 'list', 'title' => 'Список платежных счетов пользователя'))
 			->btn(array(
 				'func' => function($row, $params, $html, $that, $CI) {
 					if (!$row['status']) {
@@ -207,6 +207,7 @@ class Manage_user extends CI_Controller {
 	}
 
 	public function payment_accounts($id = false) {
+		custom_404();
 		if (empty($id)) {
 			custom_404();
 		}

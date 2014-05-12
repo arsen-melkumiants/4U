@@ -617,4 +617,20 @@ class Shop_model extends CI_Model {
 		$this->db->trans_commit();
 		$this->session->set_flashdata('success', lang('orders_payment_success'));
 	}
+
+	function get_withdrawal_requests($user_id = false) {
+		if (empty($user_id)) {
+			$user_id = $this->data['user_info']['id'];
+		}
+
+		return $this->db
+			->select('w.*, c.symbol, c.code')
+			->from('shop_user_withdrawal_requests as w')
+			->join('shop_currencies as c', 'w.currency = c.id')
+			->where(array(
+				'w.user_id' => $user_id,
+				'w.status'  => 0
+			))
+			->get();
+	}
 }

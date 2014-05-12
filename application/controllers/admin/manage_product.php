@@ -9,45 +9,57 @@ class Manage_product extends CI_Controller {
 	public $DB_TABLE = 'shop_products';
 
 	public $PAGE_INFO = array(
-		'index'            => array(
-			'header'       => 'Все продукты',
-			'header_descr' => 'Список продуктов',
+		'index'                     => array(
+			'header'                => 'Все продукты',
+			'header_descr'          => 'Список продуктов',
 		),
-		'moderate'         => array(
-			'header'       => 'Продукты на модерацию',
-			'header_descr' => 'Список продуктов',
+		'moderate'                  => array(
+			'header'                => 'Продукты на модерацию',
+			'header_descr'          => 'Список продуктов',
 		),
-		'activated'        => array(
-			'header'       => 'Активные продукты',
-			'header_descr' => 'Список продуктов',
+		'activated'                 => array(
+			'header'                => 'Активные продукты',
+			'header_descr'          => 'Список продуктов',
 		),
-		'rejected'         => array(
-			'header'       => 'Продукты непрошедшие модерацию',
-			'header_descr' => 'Список продуктов',
+		'rejected'                  => array(
+			'header'                => 'Продукты непрошедшие модерацию',
+			'header_descr'          => 'Список продуктов',
 		),
-		'add'              => array(
-			'header'       => 'Добавления продукта',
-			'header_descr' => 'Информация о продукте',
+		'add'                       => array(
+			'header'                => 'Добавления продукта',
+			'header_descr'          => 'Информация о продукте',
 		),
-		'edit'             => array(
-			'header'       => 'Редактирование "%name"',
-			'header_descr' => 'Редактирование информации о продукте',
+		'edit'                      => array(
+			'header'                => 'Редактирование "%name"',
+			'header_descr'          => 'Редактирование информации о продукте',
 		),
-		'delete'           => array(
-			'header'       => 'Удаление продукта "%name"',
-			'header_descr' => false,
+		'delete'                    => array(
+			'header'                => 'Удаление продукта "%name"',
+			'header_descr'          => false,
 		),
-		'orders'           => array(
-			'header'       => 'Все заказы',
-			'header_descr' => 'Список заказов',
+		'orders'                    => array(
+			'header'                => 'Все заказы',
+			'header_descr'          => 'Список заказов',
 		),
-		'order_view'       => array(
-			'header'       => 'Заказ №"%order_id"',
-			'header_descr' => 'Список заказанных продуктов',
+		'order_view'                => array(
+			'header'                => 'Заказ №"%order_id"',
+			'header_descr'          => '',
 		),
-		'payments'         => array(
-			'header'       => 'Финансовые операции',
-			'header_descr' => 'Список операций всех пользователей',
+		'payments'                  => array(
+			'header'                => 'Финансовые операции',
+			'header_descr'          => 'Список операций всех пользователей',
+		),
+		'withdrawal_requests'       => array(
+			'header'                => 'Вывод денег',
+			'header_descr'          => 'Заявки на вывод денег',
+		),
+		'delete_withdrawal_request' => array(
+			'header'                => 'Удаление запроса №%id',
+			'header_descr'          => '',
+		),
+		'accept_withdrawal_request' => array(
+			'header'                => 'Подтверждение запроса №%id',
+			'header_descr'          => '',
 		),
 	);
 
@@ -514,5 +526,107 @@ class Manage_product extends CI_Controller {
 			});
 
 		load_admin_views();
+	}
+
+	public function withdrawal_requests() {
+		$this->load->library('table');
+		$this->data['center_block'] = $this->table
+			->text('id', array('title' => 'Номер заявки'))
+			->text('cat_id', array(
+				'title' => 'Категория',
+				'func'  => function($row, $params) {
+				}
+		))
+			->date('username', array(
+				'title' => 'Пользователь',
+				'func'  => function($row, $params) {
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
+				}
+		))
+			->text('amount', array(
+				'title' => lang('price'),
+				'func'  => function($row, $params) {
+					return floatval($row['amount']).' '.$row['symbol'];
+				}
+		))
+			->text('commission', array(
+				'title' => lang('commission'),
+				'func'  => function($row, $params) {
+					return floatval($row['commission']).' '.$row['symbol'];
+				}
+		))
+			->date('add_date', array(
+				'title' => 'Дата создания'
+			))
+			->delete(array('link' => $this->MAIN_URL.'delete_withdrawal_request/%d', 'modal' => 1))
+			->btn(array('link' => $this->MAIN_URL.'accept_withdrawal_request/%d', 'modal' => 1, 'icon' => 'ok'))
+			->create(function($CI) {
+				return $CI->db
+					->select('w.*, c.symbol, c.code, u.username')
+					->from('shop_user_withdrawal_requests as w')
+					->join('shop_currencies as c', 'w.currency = c.id')
+					->join('users as u', 'w.user_id = u.id')
+					->where('w.status', 0)
+					->get();
+			});
+
+		load_admin_views();
+	}
+
+	public function delete_withdrawal_request($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+
+		$request_info = $this->db->where(array('id' => $id,'status'  => 0))->get('shop_user_withdrawal_requests')->row_array();
+		if (empty($request_info)) {
+			custom_404();
+		}
+		set_header_info($request_info);
+
+		if (isset($_POST['delete'])) {
+			$this->db->where('id', $id)->update('shop_user_withdrawal_requests', array('status' => 2));
+			$this->session->set_flashdata('danger', 'Удаление успешно выполено');
+			echo 'refresh';
+		} else {
+			$this->load->library('form');
+			$this->data['center_block'] = $this->form
+				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+				->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
+				->create(array('action' => current_url(), 'btn_offset' => 4));
+			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+		}
+	}
+
+	public function accept_withdrawal_request($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+
+		$request_info = $this->db->where(array('id' => $id,'status'  => 0))->get('shop_user_withdrawal_requests')->row_array();
+		if (empty($request_info)) {
+			custom_404();
+		}
+		set_header_info($request_info);
+
+		if (isset($_POST['accept'])) {
+			$this->db->trans_begin();
+			$this->load->model('shop_model');
+
+			$this->db->where('id', $id)->update('shop_user_withdrawal_requests', array('status' => 1));
+			$this->shop_model->log_payment($request_info['user_id'], 'draw_out', $request_info['id'], -($request_info['amount'] + $request_info['commission']));
+			$this->session->set_flashdata('success', 'Вывод средств успешно выполено');
+
+			$this->db->trans_commit();
+			echo 'refresh';
+			exit;
+		} else {
+			$this->load->library('form');
+			$this->data['center_block'] = $this->form
+				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+				->btn(array('name' => 'accept', 'value' => 'Вывести', 'class' => 'btn-success'))
+				->create(array('action' => current_url(), 'btn_offset' => 4));
+			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+		}
 	}
 }
