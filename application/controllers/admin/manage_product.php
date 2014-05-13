@@ -531,20 +531,17 @@ class Manage_product extends CI_Controller {
 	public function withdrawal_requests() {
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
-			->text('id', array('title' => 'Номер заявки'))
-			->text('cat_id', array(
-				'title' => 'Категория',
-				'func'  => function($row, $params) {
-				}
-		))
+			->text('id', array('tityyle' => 'Номер заявки'))
 			->date('username', array(
 				'title' => 'Пользователь',
 				'func'  => function($row, $params) {
 					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
 				}
 		))
+			->text('name', array('title' => 'Название'))
+			->text('number', array('title' => 'Номер'))
 			->text('amount', array(
-				'title' => lang('price'),
+				'title' => 'Количество',
 				'func'  => function($row, $params) {
 					return floatval($row['amount']).' '.$row['symbol'];
 				}

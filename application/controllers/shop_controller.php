@@ -153,6 +153,9 @@ class Shop_controller extends CI_Controller {
 	}
 
 	public function cart($step = 'orders') {
+		if ($this->ion_auth->logged_in()) {
+			$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
+		}
 		$in_order = $this->cart->total_items();
 		if (empty($in_order) && $step != 'orders') {
 			redirect('cart/orders', 'refresh');
