@@ -35,7 +35,6 @@ class Admin_control_menu_model extends CI_Model
 					'manage_product/rejected'            => 'Продукты непрошедшие модерацию',
 					'2'                                  => '',
 					'manage_product/orders'              => 'Список заказов',
-					//'manage_order/settings'     => 'Настройки заказов',
 					'3'                                  => '',
 					'manage_product/withdrawal_requests' => 'Заявки на вывод денег',
 					'manage_currency'                    => 'Список валют',
