@@ -46,7 +46,7 @@ class Shop_controller extends CI_Controller {
 		}
 
 		$view_mode = $this->input->cookie('view_mode');
-		$this->data['view_mode'] = isset($this->data['types'][$view_mode]) ? $view_mode : 'default';
+		$this->data['view_mode'] = $view_mode = isset($this->data['types'][$view_mode]) ? $view_mode : 'default';
 
 		//VIP
 		$this->data['name'] = lang('vip_lots');
@@ -68,7 +68,7 @@ class Shop_controller extends CI_Controller {
 		$query = $this->input->get('q');
 
 		$view_mode = $this->input->cookie('view_mode');
-		$this->data['view_mode'] = isset($this->data['types'][$view_mode]) ? $view_mode : 'default';
+		$this->data['view_mode'] = $view_mode = isset($this->data['types'][$view_mode]) ? $view_mode : 'default';
 
 		//VIP
 		$this->data['name'] = lang('vip_lots');
