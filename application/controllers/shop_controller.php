@@ -104,11 +104,11 @@ class Shop_controller extends CI_Controller {
 			if (!$this->ion_auth->logged_in() && $this->data['product_info']['status'] != 1) {
 				show_404();
 			} elseif ($this->ion_auth->logged_in()) {
-			   if($this->data['product_info']['author_id'] != $this->data['user_info']['id']) {
-				   show_404();
-			   } elseif ($this->data['product_info']['status'] > 2) {
-				   show_404();
-			   }
+				if($this->data['product_info']['author_id'] != $this->data['user_info']['id']) {
+					show_404();
+				} elseif ($this->data['product_info']['status'] > 2) {
+					show_404();
+				}
 			}
 		}
 
@@ -330,7 +330,7 @@ class Shop_controller extends CI_Controller {
 			echo 'Noqty';
 			exit;
 		}
-		
+
 		$prods = $this->cart->contents();
 		$count = 1;
 		if(!empty($prods)){
@@ -511,5 +511,49 @@ class Shop_controller extends CI_Controller {
 			//			$this->email->send();
 			return $order_id;
 		}
+	}
+
+/*	private function checking_owner() {
+	}
+ */
+	public function lift_up($id = false) {
+		$this->data['title'] = $this->data['name'] = lang('facilities_lift_up_header');
+		$this->data['product_info'] = $this->db->from('shop_products')->where('id', $id)->get()->row_array();
+
+		if (empty($this->data['product_info'])) {
+			show_404();
+		}
+
+		if (!defined('LIFT_UP_PRICE') || LIFT_UP_PRICE <= 0) {
+			$this->session->set_flashdata('danger', lang('facilities_disabled'));
+			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
+		}
+
+		if (!$this->ion_auth->logged_in()) {
+			$this->session->set_flashdata('danger', lang('need_auth'));
+			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
+		}
+		$user_info = $this->ion_auth->user()->row_array();
+
+		if ($user_info['id'] != $this->data['product_info']['author_id']) {
+			$this->session->set_flashdata('danger', lang('product_not_yours'));
+			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
+		}
+
+		$user_balance = $this->shop_model->get_user_balance($user_info['id']);
+		if ($user_balance[0]['amount'] < LIFT_UP_PRICE) {
+			$this->session->set_flashdata('danger', lang('finance_no_money_message'));
+			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
+		}
+
+		$this->db->trans_begin();
+
+		$this->db->where('id', $id)->update('shop_products', array('sort_date' => time()));
+		$this->shop_model->log_payment($user_info['id'], 'lift_up', $id, -LIFT_UP_PRICE);
+
+		$this->db->trans_commit();
+
+		$this->session->set_flashdata('success', lang('facilities_disabled'));
+		redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 	}
 }

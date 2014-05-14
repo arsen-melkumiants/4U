@@ -69,6 +69,16 @@ class Admin_control_panel extends CI_Controller {
 				'width'       => '2',
 				'symbol'      => '%',
 			))
+			->separator()
+			->text('LIFT_UP_PRICE', array(
+				'value'       => (defined('LIFT_UP_PRICE') ? LIFT_UP_PRICE : ''),
+				'valid_rules' => 'required|trim|xss_clean|numeric',
+				'label'       => 'Цена поднятия сообщения',
+				'width'       => '2',
+				'symbol'      => '$',
+				'icon_post'   => 'right',
+			))
+			->separator()
 			->text('VIP_DAYS', array(
 				'value'       => (defined('VIP_DAYS') ? VIP_DAYS : ''),
 				'valid_rules' => 'required|trim|xss_clean|integer',
@@ -112,6 +122,7 @@ class Admin_control_panel extends CI_Controller {
 			$data = $this->input->post();
 
 			$data['WITHDRAWAL_COMMISSION'] = abs(round($data['WITHDRAWAL_COMMISSION'], 2));
+			$data['LIFT_UP_PRICE']         = abs(round($data['LIFT_UP_PRICE'], 2));
 			$data['VIP_PRICE']             = abs(round($data['VIP_PRICE'], 2));
 			$data['MARK_PRICE']            = abs(round($data['MARK_PRICE'], 2));
 

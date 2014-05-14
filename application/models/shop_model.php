@@ -211,7 +211,10 @@ class Shop_model extends CI_Model {
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where_in('p.cat_id', array_keys($ids))
-			->where('p.status', 1);
+			->where('p.status', 1)
+			->order_by('sort_date', 'desc')
+			->order_by('id', 'desc')
+			;
 	}
 
 	function get_vip_products($limit = false) {

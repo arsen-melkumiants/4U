@@ -48,6 +48,7 @@ $lang['product_deleted']                             = 'The product has been del
 $lang['product_on_moderate']                         = 'The product is still being on moderation';
 $lang['product_rejected']                            = 'The product hasn\'t been passed moderation';
 $lang['product_already_bought']                      = 'The product has been bought by you';
+$lang['product_not_yours']                           = 'The product is not yours';
 
 
 $lang['my_stats']                                    = 'My stats';
@@ -116,7 +117,9 @@ $lang['finance_delete_withdrawal_request']           = 'Delete request';
 $lang['finance_delete_withdrawal_request_success']   = 'Request has been successfully deleted';
 $lang['finance_withdrawal_commission_message']       = 'Commission for withdrawal of money';
 
+$lang['facilities_disabled']                         = 'The service is disabled';
 
+$lang['need_auth']                                   = 'You have to log in';
 $lang['category_empty']                              = 'Category is empty';
 $lang['logout']                                      = 'Logout';
 $lang['add']                                         = 'Add';

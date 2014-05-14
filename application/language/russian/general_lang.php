@@ -49,6 +49,7 @@ $lang['product_deleted']                             = 'Товар удален'
 $lang['product_on_moderate']                         = 'Товар на модерации';
 $lang['product_rejected']                            = 'Товар не прошел модерацию';
 $lang['product_already_bought']                      = 'Данный товар уже был куплен Вами';
+$lang['product_not_yours']                           = 'Данный товар не принадлежит вам';
 
 $lang['my_stats']                                    = 'Статистика';
 
@@ -117,7 +118,9 @@ $lang['finance_delete_withdrawal_request']           = 'Удаление зап�
 $lang['finance_delete_withdrawal_request_success']   = 'Удаление запроса успешно выполнено';
 $lang['finance_withdrawal_commission_message']       = 'Комисcия за снятие денег';
 
+$lang['facilities_disabled']                         = 'Услуга отключена';
 
+$lang['need_auth']                                   = 'Вам необходимо авторизоваться';
 $lang['category_empty']                              = 'Категория пуста';
 $lang['logout']                                      = 'Выход';
 $lang['add']                                         = 'Добавить';
