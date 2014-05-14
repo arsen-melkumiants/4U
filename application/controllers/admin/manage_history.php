@@ -96,6 +96,6 @@ class Manage_history extends CI_Controller {
 	}
 
 	public function facilities() {
-		$this->index();
+		$this->index(array('lift_up', 'mark', 'make_vip'));
 	}
 }

@@ -509,6 +509,12 @@ class Manage_product extends CI_Controller {
 					return floatval($row['commission']).' '.$row['symbol'];
 				}
 		))
+			->text('amount', array(
+				'title' => 'Всего на снятие',
+				'func'  => function($row, $params) {
+					return floatval($row['amount'] + $row['commission']).' '.$row['symbol'];
+				}
+		))
 			->date('add_date', array(
 				'title' => 'Дата создания'
 			))
@@ -564,6 +570,14 @@ class Manage_product extends CI_Controller {
 		set_header_info($request_info);
 
 		if (isset($_POST['accept'])) {
+			$this->load->model('shop_model');
+			$user_balance = $this->shop_model->get_user_balance($request_info['user_id']);
+			if ($user_balance[0]['amount'] < $request_info['amount']) {
+				$this->session->set_flashdata('danger', 'Недостаточно средств на счету пользователя('.$user_balance[0]['amount'].' $)');
+				echo 'refresh';
+				exit;
+			}
+
 			$this->db->trans_begin();
 			$this->load->model('shop_model');
 

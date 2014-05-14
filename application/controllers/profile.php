@@ -910,9 +910,19 @@ class Profile extends CI_Controller {
 		$commission = defined('WITHDRAWAL_COMMISSION') ? WITHDRAWAL_COMMISSION : 0;
 		set_alert('<b>'.lang('finance_withdrawal_commission_message').': '.$commission.'%</b>', false, 'warning');
 
+
 		if ($this->form_validation->run() != FALSE) {
+			//Requests sum
+			$exist_requests = $this->shop_model->get_withdrawal_requests()->result_array();
+			$request_sum = 0;
+			if (!empty($exist_requests)) {
+				foreach ($exist_requests as $item) {
+					$request_sum += $item['amount'] + $item['commission'];
+				}
+			}
+
 			$user_balance = $this->shop_model->get_user_balance();
-			if ($this->input->post('amount') + $commission > $user_balance[0]['amount']) {
+			if ($this->input->post('amount') + $commission + $request_sum > $user_balance[0]['amount']) {
 				$this->session->set_flashdata('danger', lang('finance_no_money_message'));
 				redirect('profile/withdrawal_requests', 'refresh');
 			}

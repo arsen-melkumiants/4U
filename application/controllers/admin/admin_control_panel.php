@@ -62,12 +62,25 @@ class Admin_control_panel extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean|valid_email',
 				'label'       => 'Почта сайта',
 			))
+			->separator()
 			->text('WITHDRAWAL_COMMISSION', array(
 				'value'       => (defined('WITHDRAWAL_COMMISSION') ? WITHDRAWAL_COMMISSION : ''),
 				'valid_rules' => 'required|trim|xss_clean|numeric',
 				'label'       => 'Комиссия по выводу денег',
 				'width'       => '2',
 				'symbol'      => '%',
+			))
+			->select('TYPE_SALE_COMMISSION', array(
+				'value'       => (defined('TYPE_SALE_COMMISSION') ? TYPE_SALE_COMMISSION : ''),
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => 'Тип комиссии по продаже товара',
+				'options'     => array('fixed' => 'Фиксированная', 'percent' => 'Процент'),
+			))
+			->text('SALE_COMMISSION', array(
+				'value'       => (defined('SALE_COMMISSION') ? SALE_COMMISSION : ''),
+				'valid_rules' => 'required|trim|xss_clean|numeric',
+				'label'       => 'Комиссия по продаже товара',
+				'width'       => '2',
 			))
 			->separator()
 			->text('LIFT_UP_PRICE', array(
@@ -78,7 +91,6 @@ class Admin_control_panel extends CI_Controller {
 				'symbol'      => '$',
 				'icon_post'   => 'right',
 			))
-			->separator()
 			->text('VIP_DAYS', array(
 				'value'       => (defined('VIP_DAYS') ? VIP_DAYS : ''),
 				'valid_rules' => 'required|trim|xss_clean|integer',
@@ -122,6 +134,7 @@ class Admin_control_panel extends CI_Controller {
 			$data = $this->input->post();
 
 			$data['WITHDRAWAL_COMMISSION'] = abs(round($data['WITHDRAWAL_COMMISSION'], 2));
+			$data['SALE_COMMISSION']       = abs(round($data['SALE_COMMISSION'], 2));
 			$data['LIFT_UP_PRICE']         = abs(round($data['LIFT_UP_PRICE'], 2));
 			$data['VIP_PRICE']             = abs(round($data['VIP_PRICE'], 2));
 			$data['MARK_PRICE']            = abs(round($data['MARK_PRICE'], 2));
