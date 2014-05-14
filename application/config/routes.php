@@ -63,6 +63,8 @@ $route['(\w{2})/cart/(:any)']     = 'shop_controller/cart/$2';
 $route['(\w{2})/add_to_cart']     = 'shop_controller/add_to_cart';
 $route['(\w{2})/update_cart']     = 'shop_controller/update_cart';
 $route['(\w{2})/lift_up/(:num)']  = 'shop_controller/lift_up/$2';
+$route['(\w{2})/mark/(:num)']     = 'shop_controller/mark/$2';
+$route['(\w{2})/make_vip/(:num)'] = 'shop_controller/make_vip/$2';
 
 $route['(\w{2})/profile']        = 'profile';
 $route['(\w{2})/profile/(:any)'] = 'profile/$2';

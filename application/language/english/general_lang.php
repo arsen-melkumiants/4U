@@ -103,6 +103,9 @@ $lang['finance_income_product']                      = 'Income from product';
 $lang['finance_balance']                             = 'Account balance';
 $lang['finance_fill_up']                             = 'Fill up account';
 $lang['finance_draw_out']                            = 'Withdraw from account';
+$lang['finance_lift_up']                             = 'Lift up product';
+$lang['finance_mark']                                = 'Mark product';
+$lang['finance_make_vip']                            = 'Make product VIP';
 $lang['finance_fill_up_message_success']             = 'The account has been successfully filled up';
 $lang['finance_no_money_message']                    = 'Not enough money in the account. Please, refill';
 $lang['finance_payment_accounts']                    = 'Payment accounts';
@@ -118,6 +121,7 @@ $lang['finance_delete_withdrawal_request_success']   = 'Request has been success
 $lang['finance_withdrawal_commission_message']       = 'Commission for withdrawal of money';
 
 $lang['facilities_disabled']                         = 'The service is disabled';
+$lang['facilities_paid']                             = 'The service has been paid';
 
 $lang['need_auth']                                   = 'You have to log in';
 $lang['category_empty']                              = 'Category is empty';

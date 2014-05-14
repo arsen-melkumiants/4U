@@ -19,6 +19,12 @@ class Shop_controller extends CI_Controller {
 
 		set_alert($this->session->flashdata('success'), false, 'success');
 		set_alert($this->session->flashdata('danger'), false, 'danger');
+
+		$this->data['types'] = array(
+			'default' => 6,
+			'gallery' => 9,
+			'list'    => 12,
+		);
 	}
 
 	public function index() {
@@ -39,9 +45,8 @@ class Shop_controller extends CI_Controller {
 			show_404();
 		}
 
-		$this->data['types'] = array('default','gallery','list');
 		$view_mode = $this->input->cookie('view_mode');
-		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
+		$this->data['view_mode'] = isset($this->data['types'][$view_mode]) ? $view_mode : 'default';
 
 		//VIP
 		$this->data['name'] = lang('vip_lots');
@@ -51,7 +56,7 @@ class Shop_controller extends CI_Controller {
 		$this->data['name']  = $this->data['category_info']['name'];
 		$this->data['title'] = lang('product_category').' "'.$this->data['name'].'"';
 
-		$this->data['per_page']     = 9;
+		$this->data['per_page']     = $this->data['types'][$view_mode];
 		$this->data['total']        = $this->shop_model->count_products_by_category($this->data['category_info']['id']);
 		$this->data['products']     = $this->shop_model->get_products_by_category($this->data['category_info']['id'], $this->data['per_page']);
 		$this->data['center_block'] = $this->load->view('category', $this->data, true);
@@ -62,9 +67,8 @@ class Shop_controller extends CI_Controller {
 	public function search() {
 		$query = $this->input->get('q');
 
-		$this->data['types'] = array('default','gallery','list');
 		$view_mode = $this->input->cookie('view_mode');
-		$this->data['view_mode'] = in_array($view_mode, $this->data['types']) ? $view_mode : 'default';
+		$this->data['view_mode'] = isset($this->data['types'][$view_mode]) ? $view_mode : 'default';
 
 		//VIP
 		$this->data['name'] = lang('vip_lots');
@@ -73,7 +77,7 @@ class Shop_controller extends CI_Controller {
 
 		$this->data['title'] = $this->data['name'] = lang('search').' "'.$query.'"';
 
-		$this->data['per_page']     = 9;
+		$this->data['per_page']     = $this->data['types'][$view_mode];
 		$this->data['total']        = $this->shop_model->count_search_products($query);
 		$this->data['products']     = $this->shop_model->get_search_products($query, $this->data['per_page']);
 		$this->data['center_block'] = $this->load->view('category', $this->data, true);
@@ -513,13 +517,17 @@ class Shop_controller extends CI_Controller {
 		}
 	}
 
-/*	private function checking_owner() {
-	}
- */
-	public function lift_up($id = false) {
-		$this->data['title'] = $this->data['name'] = lang('facilities_lift_up_header');
-		$this->data['product_info'] = $this->db->from('shop_products')->where('id', $id)->get()->row_array();
+	private function pay_service($id = false, $type = 'lift_up') {
+		$prices = array(
+			'lift_up'  => LIFT_UP_PRICE,
+			'mark'     => MARK_PRICE,
+			'make_vip' => VIP_PRICE,
+		);
+		if (empty($id) || !isset($prices[$type])) {
+			show_404();
+		}
 
+		$this->data['product_info'] = $this->db->from('shop_products')->where('id', $id)->get()->row_array();
 		if (empty($this->data['product_info'])) {
 			show_404();
 		}
@@ -533,27 +541,45 @@ class Shop_controller extends CI_Controller {
 			$this->session->set_flashdata('danger', lang('need_auth'));
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
-		$user_info = $this->ion_auth->user()->row_array();
+		$this->data['user_info'] = $this->ion_auth->user()->row_array();
 
-		if ($user_info['id'] != $this->data['product_info']['author_id']) {
+		if ($this->data['user_info']['id'] != $this->data['product_info']['author_id']) {
 			$this->session->set_flashdata('danger', lang('product_not_yours'));
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
-		$user_balance = $this->shop_model->get_user_balance($user_info['id']);
-		if ($user_balance[0]['amount'] < LIFT_UP_PRICE) {
-			$this->session->set_flashdata('danger', lang('finance_no_money_message'));
+		$user_balance = $this->shop_model->get_user_balance($this->data['user_info']['id']);
+		if ($user_balance[0]['amount'] < $prices[$type]) {
+			$this->session->set_flashdata('danger', lang('finance_no_money_message').' $'.$prices[$type]);
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
 		$this->db->trans_begin();
-
-		$this->db->where('id', $id)->update('shop_products', array('sort_date' => time()));
-		$this->shop_model->log_payment($user_info['id'], 'lift_up', $id, -LIFT_UP_PRICE);
-
+		if ($type == 'mark') {
+			$date_type = 'marked_date';
+		} elseif ($type == 'make_vip') {
+			$date_type = 'vip_date';
+		} else {
+			$data_type = 'sort_date';
+		}
+		$this->db->where('id', $id)->update('shop_products', array($date_type => time()));
+		$this->shop_model->log_payment($this->data['user_info']['id'], $type, $id, -$prices[$type]);
 		$this->db->trans_commit();
 
-		$this->session->set_flashdata('success', lang('facilities_disabled'));
+		$this->session->set_flashdata('success', lang('facilities_paid'));
 		redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
+
+	}
+
+	public function lift_up($id = false) {
+		$this->pay_service($id, 'lift_up');
+	}
+
+	public function mark($id = false) {
+		$this->pay_service($id, 'mark');
+	}
+
+	public function make_vip($id = false) {
+		$this->pay_service($id, 'make_vip');
 	}
 }

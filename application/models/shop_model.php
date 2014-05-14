@@ -180,7 +180,10 @@ class Shop_model extends CI_Model {
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->like('p.name', $query)
 			->or_like('p.content', $query)
-			->where('p.status', 1);
+			->where('p.status', 1)
+			->order_by('p.sort_date', 'desc')
+			->order_by('p.id', 'desc')
+			;
 	}
 
 	function count_products_by_category($id) {
@@ -212,8 +215,8 @@ class Shop_model extends CI_Model {
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where_in('p.cat_id', array_keys($ids))
 			->where('p.status', 1)
-			->order_by('sort_date', 'desc')
-			->order_by('id', 'desc')
+			->order_by('p.sort_date', 'desc')
+			->order_by('p.id', 'desc')
 			;
 	}
 
@@ -221,6 +224,8 @@ class Shop_model extends CI_Model {
 		if (!empty($limit)) {
 			$this->db->limit($limit);
 		}
+		$this->db->where('(vip_date + '.(VIP_DAYS * 86400).') >= ', time());
+		$this->db->order_by('p.id', 'random');
 		return $this->get_product_info();
 	}
 
@@ -229,7 +234,7 @@ class Shop_model extends CI_Model {
 			->select('p.*, c.symbol, c.code, u.username, u.phone, i.file_name, i.folder')
 			->from('shop_products as p')
 			->join('shop_currencies as c', 'p.currency = c.id')
-			->join('users as u', 'p.author_id = u.id')
+			->join('users as u', 'p.author_id = u.id', 'left')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where('p.status', 1)
 			->order_by('p.id', 'desc');

@@ -4,17 +4,18 @@
 		<h2><?php echo $name?></h2>
 		<div class="view_mode">
 			<ul>
-			<?php foreach ($types as $item) {?>
+				<?php foreach (array_flip($types) as $item) {?>
 				<li data-type="<?php echo $item?>" class="<?php echo $item.($view_mode == $item ? ' active' : '')?>"></li>
-			<?php }?>
+				<?php }?>
 			</ul>
 		</div>
 	</div>
 	<div class="item_container">
 		<?php if (!empty($products)) {
 		foreach ($products as $item) {
+		$marked = (!defined('MARK_DAYS') || !MARK_DAYS || ($item['marked_date'] + MARK_DAYS * 86400) > time()) ? ' marked' : '';
 		if ($view_mode == 'default') {?>
-		<div class="item horizontal">
+		<div class="item horizontal<?php echo $marked?>">
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">
 				<div class="image">
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
@@ -30,8 +31,9 @@
 			<div class="action">
 				<?php if (isset($user_info['id']) && $user_info['id'] == $item['author_id']) {?>
 				<div class="controls">
-					<a href="#"><i class="c_icon_up"></i></a>
-					<a href="#"><i class="c_icon_edit"></i></a>
+					<a href="<?php echo site_url('lift_up/'.$item['id'])?>"><i class="c_icon_up"></i></a>
+					<a href="<?php echo site_url('mark/'.$item['id'])?>"><i class="c_icon_edit"></i></a>
+					<a href="<?php echo site_url('make_vip/'.$item['id'])?>"><i class="c_icon_star"></i></a>
 				</div>
 				<?php }?>
 				<button class="orange_btn add_to_cart"
@@ -43,7 +45,7 @@
 			<div class="clear"></div>
 		</div>
 		<?php } elseif ($view_mode == 'gallery') {?>
-		<div class="item">
+		<div class="item<?php echo $marked?>">
 			<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">
 				<div class="image">
@@ -62,7 +64,7 @@
 			</div>
 		</div>
 		<?php } else {?>
-		<div class="item list">
+		<div class="item list<?php echo $marked?>">
 			<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 			<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 			<button class="orange_btn add_to_cart"
@@ -75,7 +77,9 @@
 		<?php } ?>
 		<?php }?>
 		<div class="clear"></div>
-		<?php echo pagination($total, $per_page);?>
+		<div class="<?php echo $view_mode?>_pages">
+			<?php echo pagination($total, $per_page);?>
+		</div>
 		<?php } else {?>
 		<h3 class="empty text-center"><?php echo lang('category_empty') ?></h3>
 		<?php }?>

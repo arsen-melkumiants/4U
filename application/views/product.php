@@ -55,9 +55,9 @@
 					<?php if (isset($user_info['id']) && $user_info['id'] == $product_info['author_id']) {?>
 					<div class="actions">
 						<ul>
-							<li><a href="#"><i class="c_icon_up"></i><?php echo lang('go_to_up')?></a></li>
-							<li><a href="#"><i class="c_icon_edit"></i><?php echo lang('allocate_lot')?></a></li>
-							<li><a href="#"><i class="c_icon_star"></i><?php echo lang('make_vip')?></a></li>
+							<li><a href="<?php echo site_url('lift_up/'.$product_info['id'])?>"><i class="c_icon_up"></i><?php echo lang('go_to_up')?></a></li>
+							<li><a href="<?php echo site_url('mark/'.$product_info['id'])?>"><i class="c_icon_edit"></i><?php echo lang('allocate_lot')?></a></li>
+							<li><a href="<?php echo site_url('make_vip/'.$product_info['id'])?>"><i class="c_icon_star"></i><?php echo lang('make_vip')?></a></li>
 						</ul>
 					</div>
 					<?php }?>

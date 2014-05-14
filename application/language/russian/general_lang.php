@@ -104,6 +104,9 @@ $lang['finance_income_product']                      = 'Доход по това
 $lang['finance_balance']                             = 'Текущий баланс';
 $lang['finance_fill_up']                             = 'Пополнение счета';
 $lang['finance_draw_out']                            = 'Вывод денег';
+$lang['finance_lift_up']                             = 'Поднятие товара';
+$lang['finance_mark']                                = 'Выделение товара';
+$lang['finance_make_vip']                            = 'Статус VIP товара';
 $lang['finance_fill_up_message_success']             = 'Счет успешно пополнен';
 $lang['finance_no_money_message']                    = 'Не достаточно средств на счету. Пожалуйста, пополните';
 $lang['finance_payment_accounts']                    = 'Платежные счета';
@@ -119,6 +122,7 @@ $lang['finance_delete_withdrawal_request_success']   = 'Удаление зап�
 $lang['finance_withdrawal_commission_message']       = 'Комисcия за снятие денег';
 
 $lang['facilities_disabled']                         = 'Услуга отключена';
+$lang['facilities_paid']                             = 'Услуга оплачена';
 
 $lang['need_auth']                                   = 'Вам необходимо авторизоваться';
 $lang['category_empty']                              = 'Категория пуста';

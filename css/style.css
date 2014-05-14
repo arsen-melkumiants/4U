@@ -136,7 +136,7 @@ ul {padding-left: 0;}
 
 .custom_block .item_container {margin: 0 -20px;}
 .custom_block .item {float: left;width: 33%;text-align: center;padding: 15px 2%;border: 1px solid #f2f2f2;}
-.custom_block .item.top {background: #f5efb8;border: 1px solid #d1c664;}
+.custom_block .item.marked {background: #f5efb8;border: 1px solid #d1c664;}
 .custom_block .item .name {text-align: center;font-size: 16px;height: 41px;overflow: hidden;}
 .custom_block .item .name a {font-size: 16px;}
 .custom_block .item .image {border: 1px solid #a5a5a5;margin-bottom: 15px;height: 140px;overflow: hidden;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;position: relative;}
@@ -169,8 +169,11 @@ ul {padding-left: 0;}
 .custom_block .horizontal.item .controls {text-align: right;margin-bottom: 10px;height: 17px;}
 .custom_block .horizontal.item .controls > * {margin-left: 10px;width: 16px;display: inline-block;}
 
-.custom_block .list.item {float: none;width: auto;text-align: left;margin: 10px;border-bottom: 1px solid #c9c9c9;padding: 0 2%;}
-.custom_block .list.item h4 {height: auto;float: left;width:55%;text-align: left;}
+.custom_block .list.item {float: none;width: auto;text-align: left;border-top: 1px solid #c9c9c9;padding: 10px 2%;margin: 0 10px;}
+.custom_block .list.item h4 {height: auto;float: left;width:55%;text-align: left;margin: 8px 0 0;}
+.custom_block .list.item .price {margin: 8px 0 0;}
+
+.list_pages .pagination {margin-top: 0;}
 
 .right_block {padding: 30px 0 50px;}
 .right_block .title {margin: 0 0 15px 0;border: 0;border-bottom: 1px solid #f2f2f2;padding: 15px 0;text-align: center;}
