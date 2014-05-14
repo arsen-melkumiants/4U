@@ -475,7 +475,7 @@ class Shop_model extends CI_Model {
 		}
 
 		$order_products = $this->db
-			->select('op.*, p.amount, p.author_id')
+			->select('op.*, p.amount, p.author_id, p.commission, p.type_commission')
 			->from('shop_order_products as op')
 			->join('shop_products as p', 'p.id = op.product_id')
 			->where('op.order_id', $id)
@@ -496,9 +496,20 @@ class Shop_model extends CI_Model {
 
 			$user_profit[] = array(
 				'user_id'    => $item['author_id'],
-				'amount'     => $item['qty'] * $item['price'],
+				'amount'     => $item['qty'] * ($item['price'] - $this->product_commission($item)),
 				'product_id' => $item['product_id'],
 			);
+
+			//Default commission
+			$order_products_update[$item['id']] = array(
+				'id'              => $item['id'],
+				'type_commission' => defined('TYPE_SALE_COMMISSION') ? TYPE_SALE_COMMISSION : 'fixed',
+				'commission'      => defined('SALE_COMMISSION') ? SALE_COMMISSION : 0,
+			);
+			if (!empty($item['type_commission'])) {
+				$order_products_update[$item['id']]['type_commission'] = $item['type_commission'];
+				$order_products_update[$item['id']]['commission'] = $item['commission'];
+			}
 
 			if ($item['type'] == 'licenses') {
 				$license_products = $this->db
@@ -518,10 +529,7 @@ class Shop_model extends CI_Model {
 					);
 				}
 
-				$order_products_update[$item['id']] = array(
-					'id'       => $item['id'],
-					'file_ids' => implode(',', array_keys($license_files)),
-				);
+				$order_products_update[$item['id']]['file_ids'] = implode(',', array_keys($license_files));
 			}
 		}
 
@@ -529,9 +537,9 @@ class Shop_model extends CI_Model {
 
 		if (!empty($license_files)) {
 			$this->db->update_batch('shop_product_media_files', $license_files, 'id');
-			$this->db->update_batch('shop_order_products', $order_products_update, 'id');
 		}
 
+		$this->db->update_batch('shop_order_products', $order_products_update, 'id');
 		$this->db->update_batch('shop_products', $update_array, 'id');
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
 
@@ -573,7 +581,7 @@ class Shop_model extends CI_Model {
 
 			$user_profit[] = array(
 				'user_id'    => $item['author_id'],
-				'amount'     => $item['qty'] * $item['price'],
+				'amount'     => $item['qty'] * ($item['price'] - $this->product_commission($item)),
 				'product_id' => $item['product_id'],
 			);
 
@@ -622,8 +630,32 @@ class Shop_model extends CI_Model {
 			->delete('shop_user_payment_logs');
 		}
 
+		//$this->db->trans_rollback();
 		$this->db->trans_commit();
 		$this->session->set_flashdata('success', lang('orders_payment_success'));
+	}
+
+	function product_commission($product_info = false) {
+		if (empty($product_info)) {
+			return false;
+		}
+
+		if (empty($product_info['type_commission'])) {
+			if(!defined('TYPE_SALE_COMMISSION')) {
+				return false;
+			}
+
+			$product_info['type_commission'] = TYPE_SALE_COMMISSION;
+			$product_info['commission']      = SALE_COMMISSION;
+		}
+
+		if ($product_info['type_commission'] == 'fixed') {
+			return $product_info['commission'];
+		} elseif ($product_info['type_commission'] == 'percent') {
+			return round($product_info['price'] / 100 * $product_info['commission'], 2);
+		}
+
+		return false;
 	}
 
 	function get_withdrawal_requests($user_id = false) {

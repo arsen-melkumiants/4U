@@ -166,6 +166,9 @@ class Manage_product extends CI_Controller {
 		array_unshift($product_categories, array('id' => 0, 'name' => 'Без категории'));
 		$currencies = $this->admin_product_model->get_currencies();
 		array_unshift($currencies, array('id' => '', 'name' => 'Список валюты'));
+		if (isset($_POST['commission'])) {
+			$_POST['commission'] = abs(round($_POST['commission'], 2));
+		}
 		$this->load->library('form');
 		return $this->form
 			->text('name', array(
@@ -229,6 +232,18 @@ class Manage_product extends CI_Controller {
 				'valid_rules' => 'trim|xss_clean|is_natural',
 				'label'       => '<span class="text-danger">Модерация</span>',
 				'inputs'      => array('Ожидание', 'Подтверждено', 'Отказано'),
+			))
+			->select('type_commission', array(
+				'value'       => $product_info['type_commission'] ?: '',
+				'valid_rules' => 'trim|xss_clean',
+				'label'       => 'Тип комиссии по продаже товара',
+				'options'     => array('' => 'Глобальная', 'fixed' => 'Фиксированная', 'percent' => 'Процент'),
+			))
+			->text('commission', array(
+				'value'       => $product_info['commission'] ?: '',
+				'valid_rules' => 'trim|xss_clean|numeric',
+				'label'       => 'Комиссия по продаже товара',
+				'width'       => '2',
 			))
 			->btn(array('value' => empty($product_info) ? 'Добавить' : 'Изменить'))
 			->link(array('name' => 'Галерея', 'href' => site_url($this->MAIN_URL.'gallery/'.$product_info['id'])))
