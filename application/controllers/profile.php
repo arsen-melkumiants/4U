@@ -106,8 +106,9 @@ class Profile extends CI_Controller {
 		$this->table
 			->text('name', array(
 				'title' => lang('product_name'),
-				'width' => '60%',
+				'width' => '50%',
 				'func'  => function($row, $params, $that, $CI) {
+					$row['is_vip'] = (!defined('VIP_DAYS') || !VIP_DAYS || ($row['vip_date'] + VIP_DAYS * 86400) > time());
 					return $CI->load->view('profile/item', $row, true);
 				}
 		))
@@ -167,7 +168,8 @@ class Profile extends CI_Controller {
 							'p.author_id' => $CI->data['user_info']['id'],
 						))
 						->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
-						->order_by('id', 'desc')
+						->order_by('p.sort_date', 'desc')
+						->order_by('p.id', 'desc')
 						->get();
 				} else {
 					return $CI->db
@@ -185,7 +187,16 @@ class Profile extends CI_Controller {
 						->get();
 				}
 
-			}, array('no_header' => 1, 'class' => 'table'));
+			}, array(
+				'no_header' => 1,
+				'class'     => 'table',
+				'limit'     => 9,
+				'tr_func'   => function($row) {
+					if (!defined('MARK_DAYS') || !MARK_DAYS || ($row['marked_date'] + MARK_DAYS * 86400) > time()) {
+						return 'class="marked"';
+					}
+				}
+		));
 
 		$this->data['center_block'] = $this->load->view('profile/products', $this->data, true);
 

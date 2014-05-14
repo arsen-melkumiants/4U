@@ -307,6 +307,7 @@ dt, dd {line-height: 2.5;}
 
 .product_list ,
 .product_list table {border: 0;}
+.product_list tbody > tr.marked {background: #f5efb8;border: 1px solid #d1c664;}
 .product_list tbody > tr > td {border: 0;}
 .product_list .image {border: 1px solid #aaaaaa;width: 130px;float: left;margin-right: 10px;background: #e1e1e1 url(../img/nophoto.jpg) no-repeat center;}
 .product_list .image img {max-width: 100%;}

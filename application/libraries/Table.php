@@ -161,7 +161,7 @@ class Table {
 		}
 
 		foreach ((array)$rows_data as $row) {
-			$html .= '<tr>';
+			$html .= '<tr'.(!empty($table_params['tr_func']) ? ' '.$table_params['tr_func']($row, $table_params, $this, $CI).' ' : '').'>';
 			foreach ((array)$this->table_data as $item) {
 				if (!isset($row[$item['name']])) {
 					continue;
