@@ -512,7 +512,7 @@ class Shop_controller extends CI_Controller {
 			$this->email->subject(lang('orders_success_message'));
 			$this->email->message($this->load->view('email/create_order', $email_info ,true));
 
-			//			$this->email->send();
+			$this->email->send();
 			return $order_id;
 		}
 	}
