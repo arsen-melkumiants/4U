@@ -9,9 +9,12 @@ class Admin_product_model extends CI_Model {
 
 	function get_all_products($status = false) {
 		if ($status !== false) {
-			$this->db->where('status', $status);
+			if ($status == 0) {
+				$this->db->join('shop_product_media_files as mf', 'mf.product_id = p.id');
+			}
+			$this->db->where('p.status', $status);
 		} else {
-			$this->db->where('status <', 3);
+			$this->db->where('p.status <', 3);
 		}
 		return $this->db
 			->select('p.*, u.username')

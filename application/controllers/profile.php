@@ -448,7 +448,7 @@ class Profile extends CI_Controller {
 		if (empty($product_info)) {
 			redirect('profile/products', 'refresh');
 		}
-		$folder = $product_info['author_id'];
+		$folder = $product_info['id'];
 
 		if ($type == 'image') {
 			$upload_path_url         = base_url('uploads/gallery/'.$folder).'/';
@@ -516,7 +516,7 @@ class Profile extends CI_Controller {
 
 		} else {
 			$data = $this->upload->data();
-			$data['folder'] = $this->data['user_info']['id'].'/';
+			$data['folder'] = $folder.'/';
 			if ($type == 'image') {
 				$file_id = $this->shop_model->add_product_image($id, $data);
 				$this->load->library('image_lib');
