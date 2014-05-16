@@ -809,7 +809,15 @@ class Profile extends CI_Controller {
 				'title' => lang('price'),
 				'width' => '30%',
 				'func'  => function($row, $params) {
-					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
+					$color = '';
+					if ($row['amount'] < 0) {
+						$color = 'text-danger';
+					} elseif ($row['type_name'] == 'fill_up') {
+						$color = 'text-warning';
+					} elseif ($row['type_name'] == 'income_product') {
+						$color = 'text-success';
+					}
+					return '<div class="price '.$color.'"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
 				}
 		))
 			->date('date', array(

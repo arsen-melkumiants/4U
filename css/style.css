@@ -156,7 +156,7 @@ ul {padding-left: 0;}
 }
 .custom_block .item img {max-width: 100%;min-height: 100%;}
 .custom_block .item .orange_btn {margin-right: -3px;float: right;}
-.custom_block .price {float: left;color: #42403f;font-size: 16px;font-family: Verdana, Geneva, sans-serif;margin: 10px 0;}
+.custom_block .price {float: left;/*color: #42403f;*/font-size: 16px;font-family: Verdana, Geneva, sans-serif;margin: 10px 0;}
 
 .custom_block .horizontal.item {float: none;width: auto;text-align: left;margin: 10px;}
 .custom_block .horizontal.item .image {float: left;width: 27%;margin: 0;height: 140px;}
