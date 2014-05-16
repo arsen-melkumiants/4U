@@ -3,7 +3,10 @@
 	<script src="/dist/js/jquery-1.10.2.min.js"></script>
 	<script src="/dist/js/bootstrap.min.js"></script>
 	<script src="/dist/js/jquery.nestable.js"></script>
-	<link type="text/css" rel="stylesheet" href="/dist/css/datetimepicker.css" />
+	<script src="/dist/js/moment.min.js"></script>
+	<script src="/dist/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="/dist/js/bootstrap-datetimepicker.ru.js"></script>
+	<link type="text/css" rel="stylesheet" href="/dist/css/bootstrap-datetimepicker.min.css" />
 	<?php echo after_load('css');?>
 	<?php echo after_load('js');?>
 

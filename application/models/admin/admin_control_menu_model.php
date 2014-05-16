@@ -50,8 +50,11 @@ class Admin_control_menu_model extends CI_Model
 					'manage_history/withdrawing'         => 'Снятия',
 					'manage_history/facilities'          => 'Услуги',
 				),
-				'extra'                                  => 'Дополнительно',
-				'developers'                             => 'О разработчиках',
+				'Статистика'							 => array(
+					'manage_statistic'                   => 'Общая статистика',
+					'manage_statistic/paid_products'     => 'Статистика по продажам',
+					'manage_statistic/user_incomes'      => 'Статистика по выплатам',
+				),
 			),
 		);
 

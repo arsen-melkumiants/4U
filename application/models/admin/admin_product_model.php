@@ -60,4 +60,66 @@ class Admin_product_model extends CI_Model {
 			->order_by('op.id', 'desc')
 			->get();
 	}
+
+	function set_period_statistic($period = 'all') {
+		if ($period == 'daily') {
+			$day = strtotime('today UTC');	
+			$this->db->where('o.paid_date >', $day);
+		} elseif (is_array($period)) {
+			$this->db->where('o.paid_date >', $period['from']);
+			$this->db->where('o.paid_date <', $period['to']);
+		}
+	}
+
+	function get_paid_product_amount($period = 'all') {
+		$this->set_period_statistic($period);
+		$result = $this->db
+			->select('SUM(op.qty) as qty')
+			->from('shop_order_products as op')
+			->join('shop_orders as o', 'op.order_id = o.id')
+			->where('o.status = 1')
+			->get()
+			->row_array();
+		return $result['qty'] ?: 0;
+	}
+
+	function get_total_income_amount($period = 'all') {
+		$this->set_period_statistic($period);
+		$result = $this->db
+			->select('op.*')
+			->from('shop_order_products as op')
+			->join('shop_orders as o', 'op.order_id = o.id')
+			->where('o.status = 1')
+			->get()
+			->result_array();
+		if (empty($result)) {
+			return 0;
+		}
+
+		$total = 0;
+		foreach ($result as $item) {
+			$total += $this->shop_model->product_commission($item) * $item['qty']; 
+		}
+		return ($total ?: 0).' $';
+	}
+
+	function get_sellers_income_amount($period = 'all') {
+		$this->set_period_statistic($period);
+		$result = $this->db
+			->select('op.*')
+			->from('shop_order_products as op')
+			->join('shop_orders as o', 'op.order_id = o.id')
+			->where('o.status = 1')
+			->get()
+			->result_array();
+		if (empty($result)) {
+			return 0;
+		}
+
+		$total = 0;
+		foreach ($result as $item) {
+			$total += ($item['price'] - $this->shop_model->product_commission($item)) * $item['qty']; 
+		}
+		return ($total ?: 0).' $';
+	}
 }

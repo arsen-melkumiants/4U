@@ -541,7 +541,7 @@ class Shop_model extends CI_Model {
 
 		$this->db->update_batch('shop_order_products', $order_products_update, 'id');
 		$this->db->update_batch('shop_products', $update_array, 'id');
-		$this->db->where('id', $id)->update('shop_orders', array('status' => 1));
+		$this->db->where('id', $id)->update('shop_orders', array('status' => 1, 'paid_date' => time()));
 
 		foreach ($user_profit as $item) {
 			$this->shop_model->log_payment($item['user_id'], 'income_product', $item['product_id'], $item['amount']);
@@ -609,7 +609,7 @@ class Shop_model extends CI_Model {
 		}
 
 		$this->db->update_batch('shop_products', $update_array, 'id');
-		$this->db->where('id', $id)->update('shop_orders', array('status' => 0));
+		$this->db->where('id', $id)->update('shop_orders', array('status' => 0, 'paid_date' => 0));
 
 		foreach ($user_profit as $item) {
 			$this->db->where(array(
