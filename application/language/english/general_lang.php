@@ -175,5 +175,5 @@ $lang['mail_product_moderation']					 = 'Product passed moderation';
 $lang['mail_product_no_moderation']					 = 'Product not passed moderation';
 $lang['mail_product_purchased']						 = 'Product purchased';
 $lang['mail_services_mark_product']					 = 'Payment services "Mark product"';
-$lang['mail_services_lift_up_product']					 = 'Payment services "Lift up product"';
+$lang['mail_services_lift_up_product']				 = 'Payment services "Lift up product"';
 $lang['mail_services_vip_product']					 = 'Payment services "Vip product"';
