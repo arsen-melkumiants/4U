@@ -157,6 +157,14 @@ class Manage_product extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
 		} else {
+			if (isset($_POST['status']) && $_POST['status'] != $product_info['status']) {
+				if ($_POST['status'] == 1) {
+					$this->send_mail($this->data['user_info']['email'], 'mail_product_moderation', 'product_moderated', $product_info);	
+				}
+				elseif ($_POST['status'] == 2) {
+					$this->send_mail($this->data['user_info']['email'], 'mail_product_no_moderation', 'product_no_moderated', $product_info);
+				}
+			}
 			admin_method('edit', $this->DB_TABLE, array('id' => $id));
 		}
 	}

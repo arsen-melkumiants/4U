@@ -16,7 +16,7 @@
 
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'en') { ?>
 		<h4><?php echo lang('mail_product_moderation');?></h4>
-		<p>Congratulations! Your product (№<?php echo $order_id?>) was moderated and was successfully published.</p>
+		<p>Congratulations! Your product (№<?php echo $id?>) was moderated and was successfully published.</p>
 		<p>You can see the product following the link <?php product_url($id, $name);?></p>
 		<br />
 		<p>Sincerely, administration of this site <a href="<?php echo base_url()?>"><?php echo SITE_NAME?></a></p>
