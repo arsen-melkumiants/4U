@@ -38,14 +38,14 @@
 									if (strpos(current_url(), '/'.$current.'/') !== false) {
 										$link = str_replace('/'.$current.'/', '/'.$abbr.'/', current_url());
 									} else {
-										$link = base_url($abbr);
+										$link = base_url($abbr != 'en' ? $abbr : '');
 									}
 								?>
 									<li><a href="<?php echo $link?>"><?php echo $lang ?></a></li>
 								<?php }?>
 							</ul>
 						</div>
-						<a href="/" class="logo"></a>
+						<a href="<?php echo $current == 'en' ? '/' : '/'.$current?>" class="logo"></a>
 					</div>
 					<div class="col-md-9">
 						<div class="menu">

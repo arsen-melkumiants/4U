@@ -81,6 +81,10 @@ class MY_Lang extends CI_Lang {
 
 			/* set the language abbreviation */
 			$lang_abbr = $uri_abbr;
+			if ($URI->uri_string == '/') {
+				$lang_abbr = $config['lang_abbr'];
+				$URI->uri_string = '/'.$lang_abbr;
+			}
 		}
 
 		/* check validity against config array */
@@ -124,10 +128,10 @@ class MY_Lang extends CI_Lang {
 				}
 
 				/* redirect */
-				//if (($index_page == 'en' && $URI->uri_string != '/') || $index_page != 'en') {
+				if ($URI->uri_string != '/') {
 					header('Location: '.$config['base_url'].$index_page.$URI->uri_string);
 					exit;
-				//}
+				}
 			}
 
 			/* set the language_abbreviation cookie */                
