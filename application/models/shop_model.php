@@ -452,7 +452,7 @@ class Shop_model extends CI_Model {
 			$this->send_mail($this->data['user_info']['email'], 'mail_account_reffiled', 'account_reffiled', $payment_info);
 		}
 		elseif ($type_name == 'lift_up') {
-			$this->send_mail($this->data['user_info']['email'], 'mail_services_lift_up_product', 'services_lift_up_product', $payment_info);
+			$this->send_mail($this->data['user_info']['email'], 'mail_services_lift_up_product', 'services_lift_up_ product', $payment_info);
 		}
 		elseif ($type_name == 'mark') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_services_mark_product', 'services_mark_product', $payment_info);
