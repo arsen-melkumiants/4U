@@ -158,8 +158,6 @@ class Manage_product extends CI_Controller {
 			load_admin_views();
 		} else {
 			if (isset($_POST['status']) && $_POST['status'] != $product_info['status']) {
-				$this->config->item('language')	= 'english';
-				$this->config->item('lang_abbr') = 'en';	
 				if ($_POST['status'] == 1) {
 					$this->shop_model->send_mail($product_info['email'], 'mail_product_moderation', 'product_moderated', $product_info);	
 				}
