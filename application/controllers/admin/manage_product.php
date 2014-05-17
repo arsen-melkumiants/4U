@@ -151,7 +151,7 @@ class Manage_product extends CI_Controller {
 			custom_404();
 		}
 		set_header_info($product_info);
-
+		$this->load->model('shop_model');
 		$this->data['center_block'] = $this->edit_form($product_info);
 
 		if ($this->form_validation->run() == FALSE) {
@@ -159,10 +159,10 @@ class Manage_product extends CI_Controller {
 		} else {
 			if (isset($_POST['status']) && $_POST['status'] != $product_info['status']) {
 				if ($_POST['status'] == 1) {
-					$this->send_mail($this->data['user_info']['email'], 'mail_product_moderation', 'product_moderated', $product_info);	
+					$this->shop_model->send_mail($this->data['user_info']['email'], 'mail_product_moderation', 'product_moderated', $product_info);	
 				}
 				elseif ($_POST['status'] == 2) {
-					$this->send_mail($this->data['user_info']['email'], 'mail_product_no_moderation', 'product_no_moderated', $product_info);
+					$this->shop_model->send_mail($this->data['user_info']['email'], 'mail_product_no_moderation', 'product_no_moderated', $product_info);
 				}
 			}
 			admin_method('edit', $this->DB_TABLE, array('id' => $id));
