@@ -511,11 +511,15 @@ class Profile extends CI_Controller {
 						'error'        => null,
 						'sold'         => !empty($item['status'])
 					);
+					$last_order = $item['order'];
 				}
 			}
 
 		} else {
 			$data = $this->upload->data();
+			if (isset($_POST['order'])) {
+				$data['order'] = intval($_POST['order']);
+			}
 			$data['folder'] = $folder.'/';
 			if ($type == 'image') {
 				$file_id = $this->shop_model->add_product_image($id, $data);
@@ -546,11 +550,14 @@ class Profile extends CI_Controller {
 			);
 		}
 
-		if ($this->input->is_ajax_request()) {
-			$this->output
-				->set_content_type('application/json')
-				->set_output(json_encode(array('files' => $files)));
-		}	
+		$result_array['files'] = $files;
+		if (!empty($last_order)) {
+			$result_array['order'] = $last_order;
+		}
+		$result_array['files'] = $files;
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result_array));
 	}
 
 	public function delete_file($id = false, $type = 'file') {

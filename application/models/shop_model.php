@@ -362,6 +362,8 @@ class Shop_model extends CI_Model {
 			->where(array(
 				'product_id' => $id,
 			))
+			->order_by('order', 'asc')
+			->order_by('id', 'asc')
 			->get('shop_product_media_files')
 			->result_array();
 	}
@@ -373,6 +375,9 @@ class Shop_model extends CI_Model {
 		);
 		if (isset($data['folder'])) {
 			$insert_array['folder'] = $data['folder'];
+		}
+		if (isset($data['order'])) {
+			$insert_array['order'] = $data['order'];
 		}
 		$this->db->insert('shop_product_media_files', $insert_array);
 		$file_id = $this->db->insert_id();
