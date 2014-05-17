@@ -1,9 +1,9 @@
 <html>
 	<body>
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'ru') {?>
-		<h4>Товар прошел модерацию</h4>
-		<p>Поздравляем! Ваш товар (номер №<?php echo $id?>) прошел модерацию и был успешно опубликован.</p>
-		<p>Посмотреть товар Вы можете пройдя по ссылке <?php echo product_url($id, $name);?></p>
+		<h4>Товар не прошел модерацию</h4>
+		<p>К сожалению Ваш товар (номер №<?php echo $id?>) не прошел модерацию.</p>
+		<p>Узнать причину ошибки или дополнительную информацию Вы можете обратившись к администратору: <?php echo $email;?>.</p>
 		<?php if($auto_reg){?>
 		<br />
 		<p>Вы не зарегистрированы в системе. Не стоит беспокоиться, <font color="red">регистрация продёт автоматически</font>, а Вашим паролем будет "<font color="red"><?php echo $email?></font>"</p>
@@ -20,9 +20,9 @@
 
 
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'en') { ?>
-		<h4>This product passed moderation</h4>
-		<p>Congratulations! Your product (№<?php echo $order_id?>) was moderated and was successfully published.</p>
-		<p>You can view the product following the link <?php product_url($id, $name);?></p>
+		<h4>This product not passed moderation</h4>
+		<p>Unfortunately your product (№<?php echo $order_id?>) not passed moderation.</p>
+		<p>Contact the administrator for more information: <?php echo $email;?>.</p>
 		<?php if($auto_reg){?>
 		<br />
 		<p>You are not registered in the system. Do not worry, <font color="red"> registration threaded automatically </font>, and your password will be "<font color="red"> <?php echo $email?></font>"</p>
