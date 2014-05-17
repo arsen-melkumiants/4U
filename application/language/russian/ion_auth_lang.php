@@ -47,7 +47,19 @@ $lang['update_unsuccessful']                 = 'Невозможно обнов�
 $lang['delete_successful']                   = 'Учетная запись удалена';
 $lang['delete_unsuccessful']                 = 'Невозможно удалить учетную запись';
 
-// Email Subjects - TODO Please Translate
-$lang['email_forgotten_password_subject']    = 'Проверка забытого пароля';
-$lang['email_new_password_subject']          = 'Новый пароль';
+// Activation Email
 $lang['email_activation_subject']            = 'Активация учетной записи';
+$lang['email_activate_heading']              = 'Активация аккаунт для %s';
+$lang['email_activate_subheading']           = 'Пожалуйста, нажмите на эту ссылку, чтобы %s.';
+$lang['email_activate_link']                 = 'Активировать аккаунт';
+
+// Forgot Password Email
+$lang['email_forgotten_password_subject']    = 'Забыли пароль';
+$lang['email_forgot_password_heading']       = 'Сбросить пароль для %s';
+$lang['email_forgot_password_subheading']    = 'Нажмите пожалуйста на ссылке %s.';
+$lang['email_forgot_password_link']          = 'Сбросить пароль';
+
+// New Password Email
+$lang['email_new_password_subject']          = 'Новый пароль';
+$lang['email_new_password_heading']          = 'Новый пароль для %s';
+$lang['email_new_password_subheading']       = 'Ваш пароль был сброшен на: %s';
