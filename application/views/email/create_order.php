@@ -25,7 +25,7 @@
 		<p>You can see order status in your personal account</p>
 		<?php if($auto_reg){?>
 		<br />
-		<p>You are not registered in the system. Do not worry, <font color="red"> registration threaded automatically </font>, and your password will be "<font color="red"> <?php echo $ email?></font>"</p>
+		<p>You are not registered in the system. Do not worry, <font color="red"> registration threaded automatically </font>, and your password will be "<font color="red"> <?php echo $email?></font>"</p>
 		<p>After the first login <font color="red">for security reasons we recommend you change your password</font></p>
 		<?php }?>
 		<br />
