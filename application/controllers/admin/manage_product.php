@@ -159,10 +159,10 @@ class Manage_product extends CI_Controller {
 		} else {
 			if (isset($_POST['status']) && $_POST['status'] != $product_info['status']) {
 				if ($_POST['status'] == 1) {
-					$this->shop_model->send_mail('turkira@yandex.ru', 'mail_product_moderation', 'product_moderated', $product_info);	
+					$this->shop_model->send_mail($product_info['email'], 'mail_product_moderation', 'product_moderated', $product_info);	
 				}
 				elseif ($_POST['status'] == 2) {
-					$this->shop_model->send_mail('turkira@yandex.ru', 'mail_product_no_moderation', 'product_no_moderated', $product_info);
+					$this->shop_model->send_mail($product_info['email'], 'mail_product_no_moderation', 'product_no_moderated', $product_info);
 				}
 			}
 			admin_method('edit', $this->DB_TABLE, array('id' => $id));
