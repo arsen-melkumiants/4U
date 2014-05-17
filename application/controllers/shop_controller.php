@@ -502,17 +502,9 @@ class Shop_controller extends CI_Controller {
 				'email'     => $user_data['order_info']['email'],
 			);
 			$this->cart->destroy();
+			
+			$this->shop_model->send_mail($info['email'], 'orders_success_message', 'create_order', $email_info);
 
-			$this->load->library('email');
-
-			$this->email->from(SITE_EMAIL, SITE_NAME);
-			$this->email->to($info['email']); 
-			$this->email->cc(SITE_EMAIL); 
-
-			$this->email->subject(lang('orders_success_message'));
-			$this->email->message($this->load->view('email/create_order', $email_info ,true));
-
-			$this->email->send();
 			return $order_id;
 		}
 	}

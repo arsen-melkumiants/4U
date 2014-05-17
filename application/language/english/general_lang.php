@@ -168,3 +168,12 @@ $lang['vip_lots']                                    = 'VIP lots';
 $lang['strongly_recommended']                        = 'Strongly recommended';
 $lang['best_sales']                                  = 'Best sales';
 $lang['new_products']                                = 'New products';
+
+
+$lang['mail_account_reffiled']					 	 = 'Account has been reffiled';
+$lang['mail_product_moderation']					 = 'Product passed moderation';
+$lang['mail_product_no_moderation']					 = 'Product not passed moderation';
+$lang['mail_product_purchased']						 = 'Product purchased';
+$lang['mail_services_selects_product']				 = 'Payment services "Select product"';
+$lang['mail_services_go_up_product']				 = 'Payment services "Go to up product"';
+$lang['mail_services_vip_product']					 = 'Payment services "Vip product"';

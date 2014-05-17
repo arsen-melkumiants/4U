@@ -438,18 +438,32 @@ class Shop_model extends CI_Model {
 		if (empty($user_id) || empty($type_name) || empty($amount) || empty($currency)) {
 			return false;
 		}
-
-		$this->db->insert('shop_user_payment_logs', array(
+		
+		$payment_info = array(
 			'user_id'   => $user_id,
 			'type_name' => $type_name,
 			'type_id'   => $type_id,
 			'amount'    => $amount,
 			'currency'  => $currency,
 			'date'      => time(),
-		));
+		);
+		$this->db->insert('shop_user_payment_logs', $payment_info);
+		if ($type_name == 'fill_up') {
+			$this->send_mail($this->data['user_info']['email'], 'mail_account_reffiled', 'account_reffiled', $payment_info);
+		}
 		return $this->db->insert_id();
 	}
 
+	function send_mail($email, $subject, $mail_view, $email_info){
+		$this->load->library('email');
+		$this->email->from(SITE_EMAIL, SITE_NAME);
+		$this->email->to($email); 
+		$this->email->cc(SITE_EMAIL); 
+		$this->email->subject(lang($subject));
+		$this->email->message($this->load->view('email/'.$mail_view, $email_info ,true));
+		$this->email->send();
+	}
+	
 	function get_user_balance($user_id = false) {
 		if (empty($user_id)) {
 			$user_id = $this->data['user_info']['id'];
