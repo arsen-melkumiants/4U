@@ -449,6 +449,9 @@ class Shop_model extends CI_Model {
 		);
 		$this->db->insert('shop_user_payment_logs', $payment_info);
 		if ($type_name == 'fill_up') {
+			$this->send_mail($this->data['user_info']['email'], 'mail_account_reffiled', 'account_reffiled', $payment_info);
+		}
+		if ($type_name == 'lift_up') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_services_lift_up_product', 'services_lift_up_product', $payment_info);
 		}
 		elseif ($type_name == 'mark') {
@@ -457,6 +460,10 @@ class Shop_model extends CI_Model {
 		elseif ($type_name == 'make_vip') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_services_vip_product', 'services_vip_product', $payment_info);
 		}
+		elseif ($type_name == 'income_product') {
+			$this->send_mail($this->data['user_info']['email'], 'mail_product_purchased', 'product_purchased', $payment_info);
+		}
+		
 		
 		return $this->db->insert_id();
 	}

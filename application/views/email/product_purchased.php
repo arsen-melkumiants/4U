@@ -2,7 +2,7 @@
 	<body>
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'ru') {?>
 		<h4><?php echo lang('mail_product_purchased');?></h4>
-		<p>Поздравляем! Ваш товар (номер №<?php echo $id?>) куплен на сумму с учетом комиссии <?php echo $price;?>.</p>
+		<p>Поздравляем! Ваш товар (номер №<?php echo $type_id?>) куплен на сумму с учетом комиссии <?php echo $amount.$currency;?>.</p>
 		<p>Детали Вы можете просмотреть в личном кабинете.</p>
 		<?php if($auto_reg){?>
 		<br />
@@ -21,7 +21,7 @@
 
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'en') { ?>
 		<h4><?php echo lang('mail_product_purchased');?></h4>
-		<p>Congratulations! Your product (№<?php echo $order_id?>) purchased for the sum view of the commission <?php echo $price;?>.</p>
+		<p>Congratulations! Your product (№<?php echo $type_id?>) purchased for the sum view of the commission <?php echo $amount.$currency;?>.</p>
 		<p>You can see details in your personal cabinet</p>
 		<?php if($auto_reg){?>
 		<br />
