@@ -21,7 +21,7 @@
 
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'en') { ?>
 		<h4>Orders received successfully</h4>
-		<p>Ваш заказ №<?php echo $order_id?> принят и будет рассмотрен в ближайшем времени.Your order №<?php echo $order_id?> accepted and will be considered in the near future.</p>
+		<p>Your order №<?php echo $order_id?> accepted and will be considered in the near future.</p>
 		<p>You can see order status in your personal account</p>
 		<?php if($auto_reg){?>
 		<br />
