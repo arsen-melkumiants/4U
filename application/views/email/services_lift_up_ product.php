@@ -1,7 +1,7 @@
 <html>
 	<body>
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'ru') {?>
-		<h4><?php echo lang('mail_services_go_up_product');?></h4>
+		<h4><?php echo lang('mail_services_lift_up_product');?></h4>
 		<p>Оплата услуги "Поднять товар" выполнена успешно.</p>
 		<p>Детали Вы можете просмотреть в личном кабинете.</p>
 		<?php if($auto_reg){?>
@@ -20,8 +20,8 @@
 
 
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'en') { ?>
-		<h4><?php echo lang('mail_services_go_up_product');?></h4>
-		<p>Payment services "Go to up product" completed successfully.</p>
+		<h4><?php echo lang('mail_services_lift_up_product');?></h4>
+		<p>Payment services "Lift up product" completed successfully.</p>
 		<p>You can see details in your personal cabinet</p>
 		<?php if($auto_reg){?>
 		<br />
