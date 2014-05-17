@@ -50,6 +50,7 @@ $lang['product_on_moderate']                         = 'Товар на моде
 $lang['product_rejected']                            = 'Товар не прошел модерацию';
 $lang['product_already_bought']                      = 'Данный товар уже был куплен Вами';
 $lang['product_not_yours']                           = 'Данный товар не принадлежит вам';
+$lang['product_bought']                              = 'Куплен товар';
 
 $lang['my_stats']                                    = 'Статистика';
 

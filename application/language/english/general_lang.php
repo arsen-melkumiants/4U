@@ -49,6 +49,7 @@ $lang['product_on_moderate']                         = 'The product is still bei
 $lang['product_rejected']                            = 'The product hasn\'t been passed moderation';
 $lang['product_already_bought']                      = 'The product has been bought by you';
 $lang['product_not_yours']                           = 'The product is not yours';
+$lang['product_bought']                              = 'Product has been bought';
 
 
 $lang['my_stats']                                    = 'My stats';
