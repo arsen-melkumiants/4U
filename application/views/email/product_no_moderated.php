@@ -20,7 +20,7 @@
 
 
 		<?php if (empty($_COOKIE['user_lang']) || $_COOKIE['user_lang'] == 'en') { ?>
-		<h4>This product not passed moderation</h4>
+		<h4>Product not passed moderation</h4>
 		<p>Unfortunately your product (№<?php echo $order_id?>) not passed moderation.</p>
 		<p>Contact the administrator for more information: <?php echo $email;?>.</p>
 		<?php if($auto_reg){?>
