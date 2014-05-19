@@ -5,7 +5,7 @@ class Manage_category extends CI_Controller {
 	public $MAIN_URL = '';
 
 	public $IS_AJAX = false;
-	
+
 	public $DB_TABLE = 'shop_categories';
 
 	public $PAGE_INFO = array(
@@ -105,6 +105,7 @@ class Manage_category extends CI_Controller {
 		if (empty($category_info)) {
 			custom_404();
 		}
+		$category_info['name'] = $category_info['name_ru'].' ('.$category_info['name_en'].')';
 		set_header_info($category_info);
 
 		if ($this->IS_AJAX) {
@@ -126,7 +127,7 @@ class Manage_category extends CI_Controller {
 			redirect($this->MAIN_URL, 'refresh');
 		}
 	}
-	
+
 	private function edit_form($category_info = false) {
 		$this->load->library('form');
 		return $this->form
@@ -148,12 +149,12 @@ class Manage_category extends CI_Controller {
 			->btn(array('value' => !empty($category_info) ? 'Изменить' : 'Добавить'))
 			->create(array('action' => current_url()));
 	}
-	
+
 	public function active($id = false) {
 		if (empty($id)) {
 			custom_404();
 		}
-		
+
 		$category_info = $this->admin_category_model->get_category_info($id);
 
 		if (empty($category_info)) {

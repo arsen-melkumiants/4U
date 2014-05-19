@@ -844,11 +844,41 @@ class Profile extends CI_Controller {
 		load_views();
 	}
 
-	function fill_up() {
-		$this->data['title'] = $this->data['header'] = lang('finance_fill_up');
+	function fill_up_requests() {
+		$this->data['title'] = $this->data['header'] = lang('finance_fill_up_requests');
+
+		$this->load->library('table');
+		$this->table
+			->text('id', array(
+				'width' => '30%',
+				'func'  => function($row, $params) {
+					return '№'.$row['id'];
+				}
+		))
+			->text('amount', array(
+				'title' => lang('price'),
+				'func'  => function($row, $params) {
+					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
+				}
+		))
+			->date('add_date', array(
+				'title' => lang('date'),
+			))
+			->btn(array(
+				'link'  => 'profile/delete_withdrawal_request/%d',
+				'class' => 'delete',
+				'title' => lang('delete'),
+				'modal' => true,
+			))
+			;
+
+		$this->data['center_block'] = $this->table
+			->create(function($CI) {
+				return $CI->shop_model->get_payment_requests('fill_up');
+			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
 		$this->load->library('form');
-		$this->data['center_block'] = $this->form
+		$this->data['center_block'] .= $this->form
 			->text('amount', array(
 				'valid_rules' => 'required|trim|xss_clean|price',
 				'symbol'      => '$',
@@ -859,9 +889,16 @@ class Profile extends CI_Controller {
 			->create(array('action' => current_url(), 'error_inline' => 'true'));
 
 		if ($this->form_validation->run() != FALSE) {
-			$this->shop_model->log_payment($this->data['user_info']['id'], 'fill_up', 0, $this->input->post('amount'));
-			$this->session->set_flashdata('success', lang('finance_fill_up_message_success'));
-			redirect('profile/finance', 'refresh');
+			$this->db->insert('shop_user_payment_requests', array(
+				'type'     => 'fill_up',
+				'name'     => '',
+				'amount'   => $this->input->post('amount'),
+				'currency' => 1,
+				'user_id'  => $this->data['user_info']['id'],
+				'add_date' => time(),
+			));
+			$this->session->set_flashdata('success', lang('finance_add_fill_up_requests_success'));
+			redirect('profile/fill_up_requests', 'refresh');
 
 		}
 
@@ -873,8 +910,7 @@ class Profile extends CI_Controller {
 
 		$this->load->library('table');
 		$this->table
-			->text('amount', array(
-				'title' => lang('price'),
+			->text('id', array(
 				'func'  => function($row, $params) {
 					return '№'.$row['id'];
 				}
@@ -893,7 +929,7 @@ class Profile extends CI_Controller {
 					return '<div class="price">'.lang('commission').': <i class="c_icon_label"></i>-'.floatval($row['commission']).' '.$row['symbol'].'</div>';
 				}
 		))
-			->date('date', array(
+			->date('add_date', array(
 				'title' => lang('date'),
 			))
 			->btn(array(
@@ -910,7 +946,7 @@ class Profile extends CI_Controller {
 		}
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
-				return $CI->shop_model->get_withdrawal_requests();
+				return $CI->shop_model->get_payment_requests('withdraw');
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
 
@@ -953,7 +989,8 @@ class Profile extends CI_Controller {
 				redirect('profile/withdrawal_requests', 'refresh');
 			}
 
-			$this->db->insert('shop_user_withdrawal_requests', array(
+			$this->db->insert('shop_user_payment_requests', array(
+				'type'       => 'withdraw',
 				'name'       => $this->input->post('name'),
 				'number'     => $this->input->post('number'),
 				'amount'     => $this->input->post('amount'),

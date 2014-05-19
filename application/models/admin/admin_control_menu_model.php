@@ -37,7 +37,8 @@ class Admin_control_menu_model extends CI_Model
 					'manage_product/orders'              => 'Список заказов',
 					'3'                                  => '',
 					'manage_product/withdrawal_requests' => 'Заявки на вывод денег',
-					'manage_currency'                    => 'Список валют',
+					'manage_product/fill_up_requests'    => 'Заявки на пополнение',
+					//'manage_currency'                    => 'Список валют',
 				),
 				'Пользователи'                           => array(
 					'manage_user'                        => 'Список всех пользователей',

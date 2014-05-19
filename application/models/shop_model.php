@@ -691,18 +691,22 @@ class Shop_model extends CI_Model {
 		return false;
 	}
 
-	function get_withdrawal_requests($user_id = false) {
+	function get_payment_requests($type = false, $user_id = false) {
 		if (empty($user_id)) {
 			$user_id = $this->data['user_info']['id'];
 		}
 
+		if (!empty($type)) {
+			$this->db->where('r.type', $type);
+		}
+
 		return $this->db
-			->select('w.*, c.symbol, c.code')
-			->from('shop_user_withdrawal_requests as w')
-			->join('shop_currencies as c', 'w.currency = c.id')
+			->select('r.*, c.symbol, c.code')
+			->from('shop_user_payment_requests as r')
+			->join('shop_currencies as c', 'r.currency = c.id')
 			->where(array(
-				'w.user_id' => $user_id,
-				'w.status'  => 0
+				'r.user_id' => $user_id,
+				'r.status'  => 0
 			))
 			->get();
 	}

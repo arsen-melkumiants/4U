@@ -116,9 +116,10 @@ $lang['finance_add_account_message_success']         = 'Payment account has been
 $lang['finance_delete_account']                      = 'Delete';
 $lang['finance_delete_account_message_success']      = 'Payment account has been successfully deleted';
 $lang['finance_withdrawal_requests']                 = 'Requests for withdrawal of money';
-$lang['finance_add_withdrawal_requests_success']     = 'Request has been successfully sent';
-$lang['finance_delete_withdrawal_request']           = 'Delete request';
-$lang['finance_delete_withdrawal_request_success']   = 'Request has been successfully deleted';
+$lang['finance_fill_up_requests']                    = 'Requests for filling up of money';
+$lang['finance_add_requests_success']                = 'Request has been successfully sent';
+$lang['finance_delete_request']                      = 'Delete request';
+$lang['finance_delete_request_success']              = 'Request has been successfully deleted';
 $lang['finance_withdrawal_commission_message']       = 'Commission for withdrawal of money';
 
 $lang['facilities_disabled']                         = 'The service is disabled';

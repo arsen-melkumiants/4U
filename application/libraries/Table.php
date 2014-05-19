@@ -139,7 +139,8 @@ class Table {
 		}
 
 		if (empty($rows_data) || is_string($rows_data)) {
-			return $html .= '<div class="alert alert-info">Записи отсутствуют</div>';
+			//return $html .= '<div class="alert alert-info">Записи отсутствуют</div>';
+			return $html;
 		}
 
 		$table_params['class'] = !empty($table_params['class']) ? $table_params['class'] : 'table table-bordered table-hover';

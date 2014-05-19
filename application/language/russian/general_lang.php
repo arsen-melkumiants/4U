@@ -117,9 +117,10 @@ $lang['finance_add_account_message_success']         = 'Платежный сч�
 $lang['finance_delete_account']                      = 'Удаление';
 $lang['finance_delete_account_message_success']      = 'Удаление платежного счета успешно выполнено';
 $lang['finance_withdrawal_requests']                 = 'Запросы на вывод денег';
-$lang['finance_add_withdrawal_requests_success']     = 'Запрос успешно отправлен';
-$lang['finance_delete_withdrawal_request']           = 'Удаление запроса';
-$lang['finance_delete_withdrawal_request_success']   = 'Удаление запроса успешно выполнено';
+$lang['finance_fill_up_requests']                    = 'Запросы на пополнение счета';
+$lang['finance_add_requests_success']                = 'Запрос успешно отправлен';
+$lang['finance_delete_request']                      = 'Удаление запроса';
+$lang['finance_delete_request_success']              = 'Удаление запроса успешно выполнено';
 $lang['finance_withdrawal_commission_message']       = 'Комисcия за снятие денег';
 
 $lang['facilities_disabled']                         = 'Услуга отключена';
