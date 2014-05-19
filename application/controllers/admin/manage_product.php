@@ -194,6 +194,12 @@ class Manage_product extends CI_Controller {
 				'symbol'	  => '$',
 				'label'       => 'Цена',
 			))
+			->radio('unlimited', array(
+				'value'       => $product_info['recommended'] ?: false,
+				'valid_rules' => 'trim|xss_clean|is_natural',
+				'label'       => 'Бесконечный',
+				'inputs'      => array('Нет', 'Да'),
+			))
 			->text('amount', array(
 				'value'       => $product_info['amount'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean|is_natural_no_zero',

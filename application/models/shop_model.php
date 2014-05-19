@@ -448,22 +448,18 @@ class Shop_model extends CI_Model {
 			'date'      => time(),
 		);
 		$this->db->insert('shop_user_payment_logs', $payment_info);
+
 		if ($type_name == 'fill_up') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_account_reffiled', 'account_reffiled', $payment_info);
-		}
-		elseif ($type_name == 'lift_up') {
+		} elseif ($type_name == 'lift_up') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_services_lift_up_product', 'services_lift_up_product', $payment_info);
-		}
-		elseif ($type_name == 'mark') {
+		} elseif ($type_name == 'mark') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_services_mark_product', 'services_mark_product', $payment_info);
-		}
-		elseif ($type_name == 'make_vip') {
+		} elseif ($type_name == 'make_vip') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_services_vip_product', 'services_vip_product', $payment_info);
-		}
-		elseif ($type_name == 'income_product') {
+		} elseif ($type_name == 'income_product') {
 			$this->send_mail($this->data['user_info']['email'], 'mail_product_purchased', 'product_purchased', $payment_info);
 		}
-		
 		
 		return $this->db->insert_id();
 	}
@@ -508,7 +504,7 @@ class Shop_model extends CI_Model {
 		}
 
 		$order_products = $this->db
-			->select('op.*, p.amount, p.author_id, p.commission, p.type_commission')
+			->select('op.*, p.amount, p.author_id, p.commission, p.type_commission, p.unlimited')
 			->from('shop_order_products as op')
 			->join('shop_products as p', 'p.id = op.product_id')
 			->where('op.order_id', $id)
@@ -522,10 +518,12 @@ class Shop_model extends CI_Model {
 
 		foreach ($order_products as $item) {
 
-			$update_array[$item['product_id']] = array(
-				'id'     => $item['product_id'],
-				'amount' => $item['amount'] + $item['qty'],
-			);
+			if (!$item['unlimited']) {
+				$update_array[$item['product_id']] = array(
+					'id'     => $item['product_id'],
+					'amount' => $item['amount'] - $item['qty'],
+				);
+			}
 
 			$user_profit[] = array(
 				'user_id'    => $item['author_id'],
@@ -573,7 +571,9 @@ class Shop_model extends CI_Model {
 		}
 
 		$this->db->update_batch('shop_order_products', $order_products_update, 'id');
-		$this->db->update_batch('shop_products', $update_array, 'id');
+		if (!empty($update_array)) {
+			$this->db->update_batch('shop_products', $update_array, 'id');
+		}
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 1, 'paid_date' => time()));
 
 		foreach ($user_profit as $item) {
@@ -594,7 +594,7 @@ class Shop_model extends CI_Model {
 		}
 
 		$order_products = $this->db
-			->select('op.*, p.amount, p.author_id')
+			->select('op.*, p.amount, p.author_id, p.unlimited')
 			->from('shop_order_products as op')
 			->join('shop_products as p', 'p.id = op.product_id')
 			->where('op.order_id', $id)
@@ -607,10 +607,12 @@ class Shop_model extends CI_Model {
 		}
 
 		foreach ($order_products as $item) {
-			$update_array[$item['product_id']] = array(
-				'id'     => $item['product_id'],
-				'amount' => $item['amount'] + $item['qty'],
-			);
+			if (!$item['unlimited']) {
+				$update_array[$item['product_id']] = array(
+					'id'     => $item['product_id'],
+					'amount' => $item['amount'] + $item['qty'],
+				);
+			}
 
 			$user_profit[] = array(
 				'user_id'    => $item['author_id'],
@@ -641,7 +643,9 @@ class Shop_model extends CI_Model {
 			$this->db->update_batch('shop_order_products', $order_products_update, 'id');
 		}
 
-		$this->db->update_batch('shop_products', $update_array, 'id');
+		if (!empty($update_array)) {
+			$this->db->update_batch('shop_products', $update_array, 'id');
+		}
 		$this->db->where('id', $id)->update('shop_orders', array('status' => 0, 'paid_date' => 0));
 
 		foreach ($user_profit as $item) {

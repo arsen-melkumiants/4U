@@ -21,6 +21,7 @@ $lang['product_name']                                = 'Название';
 $lang['product_price']                               = 'Цена';
 $lang['product_type']                                = 'Тип';
 $lang['product_type_descr']                          = 'Тип продукта (С типом "лицензия" количество продукта автоматически зависит от количества загружаемых медиа-файлов)';
+$lang['product_unlimited_descr']                     = 'Неограниченное количество';
 $lang['product_amount']                              = 'Количество';
 $lang['product_category']                            = 'Категория';
 $lang['product_no_category']                         = 'Без категории';
@@ -164,6 +165,8 @@ $lang['previous']                                    = 'Предыдущая';
 $lang['next']                                        = 'Следующая';
 $lang['last']                                        = 'Последняя';
 $lang['commission']                                  = 'Комиссия';
+$lang['yes']                                         = 'Да';
+$lang['no']                                          = 'Нет';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

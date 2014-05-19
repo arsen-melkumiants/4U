@@ -257,7 +257,8 @@ class Profile extends CI_Controller {
 			);
 
 			if ($product_info['type'] == 'media') {
-				$info['amount'] = $this->input->post('amount');
+				$info['amount']    = $this->input->post('amount');
+				$info['unlimited'] = $this->input->post('unlimited');
 			}
 
 			foreach ($info as $key => $item) {
@@ -285,6 +286,10 @@ class Profile extends CI_Controller {
 			'media'    => lang('product_media_files'),
 			'licenses' => lang('product_licenses'),
 		);
+		$product_unlimited = array(
+			'0' => lang('no'),
+			'1' => lang('yes'),
+		);
 		$product_categories = $this->shop_model->get_product_categories();
 		array_unshift($product_categories, array('id' => '', 'name' => lang('product_no_category')));
 		$this->load->library('form');
@@ -311,7 +316,14 @@ class Profile extends CI_Controller {
 				));
 			if ($product_info['type'] != 'licenses') {
 				$this->form
+					->radio('unlimited', array(
+						'value'       => $product_info['unlimited'],
+						'inputs'      => $product_unlimited,
+						'label'       => lang('product_unlimited_descr'),
+						'valid_rules' => 'required|trim|xss_clean',
+					))
 					->text('amount', array(
+						'group_class' => 'amount_field',
 						'value'       => $product_info['amount'],
 						'valid_rules' => 'required|trim|xss_clean|is_natural',
 						'label'       => lang('product_amount'),
@@ -324,7 +336,13 @@ class Profile extends CI_Controller {
 					'label'       => lang('product_type_descr'),
 					'valid_rules' => 'required|trim|xss_clean',
 				))
+				->radio('unlimited', array(
+					'inputs'      => $product_unlimited,
+					'label'       => lang('product_unlimited_descr'),
+					'valid_rules' => 'required|trim|xss_clean',
+				))
 				->text('amount', array(
+					'group_class' => 'amount_field',
 					'value'       => 0,
 					'valid_rules' => 'required|trim|xss_clean|is_natural',
 					'label'       => lang('product_amount'),

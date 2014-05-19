@@ -21,6 +21,7 @@ $lang['product_name']                                = 'Name';
 $lang['product_price']                               = 'Price';
 $lang['product_type']                                = 'Type';
 $lang['product_type_descr']                          = 'Type of product (license type sets amount of product according amount of files automatically)';
+$lang['product_unlimited_descr']                     = 'Unlimited amount';
 $lang['product_amount']                              = 'Amount';
 $lang['product_category']                            = 'Category';
 $lang['product_no_category']                         = 'No category';
@@ -163,6 +164,8 @@ $lang['previous']                                    = 'Previous';
 $lang['next']                                        = 'Next';
 $lang['last']                                        = 'Last';
 $lang['commission']                                  = 'Commission';
+$lang['yes']                                         = 'Yes';
+$lang['no']                                          = 'No';
 
 
 $lang['vip_lots']                                    = 'VIP lots';
