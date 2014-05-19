@@ -80,6 +80,7 @@ class Manage_category extends CI_Controller {
 		if (empty($category_info)) {
 			custom_404();
 		}
+		$category_info['name'] = $category_info['name_ru'].' ('.$category_info['name_en'].')';
 		set_header_info($category_info);
 
 		if(!empty($_POST)){

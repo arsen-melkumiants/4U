@@ -25,6 +25,10 @@ class Manage_history extends CI_Controller {
 			'header'       => 'Услуги',
 			'header_descr' => 'Оплаты дополнительных услуг',
 		),
+		'delete'           => array(
+			'header'       => 'Удаление платежки №%id',
+			'header_descr' => 'Оплаты дополнительных услуг',
+		),
 	);
 
 	function __construct() {
@@ -69,7 +73,8 @@ class Manage_history extends CI_Controller {
 		))
 			->date('date', array(
 				'title' => lang('date'),
-			));
+			))
+			->delete(array('link' => $this->MAIN_URL.'delete/%d', 'modal' => 1));
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				if (!empty($CI->data['types']) && is_array($CI->data['types'])) {
@@ -80,6 +85,7 @@ class Manage_history extends CI_Controller {
 					->from('shop_user_payment_logs as l')
 					->join('shop_currencies as c', 'l.currency = c.id')
 					->join('users as u', 'l.user_id = u.id')
+					->where('l.status !=', 2)
 					->order_by('l.id', 'desc')
 					->get();
 			});
@@ -97,5 +103,30 @@ class Manage_history extends CI_Controller {
 
 	public function facilities() {
 		$this->index(array('lift_up', 'mark', 'make_vip'));
+	}
+
+	public function delete($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+		$payment_info = $this->db->where('id', $id)->get('shop_user_payment_logs')->row_array();
+		if (empty($payment_info)) {
+			custom_404();
+		}
+
+		set_header_info($payment_info);
+
+		if (isset($_POST['delete'])) {
+			$this->db->where('id', $id)->update('shop_user_payment_logs', array('status' => 2));
+			$this->session->set_flashdata('danger', 'Данные успешно удалены');
+			echo 'refresh';
+		} else {
+			$this->load->library('form');
+			$this->data['center_block'] = $this->form
+				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+				->btn(array('name' => 'delete', 'value' => 'Удалить', 'class' => 'btn-danger'))
+				->create(array('action' => current_url(), 'btn_offset' => 4));
+			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+		}
 	}
 }

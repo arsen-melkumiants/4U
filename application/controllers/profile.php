@@ -975,7 +975,7 @@ class Profile extends CI_Controller {
 
 		if ($this->form_validation->run() != FALSE) {
 			//Requests sum
-			$exist_requests = $this->shop_model->get_withdrawal_requests()->result_array();
+			$exist_requests = $this->shop_model->get_payment_requests('withdraw')->result_array();
 			$request_sum = 0;
 			if (!empty($exist_requests)) {
 				foreach ($exist_requests as $item) {

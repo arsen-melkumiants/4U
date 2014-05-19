@@ -345,7 +345,7 @@ class Manage_product extends CI_Controller {
 		if (empty($product_info)) {
 			redirect($this->MAIN_URL, 'refresh');
 		}
-		$folder = $product_info['author_id'];
+		$folder = $product_info['id'];
 		$this->load->model('shop_model');
 
 		if ($type == 'image') {
@@ -659,7 +659,7 @@ class Manage_product extends CI_Controller {
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
-				->btn(array('name' => 'accept', 'value' => 'Вывести', 'class' => 'btn-success'))
+				->btn(array('name' => 'accept', 'value' => $request_info['type'] == 'withdraw' ? 'Вывести' : 'Пополнить', 'class' => 'btn-success'))
 				->create(array('action' => current_url(), 'btn_offset' => 4));
 			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 		}
