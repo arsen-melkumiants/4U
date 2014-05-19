@@ -552,7 +552,7 @@ class Shop_controller extends CI_Controller {
 		} elseif ($type == 'make_vip') {
 			$date_type = 'vip_date';
 		} else {
-			$data_type = 'sort_date';
+			$date_type = 'sort_date';
 		}
 		$this->db->where('id', $id)->update('shop_products', array($date_type => time()));
 		$this->shop_model->log_payment($this->data['user_info']['id'], $type, $id, -$prices[$type]);

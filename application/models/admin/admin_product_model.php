@@ -25,7 +25,13 @@ class Admin_product_model extends CI_Model {
 	}
 
 	function get_product_info($id) {
-		return $this->db->where(array('id' => $id, 'status <' => 3))->get('shop_products')->row_array();
+		return $this->db
+				->select('p.*, u.email')
+				->from('shop_products as p')
+				->join('users as u', 'p.author_id = u.id')
+				->where(array('p.id' => $id, 'p.status <' => 3))
+				->get()
+				->row_array();
 	}
 
 	function get_product_categories() {
