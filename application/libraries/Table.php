@@ -139,6 +139,7 @@ class Table {
 		}
 
 		if (empty($rows_data) || is_string($rows_data)) {
+			$this->clear();
 			//return $html .= '<div class="alert alert-info">Записи отсутствуют</div>';
 			return $html;
 		}
