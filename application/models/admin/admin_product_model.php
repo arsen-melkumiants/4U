@@ -11,6 +11,7 @@ class Admin_product_model extends CI_Model {
 		if ($status !== false) {
 			if ($status == 0) {
 				$this->db->join('shop_product_media_files as mf', 'mf.product_id = p.id');
+				$this->db->group_by('p.id');
 			}
 			$this->db->where('p.status', $status);
 		} else {
