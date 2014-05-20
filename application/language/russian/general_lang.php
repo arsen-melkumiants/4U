@@ -123,6 +123,8 @@ $lang['finance_add_requests_success']                = 'Запрос успеш�
 $lang['finance_delete_request']                      = 'Удаление запроса';
 $lang['finance_delete_request_success']              = 'Удаление запроса успешно выполнено';
 $lang['finance_withdrawal_commission_message']       = 'Комисcия за снятие денег';
+$lang['finance_send_money']                          = 'Отправьте деньги на e-mail';
+$lang['finance_add_payment_comment']                 = 'Пожалуйста добавьте комментарий к вашей платежке';
 
 $lang['facilities_disabled']                         = 'Услуга отключена';
 $lang['facilities_paid']                             = 'Услуга оплачена';
@@ -175,10 +177,10 @@ $lang['best_sales']                                  = 'Лучшие прода�
 $lang['new_products']                                = 'Новые товары';
 
 
-$lang['mail_account_reffiled']						 = 'Счет пополнен';
-$lang['mail_product_moderation']					 = 'Товар прошел модерацию';
-$lang['mail_product_no_moderation']					 = 'Товар не прошел модерацию';
-$lang['mail_product_purchased']						 = 'Товар куплен';
-$lang['mail_services_mark_product']					 = 'Оплата услуги "Выделить товар"';
-$lang['mail_services_lift_up_product']				 = 'Оплата услуги "Поднять товар"';
-$lang['mail_services_vip_product']					 = 'Оплата услуги "Vip товар"';
+$lang['mail_account_reffiled']                       = 'Счет пополнен';
+$lang['mail_product_moderation']                     = 'Товар прошел модерацию';
+$lang['mail_product_no_moderation']                  = 'Товар не прошел модерацию';
+$lang['mail_product_purchased']                      = 'Товар куплен';
+$lang['mail_services_mark_product']                  = 'Оплата услуги "Выделить товар"';
+$lang['mail_services_lift_up_product']               = 'Оплата услуги "Поднять товар"';
+$lang['mail_services_vip_product']                   = 'Оплата услуги "Vip товар"';

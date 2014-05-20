@@ -10,6 +10,7 @@ class Admin_product_model extends CI_Model {
 	function get_all_products($status = false) {
 		if ($status !== false) {
 			if ($status == 0) {
+				$this->db->where('p.created', '1');
 				$this->db->join('shop_product_media_files as mf', 'mf.product_id = p.id');
 				$this->db->group_by('p.id');
 			}

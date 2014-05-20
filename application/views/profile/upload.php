@@ -148,8 +148,10 @@ window.onload = function() {
 	<a class="btn btn-primary" href="<?php echo site_url('profile/edit_product/'.$id)?>"><?php echo lang('prev_step')?></a>
 	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/product_media_files/'.$id)?>"><?php echo lang('next_step')?></a>
 	<?php } else {?>
-	<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>"><?php echo lang('prev_step')?></a>
-	<a class="btn btn-primary" style="float: right;" href="<?php echo site_url('profile/products/moderate')?>"><?php echo lang('finish')?></a>
+	<form action="<?php echo site_url('profile/finish/'.$id)?>" method="post">
+		<a class="btn btn-primary" href="<?php echo site_url('profile/product_gallery/'.$id)?>"><?php echo lang('prev_step')?></a>
+		<button type="submit" name="finish" class="btn btn-primary" style="float: right;"><?php echo lang('finish')?></button>
+	</form>
 	<?php } ?>
 </div>
 <!-- The template to display files available for upload -->

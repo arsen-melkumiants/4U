@@ -274,11 +274,27 @@ class Profile extends CI_Controller {
 
 			if (isset($info['status']) && !$product_info['is_locked'])	{
 				$this->db->where('id', $id)->update('shop_products', $info);
-				$this->session->set_flashdata('success', lang('product_add_message_success'));
+				if ($product_info['created']) {
+					$this->session->set_flashdata('success', lang('product_add_message_success'));
+				}
 			}
 			redirect(current_url(), 'refresh');
 		}
 
+	}
+
+	public function finish($id = false) {
+		$id = $this->data['id'] = intval($id);
+		$product_info = $this->shop_model->get_product_by_user($id, $this->data['user_info']['id']);
+		if (empty($product_info)) {
+			redirect('profile/products', 'refresh');
+		}
+
+		if (isset($_POST['finish']) && !$product_info['created']) {
+			$this->db->where('id', $id)->update('shop_products', array('created' => 1));
+			$this->session->set_flashdata('success', lang('product_add_message_success'));
+			redirect('profile/products', 'refresh');
+		}
 	}
 
 	private function edit_form($product_info = false) {
@@ -863,6 +879,15 @@ class Profile extends CI_Controller {
 	}
 
 	function fill_up_requests() {
+		$this->data['title'] = $this->data['header'] = lang('finance_fill_up');
+
+		$this->data['center_block'] = lang('finance_send_money').': <b>'.$this->data['user_info']['email'].'</b><br />';
+		$this->data['center_block'] .= lang('finance_add_payment_comment').': <b>add-'.$this->data['user_info']['email'].'</b>';
+
+		load_views();
+	}
+
+/*	function fill_up_requests() {
 		$this->data['title'] = $this->data['header'] = lang('finance_fill_up_requests');
 
 		$this->load->library('table');
@@ -922,7 +947,7 @@ class Profile extends CI_Controller {
 
 		load_views();
 	}
-
+ */
 	function withdrawal_requests() {
 		$this->data['title'] = $this->data['header'] = lang('finance_withdrawal_requests');
 
