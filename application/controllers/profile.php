@@ -881,7 +881,8 @@ class Profile extends CI_Controller {
 	function fill_up_requests() {
 		$this->data['title'] = $this->data['header'] = lang('finance_fill_up');
 
-		$this->data['center_block'] = lang('finance_send_money').': <b>'.$this->data['user_info']['email'].'</b><br />';
+		$this->data['center_block'] = 'Paxum<br />';
+		$this->data['center_block'] .= lang('finance_send_money').': <b>'.$this->data['user_info']['email'].'</b><br />';
 		$this->data['center_block'] .= lang('finance_add_payment_comment').': <b>add-'.$this->data['user_info']['email'].'</b>';
 
 		load_views();
