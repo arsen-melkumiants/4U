@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Menu_model extends CI_Model {
-	
+
 	function __construct() {
 		parent::__construct();
 		$this->load->database();
@@ -74,7 +74,14 @@ class Menu_model extends CI_Model {
 				} else {
 					$link = $url.$item['alias'];
 				}
-				
+
+				//For seller
+				if (is_object($this->ion_auth) && $this->ion_auth->logged_in()) {
+					if ($item['item_id'] == 'cart' && $this->ion_auth->user()->row()->is_seller) {
+						continue;
+					}
+				}
+
 				if ($item['type'] != 'external' || $link != '#') {
 					$link = site_url($link);
 				}
