@@ -73,6 +73,10 @@ $lang['create_user_password_label']                            = 'Пароль';
 $lang['create_user_password_confirm_label']                    = 'Подтверждение пароля';
 $lang['create_user_submit_btn']                                = 'Регистрация';
 
+$lang['create_user_type_label']                                = 'Тип пользователя';
+$lang['create_user_seller']                                    = 'Продавец';
+$lang['create_user_buyer']                                     = 'Покупатель';
+
 // Edit User
 $lang['edit_user_heading']                                     = 'Редактирование профиля';
 $lang['edit_user_subheading']                                  = 'Пожалуйста заполните информацию ниже.';

@@ -70,6 +70,10 @@ $lang['create_user_password_label']                            = 'Password';
 $lang['create_user_password_confirm_label']                    = 'Confirm Password';
 $lang['create_user_submit_btn']                                = 'Sign Up';
 
+$lang['create_user_type_label']                                = 'Type of user';
+$lang['create_user_seller']                                    = 'Seller';
+$lang['create_user_buyer']                                     = 'Buyer';
+
 // Edit User
 $lang['edit_user_heading']                                     = 'Edit profile';
 $lang['edit_user_subheading']                                  = 'Please enter the users information below.';

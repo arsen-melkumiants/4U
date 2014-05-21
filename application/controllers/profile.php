@@ -59,13 +59,18 @@ class Profile extends CI_Controller {
 			->get()
 			->row_array();
 
-		$this->data['stats'] = array(
-			'active_sales'            => $this->db->where(array('author_id' => $user_id, 'status' => 1))->get('shop_products')->num_rows(),
-			'sold_products_amount'    => !empty($sold_stats['amount']) ? floatval($sold_stats['amount']) : 0,
-			'sold_products_profit'    => (!empty($sold_stats['price']) ? floatval($sold_stats['price']) : 0).' $',
-			'bought_products_amount'  => !empty($bought_stats['amount']) ? floatval($bought_stats['amount']) : 0,
-			'bought_products_expense' => (!empty($bought_stats['price']) ? floatval($bought_stats['price']) : 0).' $',
-		);
+		if ($this->data['user_info']['is_seller']) {
+			$this->data['stats'] = array(
+				'active_sales'            => $this->db->where(array('author_id' => $user_id, 'status' => 1))->get('shop_products')->num_rows(),
+				'sold_products_amount'    => !empty($sold_stats['amount']) ? floatval($sold_stats['amount']) : 0,
+				'sold_products_profit'    => (!empty($sold_stats['price']) ? floatval($sold_stats['price']) : 0).' $',
+			);
+		} else {
+			$this->data['stats'] = array(
+				'bought_products_amount'  => !empty($bought_stats['amount']) ? floatval($bought_stats['amount']) : 0,
+				'bought_products_expense' => (!empty($bought_stats['price']) ? floatval($bought_stats['price']) : 0).' $',
+			);
+		}
 
 		$allowed_fields = array(
 			'username' => lang('create_user_fname_label'),
@@ -93,6 +98,9 @@ class Profile extends CI_Controller {
 	}
 
 	function products($type = 'active') {
+		if (!$this->data['user_info']['is_seller']) {
+			redirect('profile');
+		}
 		$this->data['title'] = $this->data['name'] = lang('my_products');
 		$this->data['type_list'] = array(
 			'active'      => array(1),
@@ -205,6 +213,9 @@ class Profile extends CI_Controller {
 
 
 	function add_product() {
+		if (!$this->data['user_info']['is_seller']) {
+			redirect('profile');
+		}
 		$this->data['title'] = $this->data['header'] = lang('product_add_header');
 		$this->data['center_block'] = $this->edit_form();
 
@@ -682,6 +693,9 @@ class Profile extends CI_Controller {
 
 
 	function orders() {
+		if ($this->data['user_info']['is_seller']) {
+			redirect('profile');
+		}
 		$this->data['title'] = $this->data['header'] = lang('my_orders');
 
 		$this->load->library('table');
@@ -728,6 +742,9 @@ class Profile extends CI_Controller {
 
 
 	function order_view($id = false) {
+		if ($this->data['user_info']['is_seller']) {
+			redirect('profile');
+		}
 		$id = intval($id);
 		if (empty($id)) {
 			show_404();

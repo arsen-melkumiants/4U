@@ -12,3 +12,8 @@
 </div>
 <?php echo after_load('css');?>
 <?php echo after_load('js');?>
+<script>
+$(function() {
+	$('input[type="radio"], input[type="checkbox"]').uniform();
+});
+</script>

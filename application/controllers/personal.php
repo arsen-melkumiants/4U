@@ -127,6 +127,14 @@ class Personal extends CI_Controller {
 		}
 
 		$this->data['center_block'] = $this->form
+			->radio('is_seller', array(
+				'inputs'      => array(
+					'1' => lang('create_user_buyer'),
+					'0' => lang('create_user_seller'),
+				),
+				'label'       => lang('create_user_type_label'),
+				'valid_rules' => 'required|trim|xss_clean',
+			))
 			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_fname_label')))
 			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => lang('create_user_email_label')))
 			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_password_label')))
