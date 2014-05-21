@@ -133,7 +133,7 @@ class Personal extends CI_Controller {
 					'0' => lang('create_user_seller'),
 				),
 				'label'       => lang('create_user_type_label'),
-				'valid_rules' => 'required|trim|xss_clean',
+				'valid_rules' => 'required|trim|xss_clean|is_natural',
 			))
 			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_fname_label')))
 			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.email]',  'label' => lang('create_user_email_label')))
@@ -156,13 +156,14 @@ class Personal extends CI_Controller {
 			$password = $this->input->post('password');
 
 			$additional_data = array(
-				'company' => $this->input->post('company'),
-				'address' => $this->input->post('address'),
-				'city'    => $this->input->post('city'),
-				'state'   => $this->input->post('state'),
-				'country' => $this->input->post('country'),
-				'zip'     => $this->input->post('zip'),
-				'phone'   => $this->input->post('phone'),
+				'company'   => $this->input->post('company'),
+				'address'   => $this->input->post('address'),
+				'city'      => $this->input->post('city'),
+				'state'     => $this->input->post('state'),
+				'country'   => $this->input->post('country'),
+				'zip'       => $this->input->post('zip'),
+				'phone'     => $this->input->post('phone'),
+				'is_seller' => $this->input->post('is_seller'),
 			);
 		}
 

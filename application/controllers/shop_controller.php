@@ -158,6 +158,9 @@ class Shop_controller extends CI_Controller {
 
 	public function cart($step = 'orders') {
 		if ($this->ion_auth->logged_in()) {
+			if ($this->data['user_info']['is_seller']) {
+				redirect('profile');
+			}
 			$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
 		}
 		$in_order = $this->cart->total_items();
@@ -321,6 +324,10 @@ class Shop_controller extends CI_Controller {
 	}
 
 	public function add_to_cart() {
+		if (!empty($this->data['user_info']['is_seller'])) {
+			echo 'is_seller';
+			exit;
+		}
 		$id = intval($this->input->post('id'));
 		if (empty($id)) {
 			return false;
@@ -510,6 +517,7 @@ class Shop_controller extends CI_Controller {
 	}
 
 	private function pay_service($id = false, $type = 'lift_up') {
+
 		$prices = array(
 			'lift_up'  => LIFT_UP_PRICE,
 			'mark'     => MARK_PRICE,
@@ -522,6 +530,10 @@ class Shop_controller extends CI_Controller {
 		$this->data['product_info'] = $this->db->from('shop_products')->where('id', $id)->get()->row_array();
 		if (empty($this->data['product_info'])) {
 			show_404();
+		}
+
+		if (empty($this->data['user_info']['is_seller'])) {
+			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
 		if (!defined('LIFT_UP_PRICE') || LIFT_UP_PRICE <= 0) {

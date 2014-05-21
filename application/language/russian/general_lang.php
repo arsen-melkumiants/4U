@@ -39,6 +39,7 @@ $lang['product_danger_message_key_is_not_available'] = 'Лицензионный
 $lang['product_not_added_to_cart']                   = 'Товар не добавлен в корзину';
 $lang['product_added_to_cart']                       = 'Товар добавлен в корзину';
 $lang['product_cannot_be_bought']                    = 'не может быть куплен в связи с его ограниченным либо полным отсутствием в данный момент';
+$lang['product_cannot_be_bought_seller']             = 'не может быть куплен, так как вы являетесь продавцом';
 $lang['product_succesfuly_added_to']                 = 'успешно добавлен в';
 $lang['product_items']                               = 'шт';
 $lang['product_views']                               = 'Просмотров';
@@ -54,7 +55,6 @@ $lang['product_not_yours']                           = 'Данный товар 
 $lang['product_bought']                              = 'Куплен товар';
 
 $lang['my_stats']                                    = 'Статистика';
-
 $lang['active_sales']                                = 'Активные лоты';
 $lang['sold_products_amount']                        = 'Проданных товаров';
 $lang['sold_products_profit']                        = 'Продано на сумму';
@@ -169,6 +169,8 @@ $lang['last']                                        = 'Последняя';
 $lang['commission']                                  = 'Комиссия';
 $lang['yes']                                         = 'Да';
 $lang['no']                                          = 'Нет';
+$lang['you_are_seller']                              = 'Вы продавец';
+$lang['you_are_buyer']                               = 'Вы покупатель';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

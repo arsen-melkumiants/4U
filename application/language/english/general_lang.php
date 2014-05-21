@@ -38,6 +38,7 @@ $lang['product_danger_message_key_is_not_available'] = 'The license key is not a
 $lang['product_not_added_to_cart']                   = 'Product is not added to the cart';
 $lang['product_added_to_cart']                       = 'Product added to cart';
 $lang['product_cannot_be_bought']                    = 'cannot be bought cause of lack of it';
+$lang['product_cannot_be_bought_seller']             = 'cannot be bought cause you are seller';
 $lang['product_succesfuly_added_to']                 = 'successfully added to';
 $lang['product_items']                               = 'items';
 $lang['product_views']                               = 'Views';
@@ -168,6 +169,8 @@ $lang['last']                                        = 'Last';
 $lang['commission']                                  = 'Commission';
 $lang['yes']                                         = 'Yes';
 $lang['no']                                          = 'No';
+$lang['you_are_seller']                              = 'You are seller';
+$lang['you_are_buyer']                               = 'You are buyer';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

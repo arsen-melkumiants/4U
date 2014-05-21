@@ -1000,20 +1000,12 @@ class Profile extends CI_Controller {
 				'modal' => true,
 			))
 			;
-
-		$amount_list = array_flip(array('130','200','300','400','500','600','700','800','900','1000','1500','2000','2500','3000'));
-		foreach ($amount_list as $key => $value) {
-			$amount_list[$key] = $key.' $';
-		}
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				return $CI->shop_model->get_payment_requests('withdraw');
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
 
-		if (isset($_POST['amount']) && !isset($amount_list[$_POST['amount']])) {
-			$_POST['amount'] = '';
-		}
 		$this->data['center_block'] .= $this->form
 			->select('name', array(
 				'valid_rules' => 'required|trim|xss_clean',
@@ -1021,10 +1013,9 @@ class Profile extends CI_Controller {
 				'options'     => array('Webmoney' => 'Webmoney', 'Paxum' => 'Paxum'),
 			))
 			->text('number', array('valid_rules' => 'required|trim|xss_clean|max_length[70]', 'label' => lang('finance_account_number')))
-			->select('amount', array(
-				'valid_rules' => 'required|trim|xss_clean',
+			->text('amount', array(
+				'valid_rules' => 'required|trim|xss_clean|price',
 				'label'       => lang('product_amount'),
-				'options'     => $amount_list,
 			))
 			->btn(array('value' => lang('add')))
 			->create(array('action' => current_url(), 'error_inline' => 'true'));

@@ -82,6 +82,13 @@
 							type  : 'error',
 							delay : 3000,
 						});
+					} else if ($.trim(data) == 'is_seller') {
+						new PNotify({
+							title : '<?php echo lang('product_not_added_to_cart')?>',
+							text  : '<?php echo lang('product')?> '+ name + ' <?php echo lang('product_cannot_be_bought_seller')?> </a>',
+							type  : 'error',
+							delay : 3000,
+						});
 					} else {
 						new PNotify({
 							title : '<?php echo lang('product_added_to_cart')?>',
