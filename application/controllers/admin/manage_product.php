@@ -568,7 +568,7 @@ class Manage_product extends CI_Controller {
 	}
 
 	public function fill_up_requests() {
-		$this->load->library('table');
+		/*$this->load->library('table');
 		$this->data['center_block'] = $this->table
 			->text('id', array('tityyle' => 'Номер заявки'))
 			->date('username', array(
@@ -598,6 +598,35 @@ class Manage_product extends CI_Controller {
 					->where('r.status', 0)
 					->get();
 			});
+		 */
+
+
+		$all_users = $this->db->select('*, email as name')->get('users')->result_array();
+		array_unshift($all_users, array('id' => '', 'name' => 'Список пользователей'));
+
+		$this->load->library('form');
+		$this->data['center_block'] = $this->form
+			->select('user_id', array(
+				'value'       => false,
+				'valid_rules' => 'trim|xss_clean|required',
+				'label'       => 'Пользователь',
+				'options'     => $all_users,
+				'search'      => true,
+			))
+			->text('amount', array(
+				'valid_rules' => 'required|trim|xss_clean|price',
+				'symbol'      => '$',
+				'label'       => lang('product_amount'),
+			))
+			->btn(array('value' => lang('finance_fill_up')))
+			->create();
+
+		if ($this->form_validation->run() != FALSE) {
+			$this->load->model('shop_model');
+			$this->shop_model->log_payment($this->input->post('user_id'), 'fill_up', 0, floatval($this->input->post('amount')));
+			$this->session->set_flashdata('success', 'Счет успешно пополнен');
+			redirect(current_url(), 'refresh');
+		}
 
 		load_admin_views();
 	}
@@ -656,7 +685,7 @@ class Manage_product extends CI_Controller {
 			} elseif ($request_info['type'] == 'withdraw') {
 				$this->shop_model->log_payment($request_info['user_id'], 'draw_out', $request_info['id'], -($request_info['amount'] + $request_info['commission']));
 			}
-			$this->session->set_flashdata('success', 'Вывод средств успешно выполено');
+			$this->session->set_flashdata('success', 'Запрос успешно обработан');
 
 			$this->db->trans_commit();
 			echo 'refresh';
