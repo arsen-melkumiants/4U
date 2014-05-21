@@ -191,7 +191,11 @@ class Personal extends CI_Controller {
 
 		$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
 
-		$user_info = $this->ion_auth->user()->row_array();
+		$user_info     = $this->ion_auth->user()->row_array();
+		$id            = $user_info['id'];
+		$groups        = $this->ion_auth->groups()->result_array();
+		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
+
 		$this->data['center_block'] = $this->form
 			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
 			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
@@ -202,11 +206,18 @@ class Personal extends CI_Controller {
 			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_zip_label')))
 			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_phone_label')))
 			->text('url', array('value' => $user_info['url'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_url_label')))
-			->btn(array('value' => lang('edit_user_submit_btn')))
-			->create(array('action' => current_url(), 'error_inline' => 'true'));
+			->separator()
+			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
+			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));
 
-		if ($this->form_validation->run() == true) {
-			$update_array = array(
+		if (isset($_POST) && !empty($_POST))
+		{
+			// do we have a valid request?
+			if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
+				show_error($this->lang->line('error_csrf'));
+			}
+
+			$data = array(
 				'username' => $this->input->post('username'),
 				'company'  => $this->input->post('company'),
 				'address'  => $this->input->post('address'),
@@ -218,17 +229,53 @@ class Personal extends CI_Controller {
 				'url'      => $this->input->post('url'),
 			);
 
-			$this->db->where('id', $user_info['id'])->update('users', $update_array);
-			$this->session->set_flashdata('success', lang('profile_changed_success'));
-
-			if ($this->input->is_ajax_request()) {
-				echo 'refresh';exit;
+			//Update the groups user belongs to
+			$groupData = $this->input->post('groups');
+			if (isset($groupData) && !empty($groupData)) {
+				$this->ion_auth->remove_from_group('', $id);
+				foreach ($groupData as $grp) {
+					$this->ion_auth->add_to_group($grp, $id);
+				}
 			}
-			redirect('personal/edit_profile', 'refresh');
-		} else {
-			$this->data['message'] = validation_errors();
-			load_views();	
+
+			//update the password if it was posted
+			if ($this->input->post('password'))	{
+				$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
+				$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
+				$this->form_validation->run();
+				$this->form->form_data[10]['params']['error'] = form_error('password');
+				$this->form->form_data[11]['params']['error'] = form_error('password_confirm');
+
+				$data['password'] = $this->input->post('password');
+			}
+
+			if ($this->form_validation->run() === TRUE) {
+				$this->ion_auth->update($user_info['id'], $data);
+				$this->session->set_flashdata('success', lang('profile_changed_success'));
+				redirect(current_url(), 'refresh');
+			}
 		}
+
+		//display the edit user form
+		$this->data['csrf'] = $this->_get_csrf_nonce();
+		$this->form
+			->hidden(key($this->data['csrf']), $this->data['csrf'][key($this->data['csrf'])])
+			->hidden('id', $id);
+
+
+		//set the flash data error message if there is one
+		$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+
+		//pass the user to the view
+		$this->data['user'] = $user_info;
+		$this->data['groups'] = $groups;
+		$this->data['currentGroups'] = $currentGroups;
+
+
+		$this->data['center_block'] = $this->form
+			->btn(array('value' => lang('edit_user_submit_btn')))
+			->create(array('action' => current_url(), 'error_inline' => 'true'));
+		load_views();
 	}
 
 	function forgot_password() {

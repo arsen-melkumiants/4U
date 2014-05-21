@@ -362,7 +362,7 @@ class Shop_model extends CI_Model {
 			->where(array(
 				'product_id' => $id,
 			))
-			->order_by('order', 'asc')
+			->order_by('file_name', 'asc')
 			->order_by('id', 'asc')
 			->get('shop_product_media_files')
 			->result_array();
