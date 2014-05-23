@@ -812,14 +812,14 @@ class Profile extends CI_Controller {
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
 		if ($this->data['right_amount'] && $this->data['order_info']['status'] == 0) {
-			$this->data['center_block'] .= '<a href="'.site_url('profile/test_payment/'.$id).'" class="btn" title="">'.lang('orders_pay').'</a>';
+			$this->data['center_block'] .= '<a href="'.site_url('profile/do_payment/'.$id).'" class="btn" title="">'.lang('orders_pay').'</a>';
 		}
 		$this->data['center_block'] .= '<span class="price_total">'.lang('orders_total_price').' <span><i class="c_icon_label"></i> <span>'.$this->data['order_info']['total_price'].'</span> $</span></span>';
 
 		load_views();
 	}
 
-	function test_payment($id = false) {
+	function do_payment($id = false) {
 		$id = intval($id);
 		if (empty($id)) {
 			show_404();

@@ -317,7 +317,7 @@ class Shop_controller extends CI_Controller {
 			);
 
 			$this->data['center_block'] = str_replace(array_keys($replace), $replace, '<h4>'.lang('cart_congratulations').'</h4>');
-			$this->data['center_block'] .= str_replace('%pay_btn', '<a class="orange_btn" href="'.site_url('profile/test_payment/'.$order_id).'">'.lang('here').'</a>', '<h4>'.lang('cart_pay_advice').'</h4>');
+			$this->data['center_block'] .= str_replace('%pay_btn', '<a class="orange_btn" href="'.site_url('profile/do_payment/'.$order_id).'">'.lang('here').'</a>', '<h4>'.lang('cart_pay_advice').'</h4>');
 			$this->data['center_block'] = $this->load->view('cart/confirm', $this->data, true);
 		}        
 		load_views();
