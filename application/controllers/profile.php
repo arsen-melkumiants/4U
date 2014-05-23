@@ -967,6 +967,10 @@ class Profile extends CI_Controller {
 	}
  */
 	function withdrawal_requests() {
+		if ($this->data['user_info']['is_seller']) {
+			redirect('personal/edit_profile');
+		}
+
 		$this->data['title'] = $this->data['header'] = lang('finance_withdrawal_requests');
 
 		$this->load->library('table');

@@ -36,7 +36,8 @@ class Admin_control_menu_model extends CI_Model
 					'2'                                  => '',
 					'manage_product/orders'              => 'Список заказов',
 					'3'                                  => '',
-					'manage_product/withdrawal_requests' => 'Заявки на вывод денег',
+					'manage_product/withdrawal_requests' => 'Заявки на вывод денег покупателя',
+					'manage_product/withdrawal_sellers'  => 'Заявки на вывод денег продавцов',
 					'manage_product/fill_up_requests'    => 'Заявки на пополнение',
 					//'manage_currency'                    => 'Список валют',
 				),
@@ -51,7 +52,7 @@ class Admin_control_menu_model extends CI_Model
 					'manage_history/withdrawing'         => 'Снятия',
 					'manage_history/facilities'          => 'Услуги',
 				),
-				'Статистика'							 => array(
+				'Статистика'                             => array(
 					'manage_statistic'                   => 'Общая статистика',
 					'manage_statistic/paid_products'     => 'Статистика по продажам',
 					'manage_statistic/user_incomes'      => 'Статистика по выплатам',

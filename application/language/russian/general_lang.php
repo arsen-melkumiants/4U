@@ -125,6 +125,7 @@ $lang['finance_delete_request_success']              = 'Удаление зап�
 $lang['finance_withdrawal_commission_message']       = 'Комисcия за снятие денег';
 $lang['finance_send_money']                          = 'Отправьте деньги на e-mail';
 $lang['finance_add_payment_comment']                 = 'Пожалуйста добавьте комментарий к вашей платежке';
+$lang['finance_payment_info']                        = 'Платежные реквизиты продавца';
 
 $lang['facilities_disabled']                         = 'Услуга отключена';
 $lang['facilities_paid']                             = 'Услуга оплачена';

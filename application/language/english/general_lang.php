@@ -125,6 +125,7 @@ $lang['finance_delete_request_success']              = 'Request has been success
 $lang['finance_withdrawal_commission_message']       = 'Commission for withdrawal of money';
 $lang['finance_send_money']                          = 'Send money to e-mail';
 $lang['finance_add_payment_comment']                 = 'Please add a comment to your payment';
+$lang['finance_payment_info']                        = 'Payment information of the seller';
 
 $lang['facilities_disabled']                         = 'The service is disabled';
 $lang['facilities_paid']                             = 'The service has been paid';

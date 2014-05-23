@@ -196,6 +196,15 @@ class Personal extends CI_Controller {
 		$groups        = $this->ion_auth->groups()->result_array();
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
+		$amount_list = array_flip(array('0','130','200','300','400','500','600','700','800','900','1000','1500','2000','2500','3000'));
+		foreach ($amount_list as $key => $value) {
+			$amount_list[$key] = $key.' $';
+		}
+
+		if (isset($_POST['payment_amount']) && !isset($amount_list[$_POST['payment_amount']])) {
+			$_POST['payment_amount'] = '';
+		}
+
 		$this->data['center_block'] = $this->form
 			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
 			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
@@ -208,7 +217,22 @@ class Personal extends CI_Controller {
 			->text('url', array('value' => $user_info['url'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_url_label')))
 			->separator()
 			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
-			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));
+			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')))
+		->separator('<h4>'.lang('finance_payment_info').'</h4>')
+			->select('payment_name', array(
+				'value'       => $user_info['payment_name'],
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => lang('finance_account_name'),
+				'options'     => array('Webmoney' => 'Webmoney', 'Paxum' => 'Paxum'),
+			))
+			->text('payment_number', array('value' => $user_info['payment_number'], 'valid_rules' => 'required|trim|xss_clean|max_length[70]', 'label' => lang('finance_account_number')))
+			->select('payment_amount', array(
+				'value'       => $user_info['payment_amount'],
+				'valid_rules' => 'required|trim|xss_clean',
+				'label'       => lang('product_amount'),
+				'options'     => $amount_list,
+			))
+			;
 
 		if (isset($_POST) && !empty($_POST))
 		{
@@ -218,15 +242,18 @@ class Personal extends CI_Controller {
 			}
 
 			$data = array(
-				'username' => $this->input->post('username'),
-				'company'  => $this->input->post('company'),
-				'address'  => $this->input->post('address'),
-				'city'     => $this->input->post('city'),
-				'state'    => $this->input->post('state'),
-				'country'  => $this->input->post('country'),
-				'zip'      => $this->input->post('zip'),
-				'phone'    => $this->input->post('phone'),
-				'url'      => $this->input->post('url'),
+				'username'       => $this->input->post('username'),
+				'company'        => $this->input->post('company'),
+				'address'        => $this->input->post('address'),
+				'city'           => $this->input->post('city'),
+				'state'          => $this->input->post('state'),
+				'country'        => $this->input->post('country'),
+				'zip'            => $this->input->post('zip'),
+				'phone'          => $this->input->post('phone'),
+				'url'            => $this->input->post('url'),
+				'payment_name'   => $this->input->post('payment_name'),
+				'payment_number' => $this->input->post('payment_number'),
+				'payment_amount' => $this->input->post('payment_amount'),
 			);
 
 			//Update the groups user belongs to

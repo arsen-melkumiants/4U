@@ -46,11 +46,19 @@ class Manage_product extends CI_Controller {
 			'header_descr'          => '',
 		),
 		'withdrawal_requests'       => array(
-			'header'                => 'Вывод денег',
-			'header_descr'          => 'Заявки на вывод денег',
+			'header'                => 'Вывод денег покупателей',
+			'header_descr'          => 'Заявки на вывод денег покупателей',
+		),
+		'withdrawal_sellers'        => array(
+			'header'                => 'Вывод денег продавцов',
+			'header_descr'          => 'Заявки на вывод денег продавцов',
+		),
+		'withdrawal_seller_accept'  => array(
+			'header'                => 'Вывод денег продавца %username(%email) в размере %total $',
+			'header_descr'          => '',
 		),
 		'fill_up_requests'       => array(
-			'header'                => 'Пополнение',
+			'header'                => 'Пополнение счета',
 			'header_descr'          => 'Заявки на пополнение пользовательского счета',
 		),
 		'delete_request' => array(
@@ -568,39 +576,6 @@ class Manage_product extends CI_Controller {
 	}
 
 	public function fill_up_requests() {
-		/*$this->load->library('table');
-		$this->data['center_block'] = $this->table
-			->text('id', array('tityyle' => 'Номер заявки'))
-			->date('username', array(
-				'title' => 'Пользователь',
-				'func'  => function($row, $params) {
-					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
-				}
-		))
-			->text('amount', array(
-				'title' => 'Количество',
-				'func'  => function($row, $params) {
-					return floatval($row['amount']).' '.$row['symbol'];
-				}
-		))
-			->date('add_date', array(
-				'title' => 'Дата создания'
-			))
-			->delete(array('link' => $this->MAIN_URL.'delete_request/%d', 'modal' => 1))
-			->btn(array('link' => $this->MAIN_URL.'accept_request/%d', 'modal' => 1, 'icon' => 'ok'))
-			->create(function($CI) {
-				return $CI->db
-					->select('r.*, c.symbol, c.code, u.username')
-					->from('shop_user_payment_requests as r')
-					->join('shop_currencies as c', 'r.currency = c.id')
-					->join('users as u', 'r.user_id = u.id')
-					->where('r.type', 'fill_up')
-					->where('r.status', 0)
-					->get();
-			});
-		 */
-
-
 		$all_users = $this->db->select('*, email as name')->get('users')->result_array();
 		array_unshift($all_users, array('id' => '', 'name' => 'Список пользователей'));
 
@@ -695,6 +670,112 @@ class Manage_product extends CI_Controller {
 			$this->data['center_block'] = $this->form
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
 				->btn(array('name' => 'accept', 'value' => $request_info['type'] == 'withdraw' ? 'Вывести' : 'Пополнить', 'class' => 'btn-success'))
+				->create(array('action' => current_url(), 'btn_offset' => 4));
+			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
+		}
+	}
+
+	public function withdrawal_sellers() {
+		$this->load->library('table');
+		$this->data['center_block'] = $this->table
+			->date('username', array(
+				'title' => 'Пользователь',
+				'func'  => function($row, $params) {
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['id']).'">'.$row['username'].'</a>';
+				}
+		))
+			->text('payment_name', array('title' => 'Название'))
+			->text('number', array('title' => 'Номер'))
+			->text('balance', array(
+				'title' => 'На счету продавца',
+				'func'  => function($row, $params) {
+					return floatval($row['balance']).' '.$row['symbol'];
+				}
+		))
+			->text('payment_amount', array(
+				'title' => 'Необходимое количество на вывод',
+				'func'  => function($row, $params) {
+					return floatval($row['payment_amount']).' '.$row['symbol'];
+				}
+		))
+			->text('commission', array(
+				'title' => lang('commission'),
+				'func'  => function($row, $params) {
+					return floatval(round($row['commission'], 2)).' '.$row['symbol'];
+				}
+		))
+			->text('total', array(
+				'title' => 'Всего на снятие',
+				'func'  => function($row, $params) {
+					return floatval(round($row['total'], 2)).' '.$row['symbol'];
+				}
+		))
+			->date('payment_last_date', array(
+				'title' => 'Последнее снятие'
+			))
+			->btn(array('link' => $this->MAIN_URL.'withdrawal_seller_accept/%d', 'modal' => 1, 'icon' => 'ok', 'title' => 'Снять со счета'))
+			->create(function($CI) {
+				return $CI->db
+					->select('SUM(l.amount) as balance, (u.payment_amount / 100 * 5) as commission, u.payment_amount + (u.payment_amount / 100 * 5) as total, l.currency, c.symbol, c.code, u.*')
+					->from('shop_user_payment_logs as l')
+					->join('shop_currencies as c', 'l.currency = c.id')
+					->join('users as u', 'u.id = l.user_id')
+					->where(array(
+						'l.currency'         => 1,
+						'u.payment_amount >' => 0,
+						'u.is_seller'        => 1,
+					))
+					->where('u.payment_last_date + 86400 <', time())
+					->group_by('u.id')
+					->having('balance >= total')
+					->get();
+			});
+
+		load_admin_views();
+	}
+
+	public function withdrawal_seller_accept($id = false) {
+		if (empty($id)) {
+			custom_404();
+		}
+
+		$seller_info = $this->db
+			->select('SUM(l.amount) as balance, (u.payment_amount / 100 * 5) as commission, u.payment_amount + (u.payment_amount / 100 * 5) as total, l.currency, c.symbol, c.code, u.*')
+			->from('shop_user_payment_logs as l')
+			->join('shop_currencies as c', 'l.currency = c.id')
+			->join('users as u', 'u.id = l.user_id')
+			->where(array(
+				'l.currency'         => 1,
+				'u.payment_amount >' => 0,
+				'u.is_seller'        => 1,
+			))
+			->group_by('u.id')
+			->having('balance >= total')
+			->get()
+			->row_array();
+		if (empty($seller_info)) {
+			custom_404();
+		}
+		$seller_info['total'] = round($seller_info['total'], 2);
+		set_header_info($seller_info);
+
+		if (isset($_POST['accept'])) {
+			$this->load->model('shop_model');
+
+			$this->db->trans_begin();
+			$this->load->model('shop_model');
+			$this->db->where('id', $seller_info['id'])->update('users', array('payment_last_date' => time()));
+			$this->shop_model->log_payment($seller_info['id'], 'draw_out', 0, -$seller_info['total']);
+			$this->session->set_flashdata('success', 'Запрос успешно обработан');
+
+			$this->db->trans_commit();
+			echo 'refresh';
+			exit;
+		} else {
+			$this->load->library('form');
+			$this->data['center_block'] = $this->form
+				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
+				->btn(array('name' => 'accept', 'value' => 'Вывести', 'class' => 'btn-success'))
 				->create(array('action' => current_url(), 'btn_offset' => 4));
 			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 		}

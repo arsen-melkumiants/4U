@@ -222,9 +222,9 @@ class Form {
 		return $this;
 	}
 
-	public function separator() {
+	public function separator($text = '&nbsp;') {
 		$this->form_data[] = array(
-			'form' => '&nbsp;',
+			'form' => $text,
 			'params' => false
 		);
 		return $this;
