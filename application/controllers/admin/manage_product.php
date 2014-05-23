@@ -721,9 +721,10 @@ class Manage_product extends CI_Controller {
 					->join('shop_currencies as c', 'l.currency = c.id')
 					->join('users as u', 'u.id = l.user_id')
 					->where(array(
-						'l.currency'         => 1,
-						'u.payment_amount >' => 0,
-						'u.is_seller'        => 1,
+						'l.currency'          => 1,
+						'u.payment_amount >'  => 0,
+						'u.payment_number !=' => 0,
+						'u.is_seller'         => 1,
 					))
 					->where('u.payment_last_date + 86400 <', time())
 					->group_by('u.id')
@@ -745,9 +746,10 @@ class Manage_product extends CI_Controller {
 			->join('shop_currencies as c', 'l.currency = c.id')
 			->join('users as u', 'u.id = l.user_id')
 			->where(array(
-				'l.currency'         => 1,
-				'u.payment_amount >' => 0,
-				'u.is_seller'        => 1,
+				'l.currency'          => 1,
+				'u.payment_amount >'  => 0,
+				'u.payment_number !=' => 0,
+				'u.is_seller'         => 1,
 			))
 			->group_by('u.id')
 			->having('balance >= total')
