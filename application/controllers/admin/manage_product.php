@@ -569,6 +569,7 @@ class Manage_product extends CI_Controller {
 					->join('users as u', 'r.user_id = u.id')
 					->where('r.type', 'withdraw')
 					->where('r.status', 0)
+					->order_by('r.id', 'desc')
 					->get();
 			});
 

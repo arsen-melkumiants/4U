@@ -205,7 +205,7 @@ class Personal extends CI_Controller {
 			$_POST['payment_amount'] = '';
 		}
 
-		$this->data['center_block'] = $this->form
+		$this->form
 			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
 			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
 			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
@@ -217,22 +217,26 @@ class Personal extends CI_Controller {
 			->text('url', array('value' => $user_info['url'], 'valid_rules' => 'trim|xss_clean|max_length[100]',  'label' => lang('create_user_url_label')))
 			->separator()
 			->password('password', array('label' => $this->lang->line('edit_user_password_label')))
-			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')))
-		->separator('<h4>'.lang('finance_payment_info').'</h4>')
-			->select('payment_name', array(
-				'value'       => $user_info['payment_name'],
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => lang('finance_account_name'),
-				'options'     => array('Webmoney' => 'Webmoney', 'Paxum' => 'Paxum'),
-			))
-			->text('payment_number', array('value' => $user_info['payment_number'], 'valid_rules' => 'required|trim|xss_clean|max_length[70]', 'label' => lang('finance_account_number')))
-			->select('payment_amount', array(
-				'value'       => $user_info['payment_amount'],
-				'valid_rules' => 'required|trim|xss_clean',
-				'label'       => lang('product_amount'),
-				'options'     => $amount_list,
-			))
-			;
+			->password('password_confirm', array('label' => $this->lang->line('edit_user_password_confirm_label')));
+
+		if ($user_info['is_seller']) {
+			$this->form 
+				->separator('<h4>'.lang('finance_payment_info').'</h4>')
+				->select('payment_name', array(
+					'value'       => $user_info['payment_name'],
+					'valid_rules' => 'required|trim|xss_clean',
+					'label'       => lang('finance_account_name'),
+					'options'     => array('Webmoney' => 'Webmoney', 'Paxum' => 'Paxum'),
+				))
+				->text('payment_number', array('value' => $user_info['payment_number'], 'valid_rules' => 'required|trim|xss_clean|max_length[70]', 'label' => lang('finance_account_number')))
+				->select('payment_amount', array(
+					'value'       => $user_info['payment_amount'],
+					'valid_rules' => 'required|trim|xss_clean',
+					'label'       => lang('product_amount'),
+					'options'     => $amount_list,
+				))
+				;
+		}
 
 		if (isset($_POST) && !empty($_POST))
 		{

@@ -108,7 +108,7 @@ class Shop_controller extends CI_Controller {
 			if (!$this->ion_auth->logged_in() && $this->data['product_info']['status'] != 1) {
 				show_404();
 			} elseif ($this->ion_auth->logged_in()) {
-				if($this->data['product_info']['author_id'] != $this->data['user_info']['id']) {
+				if($this->data['product_info']['author_id'] != $this->data['user_info']['id'] && !$this->data['product_info']['status']) {
 					show_404();
 				} elseif ($this->data['product_info']['status'] > 2) {
 					show_404();

@@ -156,7 +156,7 @@ class Shop_model extends CI_Model {
 	function count_search_products($query) {
 		$this->search_products($query);
 		return $this->db
-			->select('p.id')
+			->select('p.id, p.status')
 			->get()
 			->num_rows();
 	}
@@ -180,9 +180,9 @@ class Shop_model extends CI_Model {
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->like('p.name', $query)
 			->or_like('p.content', $query)
-			->where('p.status', 1)
 			->order_by('p.sort_date', 'desc')
 			->order_by('p.id', 'desc')
+			->having('p.status = 1')
 			;
 	}
 
