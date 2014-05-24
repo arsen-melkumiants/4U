@@ -407,13 +407,14 @@ class Shop_controller extends CI_Controller {
 				$password = $user_data['order_info']['email'];
 				$email    = $user_data['order_info']['email'];
 				$additional_data = array(
-					'company' => $user_data['order_info']['company'],
-					'phone'   => $user_data['order_info']['phone'],
-					'country' => $user_data['order_info']['country'],
-					'state'   => $user_data['order_info']['state'],
-					'city'    => $user_data['order_info']['city'],
-					'zip'     => $user_data['order_info']['zip'],
-					'address' => $user_data['order_info']['address'],
+					'company'   => $user_data['order_info']['company'],
+					'phone'     => $user_data['order_info']['phone'],
+					'country'   => $user_data['order_info']['country'],
+					'state'     => $user_data['order_info']['state'],
+					'city'      => $user_data['order_info']['city'],
+					'zip'       => $user_data['order_info']['zip'],
+					'address'   => $user_data['order_info']['address'],
+					'is_seller' => 0,
 				);								
 				$id = $this->ion_auth->register($username, $password, $email, $additional_data);
 				$auto_reg = true;

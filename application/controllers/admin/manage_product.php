@@ -54,7 +54,7 @@ class Manage_product extends CI_Controller {
 			'header_descr'          => 'Заявки на вывод денег продавцов',
 		),
 		'withdrawal_seller_accept'  => array(
-			'header'                => 'Вывод денег продавца %username(%email) в размере %total $',
+			'header'                => 'Вывод денег продавца %username(%email)',
 			'header_descr'          => '',
 		),
 		'fill_up_requests'       => array(
@@ -758,11 +758,15 @@ class Manage_product extends CI_Controller {
 		if (empty($seller_info)) {
 			custom_404();
 		}
-		$seller_info['total'] = round($seller_info['total'], 2);
+		$seller_info['total']          = round($seller_info['total'], 2);
+		$seller_info['commission']     = round($seller_info['commission'], 2);
+		$seller_info['payment_amount'] = round($seller_info['payment_amount'], 2);
 		set_header_info($seller_info);
 
 		if (isset($_POST['accept'])) {
 			$this->load->model('shop_model');
+
+			$seller_info['total'] = $this->input->post('total') ?: $seller_info['total'];
 
 			$this->db->trans_begin();
 			$this->load->model('shop_model');
@@ -776,9 +780,25 @@ class Manage_product extends CI_Controller {
 		} else {
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
+				->text('payment_amount', array(
+					'class'       => 'withdraw_amount',
+					'value'       => $seller_info['payment_amount'] ?: false,
+					'valid_rules' => 'required|trim|xss_clean|numeric',
+					'symbol'      => '$',
+					'label'       => 'Количество',
+				))
+				->text('total', array(
+					'group_class' => 'withdraw_total',
+					'value'       => $seller_info['total'] ?: false,
+					'valid_rules' => 'required|trim|xss_clean|numeric',
+					'symbol'	  => '$',
+					'label'       => 'Итого + комиссия <span class="commis_value">'.$seller_info['commission'].'</span> $',
+					'readonly'    => 1,
+				))
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
 				->btn(array('name' => 'accept', 'value' => 'Вывести', 'class' => 'btn-success'))
 				->create(array('action' => current_url(), 'btn_offset' => 4));
+			$this->data['center_block'] .= $this->load->view(ADM_FOLDER.'withdraw_js', $this->data, true);
 			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 		}
 	}

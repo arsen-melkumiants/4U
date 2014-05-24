@@ -39,6 +39,7 @@ $lang['activation_email_unsuccessful']       = 'Сообщение об акти
 // Login / Logout
 $lang['login_successful']                    = 'Авторизация прошла успешно';
 $lang['login_unsuccessful']                  = 'Логин или пароль неверены';
+$lang['login_unsuccessful_not_active'] 		 = 'Учетная записть неактивирована';
 $lang['logout_successful']                   = 'Успешный выход';
 
 // Account Changes

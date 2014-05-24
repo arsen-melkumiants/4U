@@ -352,7 +352,7 @@ class Profile extends CI_Controller {
 					->text('amount', array(
 						'group_class' => 'amount_field',
 						'value'       => $product_info['amount'],
-						'valid_rules' => 'required|trim|xss_clean|is_natural',
+						'valid_rules' => 'trim|xss_clean|is_natural',
 						'label'       => lang('product_amount'),
 					));
 			}
@@ -371,7 +371,7 @@ class Profile extends CI_Controller {
 				->text('amount', array(
 					'group_class' => 'amount_field',
 					'value'       => 0,
-					'valid_rules' => 'required|trim|xss_clean|is_natural',
+					'valid_rules' => 'trim|xss_clean|is_natural',
 					'label'       => lang('product_amount'),
 				));
 		}
