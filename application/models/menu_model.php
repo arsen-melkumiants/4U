@@ -83,8 +83,16 @@ class Menu_model extends CI_Model {
 				}
 
 				if ($item['type'] != 'external' || $link != '#') {
-					$link = site_url($link);
+					if ($link == '/' && $this->config->item('lang_abbr') != 'en') {
+						$link = site_url();
+					} elseif ($link == '/' && $this->config->item('lang_abbr') == 'en') {
+						$link = base_url();
+					} else {
+						$link = site_url($link);
+					}
 				}
+
+
 				$text .= '<li>';
 				$text .= '<a'.$modal.' href="'.$link.'">'.$icon.$item['name_'.$this->config->item('lang_abbr')].'</a>';
 				$text .= $this->get_menu_tree($all_branch, $item['id'], $url);
