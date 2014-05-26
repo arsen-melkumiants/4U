@@ -25,6 +25,7 @@ class Profile extends CI_Controller {
 		$this->load->model(array(
 			'menu_model',
 			'shop_model',
+			'special_model',
 		));
 		$this->data['main_menu']  = $this->menu_model->get_menu('upper');
 		$this->data['left_block'] = $this->load->view('profile/menu', $this->data, true);
@@ -461,7 +462,7 @@ class Profile extends CI_Controller {
 		if ($type == 'image') {
 			$allowed_types = 'jpg|jpeg|png|gif|txt|text|rtx|rtf|doc|docx|xlsx|word|xl';
 			$this->data['title'] = $this->data['name'] = lang('product_gallery_header');
-			$this->data['descr'] = lang('product_gallery_descr');
+			$this->data['descr'] = $this->special_model->get_spec_content('product_gallery_descr');
 			$this->data['descr'] .= '<br /><b>'.lang('available_formats').':</b> '.str_replace('|',', ', $allowed_types);
 			$this->data['descr'] .= '<br /><b>'.lang('max_size').':</b> 5 Mb';
 			$this->data['upload_url'] = site_url('profile/upload_gallery/'.$id);
@@ -473,7 +474,9 @@ class Profile extends CI_Controller {
 				//$allowed_types = 'jpg|jpeg|png|gif|doc|pdf|docx|txt|xls|mpeg|mpg|mpe|qt|mov|avi|movie|wmv';
 				$allowed_types = 'avi|wmv|mpg|mpeg|mp4|m2t|m2ts|mkv|mov|flv|jpg|jpeg|cr2|psd|gif|bmp|tif|tga|cdr|ai|dwg|eps|raw|png|al|ps|plt|dxf|pdf|svg|svgz|zip|rar';
 			}
-			$this->data['descr'] = lang('product_media_file_descr');
+
+			$this->data['descr'] = $this->special_model->get_spec_content('product_media_file_descr');
+			//$this->data['descr'] = lang('product_media_file_descr');
 			$this->data['descr'] .= '<br /><b>'.lang('available_formats').':</b> '.str_replace('|',', ', $allowed_types);
 			$this->data['descr'] .= '<br /><b>'.lang('max_size').':</b> 10 Gb';
 			$this->data['upload_url'] = site_url('profile/upload_media_files/'.$id);
@@ -897,75 +900,10 @@ class Profile extends CI_Controller {
 
 	function fill_up_requests() {
 		$this->data['title'] = $this->data['header'] = lang('finance_fill_up');
-
-		$this->data['center_block'] = 'Paxum<br />';
-		$this->data['center_block'] .= lang('finance_send_money').': <b>'.$this->data['user_info']['email'].'</b><br />';
-		$this->data['center_block'] .= lang('finance_add_payment_comment').': <b>add-'.$this->data['user_info']['email'].'</b>';
-
+		$this->data['center_block'] = $this->special_model->get_spec_content('fill_up_info');
 		load_views();
 	}
 
-/*	function fill_up_requests() {
-		$this->data['title'] = $this->data['header'] = lang('finance_fill_up_requests');
-
-		$this->load->library('table');
-		$this->table
-			->text('id', array(
-				'width' => '30%',
-				'func'  => function($row, $params) {
-					return '№'.$row['id'];
-				}
-		))
-			->text('amount', array(
-				'title' => lang('price'),
-				'func'  => function($row, $params) {
-					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['amount']).' '.$row['symbol'].'</div>';
-				}
-		))
-			->date('add_date', array(
-				'title' => lang('date'),
-			))
-			->btn(array(
-				'link'  => 'profile/delete_withdrawal_request/%d',
-				'class' => 'delete',
-				'title' => lang('delete'),
-				'modal' => true,
-			))
-			;
-
-		$this->data['center_block'] = $this->table
-			->create(function($CI) {
-				return $CI->shop_model->get_payment_requests('fill_up');
-			}, array('no_header' => 1, 'class' => 'table product_list orders'));
-
-		$this->load->library('form');
-		$this->data['center_block'] .= $this->form
-			->text('amount', array(
-				'valid_rules' => 'required|trim|xss_clean|price',
-				'symbol'      => '$',
-				'icon_post'   => true,
-				'label'       => lang('product_amount'),
-			))
-			->btn(array('value' => lang('finance_fill_up')))
-			->create(array('action' => current_url(), 'error_inline' => 'true'));
-
-		if ($this->form_validation->run() != FALSE) {
-			$this->db->insert('shop_user_payment_requests', array(
-				'type'     => 'fill_up',
-				'name'     => '',
-				'amount'   => $this->input->post('amount'),
-				'currency' => 1,
-				'user_id'  => $this->data['user_info']['id'],
-				'add_date' => time(),
-			));
-			$this->session->set_flashdata('success', lang('finance_add_fill_up_requests_success'));
-			redirect('profile/fill_up_requests', 'refresh');
-
-		}
-
-		load_views();
-	}
- */
 	function withdrawal_requests() {
 		if ($this->data['user_info']['is_seller']) {
 			redirect('personal/edit_profile');

@@ -86,7 +86,7 @@ window.onload = function() {
 			</ul>
 		</div>
 		<div class="clear"></div>
-		<h4><?php echo $descr?></h4>	
+		<div class="descr"><?php echo $descr?></div>	
 	</div>
 	<form id="fileupload" class="file_upload" action="<?php echo $upload_url?>" method="POST" enctype="multipart/form-data">
 		<!-- Redirect browsers with JavaScript disabled to the origin page -->

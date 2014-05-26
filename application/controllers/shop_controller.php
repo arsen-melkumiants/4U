@@ -7,6 +7,7 @@ class Shop_controller extends CI_Controller {
 		$this->load->model(array(
 			'menu_model',
 			'shop_model',
+			'special_model',
 		));
 		$this->load->library(array(
 			'session',
@@ -292,6 +293,7 @@ class Shop_controller extends CI_Controller {
 					return '<button type="submit" class="orange_btn">'.lang('finish').'</button>';
 				})
 					->create(array('action' => site_url('cart/confirmation')));
+			$this->data['info'] = $this->special_model->get_spec_content('payment_cart_step_3');
 			$this->data['center_block'] = $this->load->view('cart/payment', $this->data, true);
 		} elseif($step == 'confirmation') {
 			$finish = $this->input->post('confirm');
