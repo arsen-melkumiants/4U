@@ -94,7 +94,8 @@ ul {padding-left: 0;}
 .c_icon_up {background: url(../img/item_icons.png) no-repeat 0px 0px;width: 13px;height: 17px;}
 .c_icon_star {background: url(../img/item_icons.png) no-repeat -49px 0px;width: 16px;height: 17px;}
 
-.main_block {padding-bottom: 55px;}
+.main_block,
+.left_block {padding-bottom: 55px;}
 .left_block ul {padding-left: 0;}
 .left_block li {list-style: none;}
 .left_block li a {display: block;color: #6c6867;padding: 4px 0 4px 10px;background: url(../img/menu_square.png) no-repeat left 10px;}
