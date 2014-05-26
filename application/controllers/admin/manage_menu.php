@@ -103,6 +103,7 @@ class Manage_menu extends CI_Controller {
 		if (empty($menu_info)) {
 			custom_404();
 		}
+		$menu_info['name'] = $menu_info['name_ru'].' ('.$menu_info['name_en'].')';
 		set_header_info($menu_info);
 
 		if(!empty($_POST) && $_POST['type'] != 'external'){
