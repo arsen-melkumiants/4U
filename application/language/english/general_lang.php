@@ -92,6 +92,7 @@ $lang['cart_state']                                  = 'State';
 $lang['cart_country']                                = 'Country';
 $lang['cart_zip']                                    = 'Zip';
 $lang['cart_phone']                                  = 'Phone';
+$lang['cart_url']                                    = 'URL';
 $lang['cart_empty']                                  = 'There isn\'t any product yet. We are sure you will find everything';
 
 //$lang['cart_congratulations']                        = 'Congratulations. Your purchase is completed. Want to buy something else?';

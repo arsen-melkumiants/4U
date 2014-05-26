@@ -243,6 +243,7 @@ class Shop_controller extends CI_Controller {
 				'country'  => '',
 				'zip'      => '',
 				'phone'    => '',
+				'url'      => '',
 			);
 			foreach ($fields as $key => $item) {
 				if (isset($session_info[$key])) {
@@ -258,7 +259,7 @@ class Shop_controller extends CI_Controller {
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
 				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_name'), 'value' => $fields['username']))
-				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_email'), 'value' => $fields['email']))
+				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email', 'label' => lang('cart_email'), 'value' => $fields['email']))
 				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_company'), 'value' => $fields['company']))
 				->text('address', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_address'), 'value' => $fields['address']))
 				->text('city', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_city'), 'value' => $fields['city']))
@@ -266,6 +267,7 @@ class Shop_controller extends CI_Controller {
 				->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_country'), 'value' => $fields['country']))
 				->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => lang('cart_zip'), 'value' => $fields['zip']))
 				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => lang('cart_phone'), 'value' => $fields['phone']))
+				->text('url', array('valid_rules' => 'trim|xss_clean|max_length[100]',  'label' => lang('cart_url'), 'value' => $fields['phone']))
 				->func(function($params) {
 					return '<button type="submit" class="orange_btn">'.lang('next_step').'</button>';
 				})
@@ -414,6 +416,7 @@ class Shop_controller extends CI_Controller {
 					'city'      => $user_data['order_info']['city'],
 					'zip'       => $user_data['order_info']['zip'],
 					'address'   => $user_data['order_info']['address'],
+					'url'       => $user_data['order_info']['url'],
 					'is_seller' => 0,
 				);								
 				$id = $this->ion_auth->register($username, $password, $email, $additional_data);
@@ -511,7 +514,7 @@ class Shop_controller extends CI_Controller {
 			);
 			$this->cart->destroy();
 			
-			$this->shop_model->send_mail($info['email'], 'orders_success_message', 'create_order', $email_info);
+		//	$this->shop_model->send_mail($info['email'], 'orders_success_message', 'create_order', $email_info);
 
 			return $order_id;
 		}

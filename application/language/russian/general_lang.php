@@ -92,6 +92,7 @@ $lang['cart_state']                                  = 'Штат/Регион';
 $lang['cart_country']                                = 'Страна';
 $lang['cart_zip']                                    = 'Индекс';
 $lang['cart_phone']                                  = 'Телефон';
+$lang['cart_url']                                    = 'Страница(URL)';
 $lang['cart_empty']                                  = 'Ваша корзина пуста.';
 
 //$lang['cart_congratulations']                        = 'Поздравляем. Покупка выполнена успешно. Желаете купить что-нибудь еще?';
