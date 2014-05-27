@@ -260,7 +260,7 @@ class Shop_controller extends CI_Controller {
 
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
-				->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('cart_login')))
+				->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|alpha_dash',  'label' => lang('cart_login')))
 				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_name'), 'value' => $fields['username']))
 				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email', 'label' => lang('cart_email'), 'value' => $fields['email']))
 				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_company'), 'value' => $fields['company']))
@@ -518,8 +518,8 @@ class Shop_controller extends CI_Controller {
 				'email'     => $user_data['order_info']['email'],
 			);
 			$this->cart->destroy();
-			
-		//	$this->shop_model->send_mail($info['email'], 'orders_success_message', 'create_order', $email_info);
+
+			$this->shop_model->send_mail($info['email'], 'orders_success_message', 'create_order', $email_info);
 
 			return $order_id;
 		}

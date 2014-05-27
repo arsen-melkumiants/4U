@@ -135,7 +135,7 @@ class Personal extends CI_Controller {
 				'label'       => lang('create_user_type_label'),
 				'valid_rules' => 'required|trim|xss_clean|is_natural',
 			))
-			->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.login]',  'label' => lang('create_user_login_label')))
+			->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.login]|alpha_dash',  'label' => lang('create_user_login_label')))
 			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_fname_label')))
 			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email',  'label' => lang('create_user_email_label')))
 			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_password_label')))
