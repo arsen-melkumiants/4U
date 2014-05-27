@@ -135,8 +135,9 @@ class Personal extends CI_Controller {
 				'label'       => lang('create_user_type_label'),
 				'valid_rules' => 'required|trim|xss_clean|is_natural',
 			))
+			->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|is_unique[users.login]',  'label' => lang('create_user_login_label')))
 			->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('create_user_fname_label')))
-			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email|is_unique[users.email]',  'label' => lang('create_user_email_label')))
+			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email',  'label' => lang('create_user_email_label')))
 			->password('password', array('valid_rules' => 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']',  'label' => $this->lang->line('create_user_password_label')))
 			->password('password_confirm', array('valid_rules' => 'required|matches[password]',  'label' => lang('create_user_password_confirm_label')))
 			->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
@@ -156,6 +157,7 @@ class Personal extends CI_Controller {
 			$password = $this->input->post('password');
 
 			$additional_data = array(
+				'login'     => $this->input->post('login'),
 				'company'   => $this->input->post('company'),
 				'address'   => $this->input->post('address'),
 				'city'      => $this->input->post('city'),
@@ -207,6 +209,7 @@ class Personal extends CI_Controller {
 
 		$this->form
 			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
+			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email',  'label' => lang('create_user_email_label')))
 			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
 			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
 			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_city_label')))
@@ -247,6 +250,7 @@ class Personal extends CI_Controller {
 
 			$data = array(
 				'username'       => $this->input->post('username'),
+				'email'          => $this->input->post('email'),
 				'company'        => $this->input->post('company'),
 				'address'        => $this->input->post('address'),
 				'city'           => $this->input->post('city'),

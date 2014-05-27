@@ -23,7 +23,7 @@ $lang['error_csrf']                                            = 'This form post
 // Login
 $lang['login_heading']                                         = 'Login';
 $lang['login_subheading']                                      = 'Please login with your email/username and password below.';
-$lang['login_identity_label']                                  = 'Email/Username:';
+$lang['login_identity_label']                                  = 'Login:';
 $lang['login_password_label']                                  = 'Password:';
 $lang['login_remember_label']                                  = 'Remember Me:';
 $lang['login_submit_btn']                                      = 'Login';
@@ -55,6 +55,7 @@ $lang['deactivate_validation_user_id_label']                   = 'user ID';
 // Create User
 $lang['create_user_heading']                                   = 'Registration User';
 $lang['create_user_subheading']                                = 'Please enter the users information below.';
+$lang['create_user_login_label']                               = 'Login';
 $lang['create_user_fname_label']                               = 'Name';
 $lang['create_user_lname_label']                               = 'Last Name';
 $lang['create_user_company_label']                             = 'Company Name';
