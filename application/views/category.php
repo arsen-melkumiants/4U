@@ -1,7 +1,6 @@
 <div class="custom_block<?php echo !empty($right_block) ? ' with_right' : ''?>">
 	<div class="title">
 		<div class="corner"></div>
-		<h2><?php echo $name?></h2>
 		<div class="view_mode">
 			<ul>
 				<?php foreach (array_flip($types) as $item) {?>
@@ -9,6 +8,7 @@
 				<?php }?>
 			</ul>
 		</div>
+		<h2><?php echo $name?></h2>
 	</div>
 	<div class="item_container">
 		<?php if (!empty($products)) {
