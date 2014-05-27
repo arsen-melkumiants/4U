@@ -51,8 +51,10 @@ class Shop_controller extends CI_Controller {
 
 		//VIP
 		$this->data['name'] = lang('vip_lots');
-		$this->data['products']     = $this->shop_model->get_vip_products(3);
-		$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
+		$this->data['products']    = $this->shop_model->get_vip_products(3);
+		if (!empty($this->data['products'])) {
+			$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
+		}
 
 		$this->data['name']  = $this->data['category_info']['name'];
 		$this->data['title'] = lang('product_category').' "'.$this->data['name'].'"';
@@ -74,7 +76,9 @@ class Shop_controller extends CI_Controller {
 		//VIP
 		$this->data['name'] = lang('vip_lots');
 		$this->data['products']     = $this->shop_model->get_vip_products(3);
-		$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
+		if (!empty($this->data['products'])) {
+			$this->data['right_block'] = $this->load->view('right_lots', $this->data, true);
+		}
 
 		$this->data['title'] = $this->data['name'] = lang('search').' "'.$query.'"';
 
