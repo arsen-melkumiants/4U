@@ -83,6 +83,7 @@ $lang['to_cart']                                     = 'корзину';
 $lang['my_cart']                                     = 'Корзина';
 $lang['cart_information']                            = 'Информация';
 $lang['cart_payment']                                = 'Оплата';
+$lang['cart_login']                                  = 'Логин';
 $lang['cart_name']                                   = 'Имя';
 $lang['cart_email']                                  = 'Email';
 $lang['cart_company']                                = 'Компания';

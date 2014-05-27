@@ -83,6 +83,7 @@ $lang['to_cart']                                     = 'cart';
 $lang['my_cart']                                     = 'My cart';
 $lang['cart_information']                            = 'Information';
 $lang['cart_payment']                                = 'Payment';
+$lang['cart_login']                                  = 'Login';
 $lang['cart_name']                                   = 'Name';
 $lang['cart_email']                                  = 'Email';
 $lang['cart_company']                                = 'Company';

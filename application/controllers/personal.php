@@ -209,7 +209,7 @@ class Personal extends CI_Controller {
 
 		$this->form
 			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
-			->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email',  'label' => lang('create_user_email_label')))
+			->text('email', array('value' => $user_info['email'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email',  'label' => lang('create_user_email_label')))
 			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
 			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
 			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_city_label')))

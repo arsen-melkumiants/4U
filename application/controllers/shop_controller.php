@@ -235,6 +235,7 @@ class Shop_controller extends CI_Controller {
 			$this->data['center_block'] = $this->load->view('cart/orders', $this->data, true);
 		} elseif ($step == 'information') {
 			$fields = array(
+				'login'    => '',
 				'username' => '',
 				'email'    => '',
 				'company'  => '',
@@ -259,6 +260,7 @@ class Shop_controller extends CI_Controller {
 
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
+				->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => lang('cart_login')))
 				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_name'), 'value' => $fields['username']))
 				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email', 'label' => lang('cart_email'), 'value' => $fields['email']))
 				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_company'), 'value' => $fields['company']))
@@ -406,11 +408,12 @@ class Shop_controller extends CI_Controller {
 		$id = 0;
 		$auto_reg = false;
 		if (!$this->ion_auth->logged_in()) {
-			if (!$this->ion_auth->email_check($user_data['order_info']['email'])) {
+			if (!$this->ion_auth->identity_check($user_data['order_info']['login'])) {
 				$username = $user_data['order_info']['username'];
 				$password = $user_data['order_info']['email'];
 				$email    = $user_data['order_info']['email'];
 				$additional_data = array(
+					'login'     => $user_data['order_info']['login'],
 					'company'   => $user_data['order_info']['company'],
 					'phone'     => $user_data['order_info']['phone'],
 					'country'   => $user_data['order_info']['country'],
