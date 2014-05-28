@@ -117,14 +117,14 @@ class Profile extends CI_Controller {
 				'title' => lang('product_name'),
 				'width' => '50%',
 				'func'  => function($row, $params, $that, $CI) {
-					$row['is_vip'] = (!defined('VIP_DAYS') || !VIP_DAYS || ($row['vip_date'] + VIP_DAYS * 86400) > time());
+					$row['is_vip'] = ($row['vip_date'] > time());
 					$row['commission'] = $CI->shop_model->product_commission($row);
 					$row['facilities'] = '';
-					if (defined('VIP_DAYS') && ($row['vip_date'] + VIP_DAYS * 86400) > time()) {
-						$row['facilities'] .= lang('vip_till').': '.date('d.m.Y', $row['vip_date'] + VIP_DAYS).'<br />';
+					if ($row['vip_date'] > time()) {
+						$row['facilities'] .= lang('vip_till').': '.date('d.m.Y', $row['vip_date']).'<br />';
 					}
-					if (defined('MARK_DAYS') && ($row['marked_date'] + MARK_DAYS * 86400) > time()) {
-						$row['facilities'] .= lang('mark_till').': '.date('d.m.Y', $row['marked_date'] + MARK_DAYS).'<br />';
+					if ($row['marked_date'] > time()) {
+						$row['facilities'] .= lang('mark_till').': '.date('d.m.Y', $row['marked_date']).'<br />';
 					}
 					return $CI->load->view('profile/item', $row, true);
 				}
