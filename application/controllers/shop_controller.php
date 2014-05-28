@@ -576,14 +576,14 @@ class Shop_controller extends CI_Controller {
 
 		$this->db->trans_begin();
 		if ($type == 'mark') {
-			$date_type = 'marked_date';
+			$date_array = array('marked_date' => time() + (MARK_DAYS * 86400));
 		} elseif ($type == 'make_vip') {
-			$date_type = 'vip_date';
+			$date_array = array('vip_date' => time() + (VIP_DAYS * 86400));
 		} else {
-			$date_type = 'sort_date';
+			$date_array = array('sort_date' => time());
 		}
-		$this->db->where('id', $id)->update('shop_products', array($date_type => time()));
-		$this->shop_model->log_payment($this->data['user_info']['id'], $type, $id, -$prices[$type]);
+		$this->db->where('id', $id)->update('shop_products', $date_array);
+		//$this->shop_model->log_payment($this->data['user_info']['id'], $type, $id, -$prices[$type]);
 		$this->db->trans_commit();
 
 		$this->session->set_flashdata('success', lang('facilities_paid'));

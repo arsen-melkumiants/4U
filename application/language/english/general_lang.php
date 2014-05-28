@@ -174,6 +174,8 @@ $lang['yes']                                         = 'Yes';
 $lang['no']                                          = 'No';
 $lang['you_are_seller']                              = 'You are seller';
 $lang['you_are_buyer']                               = 'You are buyer';
+$lang['vip_till']                                    = 'VIP till';
+$lang['mark_till']                                   = 'Marked till';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

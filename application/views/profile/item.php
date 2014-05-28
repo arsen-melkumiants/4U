@@ -9,6 +9,7 @@
 	<?php if (!empty($commission)) {?>
 	<div><?php echo lang('commission').': '.-$commission.' $'?></div>
 	<?php }?>
+	<div><?php echo !empty($facilities) ? $facilities : ''?></div>
 	<?php if (!empty($is_vip)) {?>
 	<div><i class="c_icon_star"></i></div>
 	<?php }?>

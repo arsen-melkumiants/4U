@@ -174,6 +174,8 @@ $lang['yes']                                         = 'Да';
 $lang['no']                                          = 'Нет';
 $lang['you_are_seller']                              = 'Вы продавец';
 $lang['you_are_buyer']                               = 'Вы покупатель';
+$lang['vip_till']                                    = 'VIP до';
+$lang['mark_till']                                   = 'Выделено до';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';
