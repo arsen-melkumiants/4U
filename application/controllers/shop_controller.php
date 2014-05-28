@@ -263,8 +263,11 @@ class Shop_controller extends CI_Controller {
 			}
 
 			$this->load->library('form');
+			if (!$this->ion_auth->logged_in()) {
+				$this->form->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|alpha_dash',  'label' => lang('cart_login'), 'value' => $fields['company']));
+			}
+
 			$this->data['center_block'] = $this->form
-				->text('login', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|alpha_dash',  'label' => lang('cart_login')))
 				->text('username', array('valid_rules' => 'required|trim|xss_clean|max_length[150]', 'label' => lang('cart_name'), 'value' => $fields['username']))
 				->text('email', array('valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email', 'label' => lang('cart_email'), 'value' => $fields['email']))
 				->text('company', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_company'), 'value' => $fields['company']))

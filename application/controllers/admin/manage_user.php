@@ -51,9 +51,12 @@ class Manage_user extends CI_Controller {
 		$this->load->library('table');
 		$this->load->model('shop_model');
 		$this->data['center_block'] = $this->table
-			->text('username', array(
-				'title' => 'Имя',
-				'width' => '30%',
+			->text('login', array(
+				'title' => 'Логин',
+				'width' => '20%',
+			))
+			->text('email', array(
+				'title' => 'Email',
 			))
 			->date('last_login', array(
 				'title' => 'Дата последней авторизации',
@@ -62,7 +65,7 @@ class Manage_user extends CI_Controller {
 				'title' => 'Дата регистрации'
 			))
 			->text('id', array(
-				'title' => 'Статус',
+				'title' => 'Баланс',
 				'func'  => function($row, $params, $that, $CI) {
 					$balance = $CI->shop_model->get_user_balance($row['id']);
 					return $balance[0]['amount'].' '.$balance[0]['symbol'];

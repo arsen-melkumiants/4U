@@ -577,7 +577,7 @@ class Manage_product extends CI_Controller {
 	}
 
 	public function fill_up_requests() {
-		$all_users = $this->db->select('*, email as name')->get('users')->result_array();
+		$all_users = $this->db->select('id, CONCAT(login, \' - \', email) as name', false)->get('users')->result_array();
 		array_unshift($all_users, array('id' => '', 'name' => 'Список пользователей'));
 
 		$this->load->library('form');
@@ -643,10 +643,14 @@ class Manage_product extends CI_Controller {
 		}
 		set_header_info($request_info);
 
+		$this->load->model('shop_model');
+
+		$request_info['total'] = $this->input->post('total') ?: $request_info['amount'] + $request_info['commission'];
+
 		if (isset($_POST['accept'])) {
-			$this->load->model('shop_model');
+
 			$user_balance = $this->shop_model->get_user_balance($request_info['user_id']);
-			if ($request_info['type'] == 'withdraw' && $user_balance[0]['amount'] < $request_info['amount']) {
+			if ($request_info['type'] == 'withdraw' && $user_balance[0]['amount'] < $request_info['total']) {
 				$this->session->set_flashdata('danger', 'Недостаточно средств на счету пользователя('.$user_balance[0]['amount'].' $)');
 				echo 'refresh';
 				exit;
@@ -659,7 +663,12 @@ class Manage_product extends CI_Controller {
 			if ($request_info['type'] == 'fill_up') {
 				$this->shop_model->log_payment($request_info['user_id'], 'fill_up', $request_info['id'], $request_info['amount']);
 			} elseif ($request_info['type'] == 'withdraw') {
-				$this->shop_model->log_payment($request_info['user_id'], 'draw_out', $request_info['id'], -($request_info['amount'] + $request_info['commission']));
+				$this->shop_model->log_payment($request_info['user_id'], 'draw_out', $request_info['id'], -($request_info['total']));
+				if ($this->input->post('total')) {
+					$update_array['commission'] = $request_info['total'] / (100 + WITHDRAWAL_COMMISSION) * WITHDRAWAL_COMMISSION;
+					$update_array['amount'] = $request_info['total'] - $update_array['commission'];
+					$this->db->where('id', $id)->update('shop_user_payment_requests', $update_array);
+				}
 			}
 			$this->session->set_flashdata('success', 'Запрос успешно обработан');
 
@@ -669,9 +678,25 @@ class Manage_product extends CI_Controller {
 		} else {
 			$this->load->library('form');
 			$this->data['center_block'] = $this->form
+				->text('payment_amount', array(
+					'class'       => 'withdraw_amount',
+					'value'       => $request_info['amount'] ?: false,
+					'valid_rules' => 'required|trim|xss_clean|numeric',
+					'symbol'      => '$',
+					'label'       => 'Количество',
+				))
+				->text('total', array(
+					'group_class' => 'withdraw_total',
+					'value'       => $request_info['total'] ?: false,
+					'valid_rules' => 'required|trim|xss_clean|numeric',
+					'symbol'	  => '$',
+					'label'       => 'Итого + комиссия <span class="commis_value">'.$request_info['commission'].'</span> $',
+					'readonly'    => 1,
+				))
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
 				->btn(array('name' => 'accept', 'value' => $request_info['type'] == 'withdraw' ? 'Вывести' : 'Пополнить', 'class' => 'btn-success'))
 				->create(array('action' => current_url(), 'btn_offset' => 4));
+			$this->data['center_block'] .= $this->load->view(ADM_FOLDER.'withdraw_js', $this->data, true);
 			echo $this->load->view(ADM_FOLDER.'ajax', '', true);
 		}
 	}

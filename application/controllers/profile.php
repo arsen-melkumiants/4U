@@ -37,7 +37,7 @@ class Profile extends CI_Controller {
 
 	//redirect if needed, otherwise display the user list
 	function index() {
-		$this->data['title'] = $this->data['name'] = lang('my_profile');
+		$this->data['title'] = $this->data['name'] = lang('my_profile').' ('.$this->data['user_info']['login'].')';
 
 		$user_id = $this->data['user_info']['id'];
 
@@ -305,8 +305,8 @@ class Profile extends CI_Controller {
 		if (isset($_POST['finish']) && !$product_info['created']) {
 			$this->db->where('id', $id)->update('shop_products', array('created' => 1));
 			$this->session->set_flashdata('success', lang('product_add_message_success'));
-			redirect('profile/products', 'refresh');
 		}
+		redirect('profile/products', 'refresh');
 	}
 
 	private function edit_form($product_info = false) {
