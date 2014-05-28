@@ -6,6 +6,9 @@
 <div class="info">
 	<a class="name" href="<?php echo product_url($id, $name)?>"><?php echo $name ?></a>
 	<span><?php echo !empty($add_date) ? date('d.m.Y', $add_date) : ''?></span>
+	<?php if (!empty($commission)) {?>
+	<div><?php echo lang('commission').': '.-$commission.' $'?></div>
+	<?php }?>
 	<?php if (!empty($is_vip)) {?>
 	<div><i class="c_icon_star"></i></div>
 	<?php }?>

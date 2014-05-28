@@ -118,6 +118,7 @@ class Profile extends CI_Controller {
 				'width' => '50%',
 				'func'  => function($row, $params, $that, $CI) {
 					$row['is_vip'] = (!defined('VIP_DAYS') || !VIP_DAYS || ($row['vip_date'] + VIP_DAYS * 86400) > time());
+					$row['commission'] = $CI->shop_model->product_commission($row);
 					return $CI->load->view('profile/item', $row, true);
 				}
 		))
@@ -153,6 +154,19 @@ class Profile extends CI_Controller {
 		}
 
 		$this->table
+			->text('name', array(
+				'title' => lang('product_name'),
+				'func'  => function($row, $params, $that, $CI) {
+					$result = '';
+					if (defined('VIP_DAYS') && ($row['vip_date'] + VIP_DAYS * 86400) > time()) {
+						$result .= lang('finance_make_vip').': '.date('d.m.Y', $row['vip_date'] + VIP_DAYS).'<br />';
+					}
+					if (defined('MARK_DAYS') && ($row['marked_date'] + MARK_DAYS * 86400) > time()) {
+						$result .= lang('finance_mark').': '.date('d.m.Y', $row['marked_date'] + MARK_DAYS).'<br />';
+					}
+					return $result;
+				}
+		))
 			->btn(array(
 				'link'  => 'profile/edit_product/%d',
 				'class' => 'edit',
@@ -224,15 +238,16 @@ class Profile extends CI_Controller {
 			load_views();
 		} else {
 			$info = array(
-				'name'      => $this->input->post('name'),
-				'price'     => $this->input->post('price'),
-				'type'      => $this->input->post('type'),
-				'amount'    => $this->input->post('amount'),
-				'cat_id'    => $this->input->post('cat_id'),
-				'content'   => $this->input->post('content'),
-				'add_date'  => time(),
-				'author_id' => $this->data['user_info']['id'],
-				'status'    => 0,
+				'name'            => $this->input->post('name'),
+				'price'           => $this->input->post('price'),
+				'type'            => $this->input->post('type'),
+				'amount'          => $this->input->post('amount'),
+				'cat_id'          => $this->input->post('cat_id'),
+				'content'         => $this->input->post('content'),
+				'add_date'        => time(),
+				'author_id'       => $this->data['user_info']['id'],
+				'status'          => 0,
+				'type_commission' => '',
 			);
 			if ($info['type'] == 'licenses') {
 				$info['amount'] = 0;
