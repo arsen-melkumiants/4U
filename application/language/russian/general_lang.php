@@ -31,6 +31,7 @@ $lang['product_licenses']                            = 'Лицензии';
 $lang['product_media']                               = 'Медиа';
 $lang['product_gallery']                             = 'Галерея';
 $lang['product_add_message_success']                 = 'Продукт успешно добавлен и ожидает модерации';
+$lang['product_edit_message_success']                = 'Продукт успешно отредактирован и ожидает модерации';
 $lang['product_delete_message_success']              = 'Удаление успешно выполено';
 $lang['product_delete_message_lock']                 = 'Удаление данного лота заблокированно в свзяи с выполенинем заказа по нему';
 $lang['product_edit_message_lock']                   = 'Редактирование данного продукта заблокированно в свзяи с выполенинем заказа по нему';

@@ -31,6 +31,7 @@ $lang['product_licenses']                            = 'licenses';
 $lang['product_media']                               = 'Media';
 $lang['product_gallery']                             = 'Gallery';
 $lang['product_add_message_success']                 = 'Product has been successfully added and is waiting for moderation';
+$lang['product_edit_message_success']                = 'Product has been successfully edited and is waiting for moderation';
 $lang['product_delete_message_success']              = 'Deleting was successfully done';
 $lang['product_delete_message_lock']                 = 'Deleting of this product is locked in connection with an order for him';
 $lang['product_edit_message_lock']                   = 'Editing of this product is locked in connection with an order for him';

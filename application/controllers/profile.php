@@ -295,9 +295,13 @@ class Profile extends CI_Controller {
 
 			if (isset($info['status']) && !$product_info['is_locked'])	{
 				$this->db->where('id', $id)->update('shop_products', $info);
-				if ($product_info['created']) {
+				if (!$product_info['created']) {
 					$this->session->set_flashdata('success', lang('product_add_message_success'));
 				}
+			}
+			
+			if ($this->input->post('next_step')) {
+				redirect('profile/product_gallery/'.$product_info['id'], 'refresh');
 			}
 			redirect(current_url(), 'refresh');
 		}
@@ -315,7 +319,13 @@ class Profile extends CI_Controller {
 			$this->db->where('id', $id)->update('shop_products', array('created' => 1));
 			$this->session->set_flashdata('success', lang('product_add_message_success'));
 		}
-		redirect('profile/products', 'refresh');
+
+		if ($product_info['status'] == 1) {
+			redirect('profile/products', 'refresh');
+		} else {
+			$this->session->set_flashdata('success', lang('product_edit_message_success'));
+			redirect('profile/products/moderate', 'refresh');
+		}
 	}
 
 	private function edit_form($product_info = false) {
@@ -398,10 +408,11 @@ class Profile extends CI_Controller {
 				'valid_rules' => 'required|trim|xss_clean',
 				'label'       => lang('product_content'),
 			))
-			->btn(array('value' => empty($product_info) ? lang('add') : lang('edit')));
+			->btn(array('value' => empty($product_info) ? lang('add') : lang('edit')))
+			->btn(array('value' => lang('next_step'), 'name' => 'next_step', 'style' => 'float:right;'));
 		if (!empty($product_info)) {
-			$this->form
-				->link(array('name' => lang('next_step'), 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
+			//$this->form
+			//->link(array('name' => lang('next_step'), 'href' => site_url('profile/product_gallery/'.$product_info['id']), 'style' => 'float:right;'));
 			//->link(array('name' => 'Gallery', 'href' => site_url('profile/product_gallery/'.$product_info['id'])))
 			//->link(array('name' => 'Media content', 'href' => site_url('profile/product_media_files/'.$product_info['id'])));
 		}
