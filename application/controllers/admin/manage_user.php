@@ -39,6 +39,7 @@ class Manage_user extends CI_Controller {
 		if (!$this->ion_auth->is_admin()) {
 			redirect(ADM_URL.'auth/login');
 		}
+		$this->lang->load('auth');
 
 		$this->load->model(ADM_FOLDER.'admin_user_model');
 		$this->MAIN_URL = ADM_URL.strtolower(__CLASS__).'/';
@@ -144,47 +145,17 @@ class Manage_user extends CI_Controller {
 	private function edit_form($user_info = false) {
 		$this->load->library('form');
 		return $this->form
-			->text('username', array(
-				'value'       => $user_info['username'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[150]',
-				'label'       => 'Имя'
-			))
-			->text('company', array(
-				'value'       => $user_info['company'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]',
-				'label'       => 'Компания'
-			))
-			->text('address', array(
-				'value'       => $user_info['address'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]',
-				'label'       => 'Адрес'
-			))
-			->text('city', array(
-				'value'       => $user_info['city'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]',
-				'label'       => 'Город'
-			))
-			->text('state', array(
-				'value'       => $user_info['state'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]',
-				'label'       => 'Штат/Регион'
-			))
-			->text('country', array(
-				'value'       => $user_info['country'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]',
-				'label'       => 'Страна'
-			))
-			->text('zip', array(
-				'value'       => $user_info['zip'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',
-				'label'       => 'Индекс'
-			))
-			->text('phone', array(
-				'value'       => $user_info['phone'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',
-				'label'       => 'Phone'
-			))
-			->btn(array('value' => empty($id) ? 'Добавить' : 'Изменить'))
+			->text('username', array('value' => $user_info['username'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]',  'label' => $this->lang->line('create_user_fname_label')))
+			->text('email', array('value' => $user_info['email'], 'valid_rules' => 'required|trim|xss_clean|max_length[150]|valid_email',  'label' => lang('create_user_email_label')))
+			->text('company', array('value' => $user_info['company'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_company_label')))
+			->text('address', array('value' => $user_info['address'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_address_label')))
+			->text('city', array('value' => $user_info['city'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_city_label')))
+			->text('state', array('value' => $user_info['state'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_state_label')))
+			->text('country', array('value' => $user_info['country'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]',  'label' => lang('create_user_country_label')))
+			->text('zip', array('value' => $user_info['zip'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_zip_label')))
+			->text('phone', array('value' => $user_info['phone'], 'valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural',  'label' => lang('create_user_phone_label')))
+			->text('url', array('value' => $user_info['url'], 'valid_rules' => 'trim|xss_clean|max_length[100]',  'label' => lang('create_user_url_label')))
+			->btn(array('value' => 'Изменить'))
 			->create(array('action' => current_url()));
 	}
 
