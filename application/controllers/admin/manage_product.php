@@ -210,7 +210,7 @@ class Manage_product extends CI_Controller {
 			))
 			->text('amount', array(
 				'value'       => $product_info['amount'] ?: false,
-				'valid_rules' => 'required|trim|xss_clean|is_natural_no_zero',
+				'valid_rules' => 'trim|xss_clean|is_natural',
 				'label'       => 'Количество',
 			))
 			/*->select('currency', array(
