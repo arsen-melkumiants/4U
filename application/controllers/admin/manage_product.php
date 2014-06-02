@@ -54,7 +54,7 @@ class Manage_product extends CI_Controller {
 			'header_descr'          => 'Заявки на вывод денег продавцов',
 		),
 		'withdrawal_seller_accept'  => array(
-			'header'                => 'Вывод денег продавца %username(%email)',
+			'header'                => 'Вывод денег продавца %login(%email)',
 			'header_descr'          => '',
 		),
 		'fill_up_requests'       => array(
@@ -107,10 +107,10 @@ class Manage_product extends CI_Controller {
 					}
 				}
 		))
-			->date('username', array(
+			->date('login', array(
 				'title' => 'Владелец',
 				'func'  => function($row, $params) {
-					return '<a href="'.site_url('4U/manage_user/edit/'.$row['author_id']).'">'.$row['username'].'</a>';
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['author_id']).'">'.$row['login'].'</a>';
 				}
 		))
 			->date('add_date', array(
@@ -165,6 +165,7 @@ class Manage_product extends CI_Controller {
 		set_header_info($product_info);
 		$this->load->model('shop_model');
 		$this->data['center_block'] = $this->edit_form($product_info);
+		$this->data['center_block'] .= $this->load->view(ADM_FOLDER.'product_edit_js', $this->data, true);
 
 		if ($this->form_validation->run() == FALSE) {
 			load_admin_views();
@@ -209,6 +210,7 @@ class Manage_product extends CI_Controller {
 				'inputs'      => array('Нет', 'Да'),
 			))
 			->text('amount', array(
+				'group_class' => 'amount_field',
 				'value'       => $product_info['amount'] ?: false,
 				'valid_rules' => 'trim|xss_clean|is_natural',
 				'label'       => 'Количество',
@@ -406,10 +408,10 @@ class Manage_product extends CI_Controller {
 			->date('add_date', array(
 				'title' => 'Дата создания'
 			))
-			->date('username', array(
+			->date('login', array(
 				'title' => 'Покупатель',
 				'func'  => function($row, $params) {
-					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['login'].'</a>';
 				}
 		))
 			->text('total_amount', array(
@@ -530,10 +532,10 @@ class Manage_product extends CI_Controller {
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
 			->text('id', array('tityyle' => 'Номер заявки'))
-			->date('username', array(
+			->date('login', array(
 				'title' => 'Пользователь',
 				'func'  => function($row, $params) {
-					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['username'].'</a>';
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['user_id']).'">'.$row['login'].'</a>';
 				}
 		))
 			->text('name', array('title' => 'Название'))
@@ -563,7 +565,7 @@ class Manage_product extends CI_Controller {
 			->btn(array('link' => $this->MAIN_URL.'accept_request/%d', 'modal' => 1, 'icon' => 'ok'))
 			->create(function($CI) {
 				return $CI->db
-					->select('r.*, c.symbol, c.code, u.username')
+					->select('r.*, c.symbol, c.code, u.username, u.login')
 					->from('shop_user_payment_requests as r')
 					->join('shop_currencies as c', 'r.currency = c.id')
 					->join('users as u', 'r.user_id = u.id')
@@ -704,10 +706,10 @@ class Manage_product extends CI_Controller {
 	public function withdrawal_sellers() {
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
-			->date('username', array(
+			->date('login', array(
 				'title' => 'Пользователь',
 				'func'  => function($row, $params) {
-					return '<a href="'.site_url('4U/manage_user/edit/'.$row['id']).'">'.$row['username'].'</a>';
+					return '<a href="'.site_url('4U/manage_user/edit/'.$row['id']).'">'.$row['login'].'</a>';
 				}
 		))
 			->text('payment_name', array('title' => 'Название'))

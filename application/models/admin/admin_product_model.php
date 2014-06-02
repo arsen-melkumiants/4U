@@ -54,7 +54,7 @@ class Admin_product_model extends CI_Model {
 
 	function get_orders() {
 		return $this->db
-			->select('o.*, c.symbol, c.code, u.username')
+			->select('o.*, c.symbol, c.code, u.username, u.login')
 			->from('shop_orders as o')
 			->join('shop_currencies as c', 'o.currency = c.id')
 			->join('users as u', 'o.user_id = u.id')

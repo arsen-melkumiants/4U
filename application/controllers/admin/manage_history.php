@@ -59,10 +59,10 @@ class Manage_history extends CI_Controller {
 				'title' => 'Номер объекта операции<br />(заказ, продукт и т.д.)',
 				'width' => '20%',
 			))
-			->date('username', array(
+			->date('login', array(
 				'title' => 'Пользователь',
 				'func'  => function($row, $params) {
-					return anchor(site_url('4U/manage_user/edit/'.$row['user_id']), $row['username']);
+					return anchor(site_url('4U/manage_user/edit/'.$row['user_id']), $row['login']);
 				}
 		))
 			->text('amount', array(
@@ -81,7 +81,7 @@ class Manage_history extends CI_Controller {
 					$CI->db->where_in('type_name', $CI->data['types']);
 				}
 				return $CI->db
-					->select('l.*, c.symbol, c.code, u.username')
+					->select('l.*, c.symbol, c.code, u.login')
 					->from('shop_user_payment_logs as l')
 					->join('shop_currencies as c', 'l.currency = c.id')
 					->join('users as u', 'l.user_id = u.id')

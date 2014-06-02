@@ -142,10 +142,10 @@ class Manage_statistic extends CI_Controller {
 					return anchor(product_url($row['type_id'], $row['prodname']), $row['prodname']);
 				}
 		))
-			->date('username', array(
+			->date('login', array(
 				'title' => 'Пользователь',
 				'func'  => function($row, $params) {
-					return anchor(site_url('4U/manage_user/edit/'.$row['user_id']), $row['username']);
+					return anchor(site_url('4U/manage_user/edit/'.$row['user_id']), $row['login']);
 				}
 		))
 			->text('amount', array(
@@ -163,7 +163,7 @@ class Manage_statistic extends CI_Controller {
 					$CI->db->where_in('type_name', $CI->data['types']);
 				}
 				return $CI->db
-					->select('l.*, c.symbol, c.code, u.username, p.name as prodname')
+					->select('l.*, c.symbol, c.code, u.login, p.name as prodname')
 					->from('shop_user_payment_logs as l')
 					->join('shop_products as p', 'l.type_id = p.id')
 					->join('shop_currencies as c', 'l.currency = c.id')
