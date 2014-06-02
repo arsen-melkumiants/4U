@@ -271,6 +271,8 @@ class Shop_model extends CI_Model {
 			->where(array(
 				'product_id' => $id,
 			))
+			->order_by('file_name', 'asc')
+			->order_by('id', 'asc')
 			->get('shop_product_images')
 			->result_array();
 	}
