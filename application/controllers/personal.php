@@ -165,6 +165,7 @@ class Personal extends CI_Controller {
 				'country'   => $this->input->post('country'),
 				'zip'       => $this->input->post('zip'),
 				'phone'     => $this->input->post('phone'),
+				'url'       => $this->input->post('url'),
 				'is_seller' => $this->input->post('is_seller'),
 			);
 		}

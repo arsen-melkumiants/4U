@@ -40,7 +40,7 @@ class Admin_control_menu_model extends CI_Model
 					'manage_product/withdrawal_sellers'  => 'Заявки на вывод денег продавцов',
 					'manage_product/fill_up_requests'    => 'Заявки на пополнение',
 					'4'                                  => '',
-					'manage_special'                     => 'Специальный контент',
+					'manage_special'                     => 'Информационный контент',
 					//'manage_currency'                    => 'Список валют',
 				),
 				'Пользователи'                           => array(

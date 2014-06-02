@@ -5,9 +5,10 @@ class Special_model extends CI_Model {
 	function __construct() {
 		parent::__construct();
 		$this->load->database();
+		$this->load->library('parser');
 	}
 
-	function get_spec_content($var = false) {
+	function get_spec_content($var = false, $data = false) {
 		if (empty($var)) {
 			return false;
 		}
@@ -16,6 +17,6 @@ class Special_model extends CI_Model {
 		if (empty($info)) {
 			return false;
 		}
-		return $info['content'];
+		return $this->parser->parse_string($info['content'], (array)$data, true);
 	}
 }

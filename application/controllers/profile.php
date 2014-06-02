@@ -920,7 +920,7 @@ class Profile extends CI_Controller {
 
 	function fill_up_requests() {
 		$this->data['title'] = $this->data['header'] = lang('finance_fill_up');
-		$this->data['center_block'] = $this->special_model->get_spec_content('fill_up_info');
+		$this->data['center_block'] = $this->special_model->get_spec_content('fill_up_info', $this->data['user_info']);
 		load_views();
 	}
 
