@@ -721,7 +721,7 @@ class Manage_product extends CI_Controller {
 				}
 		))
 			->text('payment_amount', array(
-				'title' => 'Необходимое количество на вывод',
+				'title' => 'Минимальное количество на вывод',
 				'func'  => function($row, $params) {
 					return floatval($row['payment_amount']).' '.$row['symbol'];
 				}
@@ -729,11 +729,11 @@ class Manage_product extends CI_Controller {
 			->text('commission', array(
 				'title' => lang('commission'),
 				'func'  => function($row, $params) {
-					return floatval(round($row['commission'], 2)).' '.$row['symbol'];
+					return -floatval(round($row['commission'], 2)).' '.$row['symbol'];
 				}
 		))
 			->text('total', array(
-				'title' => 'Всего на снятие',
+				'title' => 'На перевод пользователю',
 				'func'  => function($row, $params) {
 					return floatval(round($row['total'], 2)).' '.$row['symbol'];
 				}
@@ -744,7 +744,7 @@ class Manage_product extends CI_Controller {
 			->btn(array('link' => $this->MAIN_URL.'withdrawal_seller_accept/%d', 'modal' => 1, 'icon' => 'ok', 'title' => 'Снять со счета'))
 			->create(function($CI) {
 				return $CI->db
-					->select('SUM(l.amount) as balance, (u.payment_amount / 100 * 5) as commission, u.payment_amount + (u.payment_amount / 100 * 5) as total, l.currency, c.symbol, c.code, u.*')
+					->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * 5) as commission, (SUM(l.amount) / 100 * (100 -5)) as total, l.currency, c.symbol, c.code, u.*')
 					->from('shop_user_payment_logs as l')
 					->join('shop_currencies as c', 'l.currency = c.id')
 					->join('users as u', 'u.id = l.user_id')
@@ -769,7 +769,7 @@ class Manage_product extends CI_Controller {
 		}
 
 		$seller_info = $this->db
-			->select('SUM(l.amount) as balance, (u.payment_amount / 100 * 5) as commission, u.payment_amount + (u.payment_amount / 100 * 5) as total, l.currency, c.symbol, c.code, u.*')
+			->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * 5) as commission, (SUM(l.amount) / 100 * (100 -5)) as total, l.currency, c.symbol, c.code, u.*')
 			->from('shop_user_payment_logs as l')
 			->join('shop_currencies as c', 'l.currency = c.id')
 			->join('users as u', 'u.id = l.user_id')
@@ -788,7 +788,7 @@ class Manage_product extends CI_Controller {
 		}
 		$seller_info['total']          = round($seller_info['total'], 2);
 		$seller_info['commission']     = round($seller_info['commission'], 2);
-		$seller_info['payment_amount'] = round($seller_info['payment_amount'], 2);
+		$seller_info['payment_amount'] = $seller_info['total'] + $seller_info['commission'];
 		set_header_info($seller_info);
 
 		if (isset($_POST['accept'])) {
@@ -799,7 +799,7 @@ class Manage_product extends CI_Controller {
 			$this->db->trans_begin();
 			$this->load->model('shop_model');
 			$this->db->where('id', $seller_info['id'])->update('users', array('payment_last_date' => time()));
-			$this->shop_model->log_payment($seller_info['id'], 'draw_out', 0, -$seller_info['total']);
+			$this->shop_model->log_payment($seller_info['id'], 'draw_out', 0, -$seller_info['payment_amount']);
 			$this->session->set_flashdata('success', 'Запрос успешно обработан');
 
 			$this->db->trans_commit();
@@ -813,14 +813,14 @@ class Manage_product extends CI_Controller {
 					'value'       => $seller_info['payment_amount'] ?: false,
 					'valid_rules' => 'required|trim|xss_clean|numeric',
 					'symbol'      => '$',
-					'label'       => 'Количество',
+					'label'       => 'На снятие с внутреннего счета',
 				))
 				->text('total', array(
 					'group_class' => 'withdraw_total',
 					'value'       => $seller_info['total'] ?: false,
 					'valid_rules' => 'required|trim|xss_clean|numeric',
 					'symbol'	  => '$',
-					'label'       => 'Итого + комиссия <span class="commis_value">'.$seller_info['commission'].'</span> $',
+					'label'       => 'На перевод пользователю, комиссия -<span class="commis_value">'.$seller_info['commission'].'</span> $',
 					'readonly'    => 1,
 				))
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))

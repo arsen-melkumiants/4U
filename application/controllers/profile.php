@@ -104,9 +104,9 @@ class Profile extends CI_Controller {
 		}
 		$this->data['title'] = $this->data['name'] = lang('my_products');
 		$this->data['type_list'] = array(
-			'active'      => array(1),
-			'moderate'    => array(0,2),
-			'sold'        => '',
+			'active'   => array(1),
+			'moderate' => array(0,2),
+			'sold'     => array(0,1,2),
 		);
 		$type = isset($this->data['type_list'][$type]) ? $type : 'active';
 		$this->data['type'] = $type;
@@ -136,7 +136,7 @@ class Profile extends CI_Controller {
 					return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['price']).' '.$row['symbol'].'</div>';
 				}
 		));
-		if ($type == 'sold') {
+		/*if ($type == 'sold') {
 			$this->table
 				->text('qty', array(
 					'title' => lang('product_amount'),
@@ -145,7 +145,7 @@ class Profile extends CI_Controller {
 						return '<div class="price">'.$row['qty'].' '.lang('product_items').'</div>';
 					}
 			));
-		}
+		}*/
 
 		if ($type == 'moderate') {
 			$this->table
@@ -175,34 +175,22 @@ class Profile extends CI_Controller {
 			;
 		$this->data['table'] = $this->table
 			->create(function($CI) {
-				if ($CI->data['type'] != 'sold') {
-					return $CI->db
-						->select('p.*, c.symbol, c.code, i.file_name, i.folder')
-						->from('shop_products as p')
-						->join('shop_currencies as c', 'p.currency = c.id')
-						->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
-						->where(array(
-							'p.author_id' => $CI->data['user_info']['id'],
-						))
-						->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
-						->order_by('p.sort_date', 'desc')
-						->order_by('p.id', 'desc')
-						->get();
-				} else {
-					return $CI->db
-						->select('p.*, c.symbol, c.code, i.file_name, i.folder, SUM(op.price * op.qty) as price, SUM(op.qty) as qty')
-						->from('shop_products as p')
-						->join('shop_currencies as c', 'p.currency = c.id')
-						->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
-						->join('shop_order_products as op', 'p.id = op.product_id')
-						->join('shop_orders as o', 'op.order_id = o.id')
-						->where(array(
-							'p.author_id' => $CI->data['user_info']['id'],
-						))
-						->group_by('p.id')
-						->order_by('op.id', 'desc')
-						->get();
+				if ($CI->data['type'] == 'sold') {
+					$CI->db->where('(p.unlimited = 0 AND p.amount = 0)');
 				}
+				return $CI->db
+					->select('p.*, c.symbol, c.code, i.file_name, i.folder, op.sold_qty')
+					->from('shop_products as p')
+					->join('shop_currencies as c', 'p.currency = c.id')
+					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
+					->join('(SELECT SUM(op.qty) as sold_qty, op.product_id FROM shop_order_products as op JOIN shop_orders as o ON o.id = op.order_id WHERE o.status = 1 GROUP BY op.product_id) as op', 'p.id = op.product_id', 'left')
+					->where(array(
+						'p.author_id' => $CI->data['user_info']['id'],
+					))
+					->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
+					->order_by('p.sort_date', 'desc')
+					->order_by('p.id', 'desc')
+					->get();
 
 			}, array(
 				'no_header' => 1,
