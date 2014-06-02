@@ -209,7 +209,7 @@ class Form {
 
 	public function link($params = false) {
 		$params['name'] = !empty($params['name']) ? $params['name'] : 'link';
-		$params['class'] = !empty($params['class']) ? 'btn '.$params['class'] : 'btn btn-primary';
+		$params['class'] = !empty($params['class']) ? $params['class'] : 'btn btn-primary';
 		$params['href'] = isset($params['href']) ? $params['href'] : '#';
 		$params['modal'] = !empty($params['modal']) ? ($params['modal'] == 'close' ? ' data-dismiss="modal"' : ' data-toggle="modal" data-target="#ajaxModal"') : '' ;
 

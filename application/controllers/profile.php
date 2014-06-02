@@ -790,9 +790,9 @@ class Profile extends CI_Controller {
 					$row['id'] = $row['product_id'];
 					if ($CI->data['order_info']['status'] == 1) {
 						if ($row['type'] == 'licenses') {
-							$row['files_list'] = $CI->db->where_in('id', explode(',', $row['file_ids']))->get('shop_product_media_files')->result_array();
+							$row['files_list'] = $CI->db->where_in('id', explode(',', $row['file_ids']))->order_by('file_name', 'asc')->get('shop_product_media_files')->result_array();
 						} else {
-							$row['files_list'] = $CI->db->where(array('product_id' => $row['id'], 'status' => 0))->get('shop_product_media_files')->result_array();
+							$row['files_list'] = $CI->db->where(array('product_id' => $row['id'], 'status' => 0))->order_by('file_name', 'asc')->get('shop_product_media_files')->result_array();
 						}
 					}
 					return $CI->load->view('profile/item', $row, true);

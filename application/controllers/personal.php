@@ -66,7 +66,9 @@ class Personal extends CI_Controller {
 			))
 			->btn(array(
 				'value' => lang('login_submit_btn'),
-			));
+			))
+			->link(array('name' => lang('login_forgot_password'), 'class' => 'text-danger', 'href' => site_url('personal/forgot_password')))
+			;
 
 		if ($this->form_validation->run() == true) {
 			$remember = (bool) $this->input->post('remember');
