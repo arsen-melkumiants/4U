@@ -110,10 +110,11 @@ class Shop_controller extends CI_Controller {
 		}
 
 		if (!$this->ion_auth->is_admin()) {
-			if (!$this->ion_auth->logged_in() && $this->data['product_info']['status'] != 1) {
+			$empty_amount = ($this->data['product_info']['unlimited'] == 0 && $this->data['product_info']['amount'] == 0);
+			if (!$this->ion_auth->logged_in() && ($this->data['product_info']['status'] != 1 || $empty_amount)) {
 				show_404();
 			} elseif ($this->ion_auth->logged_in()) {
-				if($this->data['product_info']['author_id'] != $this->data['user_info']['id'] && !$this->data['product_info']['status']) {
+				if($this->data['product_info']['author_id'] != $this->data['user_info']['id'] && (!$this->data['product_info']['status'] || $empty_amount)) {
 					show_404();
 				} elseif ($this->data['product_info']['status'] > 2) {
 					show_404();
