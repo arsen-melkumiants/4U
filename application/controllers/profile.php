@@ -175,15 +175,17 @@ class Profile extends CI_Controller {
 			;
 		$this->data['table'] = $this->table
 			->create(function($CI) {
+				$join_type = 'left';
 				if ($CI->data['type'] == 'sold') {
 					$CI->db->where('(p.unlimited = 0 AND p.amount = 0)');
+					$join_type = 'inner';
 				}
 				return $CI->db
 					->select('p.*, c.symbol, c.code, i.file_name, i.folder, op.sold_qty')
 					->from('shop_products as p')
 					->join('shop_currencies as c', 'p.currency = c.id')
 					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
-					->join('(SELECT SUM(op.qty) as sold_qty, op.product_id FROM shop_order_products as op JOIN shop_orders as o ON o.id = op.order_id WHERE o.status = 1 GROUP BY op.product_id) as op', 'p.id = op.product_id', 'left')
+					->join('(SELECT SUM(op.qty) as sold_qty, op.product_id FROM shop_order_products as op JOIN shop_orders as o ON o.id = op.order_id WHERE o.status = 1 GROUP BY op.product_id) as op', 'p.id = op.product_id', $join_type)
 					->where(array(
 						'p.author_id' => $CI->data['user_info']['id'],
 					))

@@ -129,6 +129,7 @@ class Shop_controller extends CI_Controller {
 				->where(array(
 					'op.product_id' => $id,
 					'o.status'      => 1,
+					'o.user_id'     => $this->data['user_info']['id'],
 				))
 				->get()
 				->num_rows();

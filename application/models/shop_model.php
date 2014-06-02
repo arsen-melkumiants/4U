@@ -128,6 +128,7 @@ class Shop_model extends CI_Model {
 			->join('users as u', 'p.author_id = u.id')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where(array('p.status' => 1, 'p.recommended' => 1))
+			->where('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))')
 			->limit(6)
 			->get()
 			->result_array();
@@ -141,6 +142,7 @@ class Shop_model extends CI_Model {
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where('p.status', 1)
+			->where('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))')
 			->order_by('num', 'desc')
 			->group_by('o.product_id')
 			->limit(6)
@@ -156,7 +158,7 @@ class Shop_model extends CI_Model {
 	function count_search_products($query) {
 		$this->search_products($query);
 		return $this->db
-			->select('p.id, p.status')
+			->select('p.id, p.status, p.unlimited, p.amount')
 			->get()
 			->num_rows();
 	}
@@ -183,13 +185,14 @@ class Shop_model extends CI_Model {
 			->order_by('p.sort_date', 'desc')
 			->order_by('p.id', 'desc')
 			->having('p.status = 1')
+			->having('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))')
 			;
 	}
 
 	function count_products_by_category($id) {
 		$this->products_by_category($id);
 		return $this->db
-			->select('p.id')
+			->select('p.id, p.status, p.unlimited, p.amount')
 			->get()
 			->num_rows();
 	}
@@ -214,6 +217,7 @@ class Shop_model extends CI_Model {
 			->join('shop_currencies as c', 'p.currency = c.id')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where_in('p.cat_id', array_keys($ids))
+			->where('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))')
 			->where('p.status', 1)
 			->order_by('p.sort_date', 'desc')
 			->order_by('p.id', 'desc')
@@ -224,7 +228,7 @@ class Shop_model extends CI_Model {
 		if (!empty($limit)) {
 			$this->db->limit($limit);
 		}
-		$this->db->where('(vip_date + '.(VIP_DAYS * 86400).') >= ', time());
+		$this->db->where('vip_date >=', time());
 		$this->db->order_by('p.id', 'random');
 		return $this->get_product_info();
 	}
@@ -237,6 +241,7 @@ class Shop_model extends CI_Model {
 			->join('users as u', 'p.author_id = u.id', 'left')
 			->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 			->where('p.status', 1)
+			->where('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))')
 			->order_by('p.id', 'desc');
 		if (is_array($id)) {
 			return $this->db
@@ -324,9 +329,9 @@ class Shop_model extends CI_Model {
 		}
 		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
-			$success = unlink(FCPATH.'uploads/gallery/'.$info['folder'].$info['file_name']);
+			@unlink(FCPATH.'uploads/gallery/'.$info['folder'].$info['file_name']);
 			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $info['file_name'])) {
-				$success = unlink(FCPATH.'uploads/gallery/'.$info['folder'].'small_thumb/'.$info['file_name']);
+				@unlink(FCPATH.'uploads/gallery/'.$info['folder'].'small_thumb/'.$info['file_name']);
 			}
 
 			if ($success) {
@@ -421,7 +426,7 @@ class Shop_model extends CI_Model {
 		}
 		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
-			$success = unlink(FCPATH.'media_files/'.$info['folder'].$info['file_name']);
+			@unlink(FCPATH.'media_files/'.$info['folder'].$info['file_name']);
 
 			if ($success) {
 				$this->db

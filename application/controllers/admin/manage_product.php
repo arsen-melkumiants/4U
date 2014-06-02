@@ -93,7 +93,7 @@ class Manage_product extends CI_Controller {
 		$this->load->library('table');
 		$this->data['center_block'] = $this->table
 			->text('name', array(
-				'title'   => 'Имя',
+				'title'   => 'Название',
 				'p_width' => 50
 			))
 			->text('cat_id', array(
@@ -107,7 +107,7 @@ class Manage_product extends CI_Controller {
 					}
 				}
 		))
-			->date('login', array(
+			->text('login', array(
 				'title' => 'Владелец',
 				'func'  => function($row, $params) {
 					return '<a href="'.site_url('4U/manage_user/edit/'.$row['author_id']).'">'.$row['login'].'</a>';
@@ -204,7 +204,7 @@ class Manage_product extends CI_Controller {
 				'label'       => 'Цена',
 			))
 			->radio('unlimited', array(
-				'value'       => $product_info['recommended'] ?: false,
+				'value'       => $product_info['unlimited'] ?: false,
 				'valid_rules' => 'trim|xss_clean|is_natural',
 				'label'       => 'Бесконечный',
 				'inputs'      => array('Нет', 'Да'),
@@ -229,12 +229,12 @@ class Manage_product extends CI_Controller {
 				'options'     => $product_categories,
 				'search'      => true,
 			))
-			->radio('recommended', array(
+/*			->radio('recommended', array(
 				'value'       => $product_info['recommended'] ?: false,
 				'valid_rules' => 'trim|xss_clean|is_natural',
 				'label'       => 'Рекомендуемый',
 				'inputs'      => array('Нет', 'Да'),
-			))
+			))*/
 			->textarea('content', array(
 				'value'       => $product_info['content'] ?: false,
 				'valid_rules' => 'required|trim|xss_clean',
@@ -744,7 +744,7 @@ class Manage_product extends CI_Controller {
 			->btn(array('link' => $this->MAIN_URL.'withdrawal_seller_accept/%d', 'modal' => 1, 'icon' => 'ok', 'title' => 'Снять со счета'))
 			->create(function($CI) {
 				return $CI->db
-					->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * 5) as commission, (SUM(l.amount) / 100 * (100 -5)) as total, l.currency, c.symbol, c.code, u.*')
+					->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * '.WITHDRAWAL_COMMISSION.') as commission, (SUM(l.amount) / 100 * (100 - '.WITHDRAWAL_COMMISSION.')) as total, l.currency, c.symbol, c.code, u.*')
 					->from('shop_user_payment_logs as l')
 					->join('shop_currencies as c', 'l.currency = c.id')
 					->join('users as u', 'u.id = l.user_id')
@@ -769,7 +769,7 @@ class Manage_product extends CI_Controller {
 		}
 
 		$seller_info = $this->db
-			->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * 5) as commission, (SUM(l.amount) / 100 * (100 -5)) as total, l.currency, c.symbol, c.code, u.*')
+			->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * '.WITHDRAWAL_COMMISSION.') as commission, (SUM(l.amount) / 100 * (100 - '.WITHDRAWAL_COMMISSION.')) as total, l.currency, c.symbol, c.code, u.*')
 			->from('shop_user_payment_logs as l')
 			->join('shop_currencies as c', 'l.currency = c.id')
 			->join('users as u', 'u.id = l.user_id')

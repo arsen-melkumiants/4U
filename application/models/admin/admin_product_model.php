@@ -19,7 +19,7 @@ class Admin_product_model extends CI_Model {
 			$this->db->where('p.status <', 3);
 		}
 		return $this->db
-			->select('p.*, u.username')
+			->select('p.*, u.login')
 			->from('shop_products as p')
 			->join('users as u', 'p.author_id = u.id')
 			->order_by('id', 'desc')
