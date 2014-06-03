@@ -63,7 +63,9 @@
 					<?php }?>
 					<div class="info">
 						<ul>
+							<?php if (!$product_info['unlimited']) {?>
 							<li><?php echo lang('product_amount').': '.$product_info['amount']?>
+							<?php }?>
 							<li><?php echo lang('product_views')?>: <?php echo $product_info['views']?></li>
 							<li><?php echo lang('product_added')?>: <?php echo date('d.m.Y, H:i', $product_info['add_date'])?></li>
 							<li><?php echo lang('product_id')?>: <?php echo $product_info['id']?></li>
