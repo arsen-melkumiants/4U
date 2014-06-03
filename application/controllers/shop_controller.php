@@ -279,7 +279,7 @@ class Shop_controller extends CI_Controller {
 				->text('country', array('valid_rules' => 'required|trim|xss_clean|max_length[100]', 'label' => lang('cart_country'), 'value' => $fields['country']))
 				->text('zip', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => lang('cart_zip'), 'value' => $fields['zip']))
 				->text('phone', array('valid_rules' => 'required|trim|xss_clean|max_length[100]|is_natural', 'label' => lang('cart_phone'), 'value' => $fields['phone']))
-				->text('url', array('valid_rules' => 'trim|xss_clean|max_length[100]',  'label' => lang('cart_url'), 'value' => $fields['phone']))
+				->text('url', array('valid_rules' => 'trim|xss_clean|max_length[100]',  'label' => lang('cart_url'), 'value' => $fields['url']))
 				->func(function($params) {
 					return '<button type="submit" class="orange_btn">'.lang('next_step').'</button>';
 				})
