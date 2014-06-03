@@ -368,6 +368,12 @@ class Shop_controller extends CI_Controller {
 				}
 			}
 		}
+
+		if ($product_info['amount'] < $count && !$product_info['unlimited']) {
+			echo 'Noqty';
+			exit;
+		}
+
 		$data = array(
 			'id'      => $id,
 			'qty'     => $count,
@@ -398,14 +404,21 @@ class Shop_controller extends CI_Controller {
 		}
 
 		$product_info = $this->db->where('id', $cart_products[$rowid]['id'])->get('shop_products')->row_array();
-		if ($product_info['amount'] < 1 && !$product_info['unlimited']) {
-			echo $cart_products[$rowid]['qty'];
-			exit;
-		}
+
 		$updata = array(
 			'rowid' => $rowid,
 			'qty'   => $qty,
 		);
+
+		if ($product_info['amount'] < $qty && !$product_info['unlimited']) {
+			if ($cart_products[$rowid]['qty'] != $product_info['amount']) {
+				$updata['qty'] = $qty = $product_info['amount'];
+				$this->cart->update($updata);
+			}
+			echo $cart_products[$rowid]['qty'];
+			exit;
+		}
+
 		echo $this->cart->update($updata) ? 'OK' : $cart_products[$rowid]['qty'];
 	}
 
