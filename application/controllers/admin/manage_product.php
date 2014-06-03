@@ -767,6 +767,7 @@ class Manage_product extends CI_Controller {
 		if (empty($id)) {
 			custom_404();
 		}
+		$this->data['seller'] = 1;
 
 		$seller_info = $this->db
 			->select('SUM(l.amount) as balance, (SUM(l.amount) / 100 * '.WITHDRAWAL_COMMISSION.') as commission, (SUM(l.amount) / 100 * (100 - '.WITHDRAWAL_COMMISSION.')) as total, l.currency, c.symbol, c.code, u.*')
@@ -795,6 +796,7 @@ class Manage_product extends CI_Controller {
 			$this->load->model('shop_model');
 
 			$seller_info['total'] = $this->input->post('total') ?: $seller_info['total'];
+			$seller_info['payment_amount'] = $this->input->post('payment_amount') ?: $seller_info['payment_amount'];
 
 			$this->db->trans_begin();
 			$this->load->model('shop_model');

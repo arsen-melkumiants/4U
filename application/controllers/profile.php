@@ -237,6 +237,8 @@ class Profile extends CI_Controller {
 				$info['amount'] = 0;
 			} else {
 				$info['type'] = 'media';
+				$info['amount']    = $this->input->post('amount');
+				$info['unlimited'] = $this->input->post('unlimited');
 			}
 			$this->db->insert('shop_products', $info);
 			$id = $this->db->insert_id();

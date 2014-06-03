@@ -352,7 +352,7 @@ class Shop_controller extends CI_Controller {
 			return false;
 		}
 
-		if ($product_info['amount'] < 1) {
+		if ($product_info['amount'] < 1 && !$product_info['unlimited']) {
 			echo 'Noqty';
 			exit;
 		}
@@ -397,11 +397,8 @@ class Shop_controller extends CI_Controller {
 			exit;
 		}
 
-		$has_amount = $this->db->where(array(
-			'id'        => $cart_products[$rowid]['id'],
-			'amount >=' => $qty,
-		))->get('shop_products')->num_rows();
-		if (!$has_amount) {
+		$product_info = $this->db->where('id', $cart_products[$rowid]['id'])->get('shop_products')->row_array();
+		if ($product_info['amount'] < 1 && !$product_info['unlimited']) {
 			echo $cart_products[$rowid]['qty'];
 			exit;
 		}

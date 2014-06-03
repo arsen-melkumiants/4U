@@ -8,7 +8,11 @@ var update_commission = function() {
 		}
 		var commission = Math.round(amount * percent) / 100;
 		$('.withdraw_total').find('.commis_value').text(commission);
-		$('.withdraw_total').find('input').val(amount - commission);
+<?php if (!empty($seller)) {?>
+	$('.withdraw_total').find('input').val(amount - commission);
+<?php } else {?>
+	$('.withdraw_total').find('input').val(amount + commission);
+<?php }?>
 	});
 }
 
