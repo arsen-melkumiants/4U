@@ -179,6 +179,8 @@ class Profile extends CI_Controller {
 				if ($CI->data['type'] == 'sold') {
 					$CI->db->where('(p.unlimited = 0 AND p.amount = 0)');
 					$join_type = 'inner';
+				} elseif ($CI->data['type'] == 'active') {
+					$CI->db->where('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))');
 				}
 				return $CI->db
 					->select('p.*, c.symbol, c.code, i.file_name, i.folder, op.sold_qty')
