@@ -367,7 +367,7 @@ class Manage_product extends CI_Controller {
 		if ($type == 'image') {
 			$upload_path_url = base_url('uploads/gallery/'.$folder).'/';
 		} else {
-			$upload_path_url = base_url('media_files').'/';
+			$upload_path_url = base_url(ADM_URL.'manage_product/media_file').'/';
 		}
 
 		$files = array();
@@ -396,6 +396,25 @@ class Manage_product extends CI_Controller {
 				->set_content_type('application/json')
 				->set_output(json_encode(array('files' => $files)));
 		}	
+	}
+
+	function media_file($id = false) {
+		$id = intval($id);
+		$product_file = $this->db
+			->select('f.*')
+			->from('shop_product_media_files as f')
+			->where('f.id', $id)
+			->get()
+			->row_array();
+
+		if (empty($product_file)) {
+			show_404();
+		}
+
+		header('X-Sendfile: '.FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name']);
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.$product_file['file_name'].'"');
+		exit;
 	}
 
 	public function orders() {
