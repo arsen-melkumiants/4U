@@ -595,7 +595,7 @@ class Shop_controller extends CI_Controller {
 			$date_array = array('sort_date' => time());
 		}
 		$this->db->where('id', $id)->update('shop_products', $date_array);
-		//$this->shop_model->log_payment($this->data['user_info']['id'], $type, $id, -$prices[$type]);
+		$this->shop_model->log_payment($this->data['user_info']['id'], $type, $id, -$prices[$type]);
 		$this->db->trans_commit();
 
 		$this->session->set_flashdata('success', lang('facilities_paid'));
