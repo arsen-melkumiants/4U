@@ -572,7 +572,7 @@ class Shop_controller extends CI_Controller {
 				'price' => $prices[$type].' $',
 				'days'  => $duration[$type],
 			);
-			$this->data['center_block'] = $this->special_model->get_spec_content('facilities_info', $payment_info);
+			$this->data['center_block'] = $this->special_model->get_spec_content($type.'_info', $payment_info);
 			$this->load->library('form');
 			$this->data['center_block'] .= $this->form
 				->btn(array('name' => 'cancel', 'value' => lang('cancel'), 'class' => 'btn-default', 'modal' => 'close'))
