@@ -732,7 +732,7 @@ class Manage_product extends CI_Controller {
 				}
 		))
 			->text('payment_name', array('title' => 'Название'))
-			->text('number', array('title' => 'Номер'))
+			->text('payment_number', array('title' => 'Номер'))
 			->text('balance', array(
 				'title' => 'На счету продавца',
 				'func'  => function($row, $params) {
@@ -740,7 +740,7 @@ class Manage_product extends CI_Controller {
 				}
 		))
 			->text('payment_amount', array(
-				'title' => 'Минимальное количество на вывод',
+				'title' => 'Минимум на вывод',
 				'func'  => function($row, $params) {
 					return floatval($row['payment_amount']).' '.$row['symbol'];
 				}
@@ -770,7 +770,7 @@ class Manage_product extends CI_Controller {
 					->where(array(
 						'l.currency'          => 1,
 						'u.payment_amount >'  => 0,
-						'u.payment_number !=' => 0,
+						'u.payment_number !=' => '',
 						'u.is_seller'         => 1,
 					))
 					->where('u.payment_last_date + 86400 <', time())
@@ -841,7 +841,7 @@ class Manage_product extends CI_Controller {
 					'value'       => $seller_info['total'] ?: false,
 					'valid_rules' => 'required|trim|xss_clean|numeric',
 					'symbol'	  => '$',
-					'label'       => 'На перевод пользователю, комиссия -<span class="commis_value">'.$seller_info['commission'].'</span> $',
+					'label'       => 'На перевод пользователю, комиссия -<span class="commis_value">'.$seller_info['commission'].'</span>$',
 					'readonly'    => 1,
 				))
 				->btn(array('name' => 'cancel', 'value' => 'Отмена', 'class' => 'btn-default', 'modal' => 'close'))
