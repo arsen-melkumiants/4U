@@ -132,6 +132,7 @@ $lang['finance_payment_info']                        = 'Платежные ре�
 
 $lang['facilities_disabled']                         = 'Услуга отключена';
 $lang['facilities_paid']                             = 'Услуга оплачена';
+$lang['facilities_pay_header']                       = 'Оплата услуги';
 
 $lang['need_auth']                                   = 'Вам необходимо авторизоваться';
 $lang['category_empty']                              = 'Категория пуста';
@@ -177,6 +178,9 @@ $lang['you_are_seller']                              = 'Вы продавец';
 $lang['you_are_buyer']                               = 'Вы покупатель';
 $lang['vip_till']                                    = 'VIP до';
 $lang['mark_till']                                   = 'Выделено до';
+$lang['pay']                                         = 'Оплатить';
+$lang['unlimited']                                   = 'Неограничено';
+$lang['days']                                        = 'дней';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

@@ -39,12 +39,12 @@ class Main_controller extends CI_Controller {
 
 	function menu_content($name = false) {
 		if(empty($name)) {
-			show_404();
+			custom_404();
 		}
 
 		$menu_info = $this->db->select('*, name_'.$this->config->item('lang_abbr').' as name')->where('alias', $name)->get('menu_items')->row_array();
 		if (empty($menu_info)) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['title'] = $this->data['header'] = $menu_info['name'];
@@ -52,12 +52,12 @@ class Main_controller extends CI_Controller {
 		if ($menu_info['type'] == 'content') {
 			$content_info = $this->db->select('*, name_'.$this->config->item('lang_abbr').' as name, content_'.$this->config->item('lang_abbr').' as content')->where('id', $menu_info['item_id'])->get('content')->row_array();
 			if (empty($content_info)) {
-				show_404();
+				custom_404();
 			}
 			$this->data['title'] = $this->data['header'] = $content_info['name'];
 			$this->data['center_block'] = '<div>'.$content_info['content'].'</div>';
 		} else {
-			show_404();
+			custom_404();
 		}
 
 		load_views();

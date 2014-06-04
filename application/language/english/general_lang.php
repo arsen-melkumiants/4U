@@ -132,6 +132,7 @@ $lang['finance_payment_info']                        = 'Payment information of t
 
 $lang['facilities_disabled']                         = 'The service is disabled';
 $lang['facilities_paid']                             = 'The service has been paid';
+$lang['facilities_pay_header']                       = 'Payment of service';
 
 $lang['need_auth']                                   = 'You have to log in';
 $lang['category_empty']                              = 'Category is empty';
@@ -177,6 +178,9 @@ $lang['you_are_seller']                              = 'You are seller';
 $lang['you_are_buyer']                               = 'You are buyer';
 $lang['vip_till']                                    = 'VIP till';
 $lang['mark_till']                                   = 'Marked till';
+$lang['pay']                                         = 'Pay';
+$lang['unlimited']                                   = 'Unlimited';
+$lang['days']                                        = 'days';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

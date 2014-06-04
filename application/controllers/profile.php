@@ -194,6 +194,7 @@ class Profile extends CI_Controller {
 					->where_in('p.status', $CI->data['type_list'][$CI->data['type']])
 					->order_by('p.sort_date', 'desc')
 					->order_by('p.id', 'desc')
+					->group_by('p.id', 'desc')
 					->get();
 
 			}, array(
@@ -231,6 +232,7 @@ class Profile extends CI_Controller {
 				'cat_id'          => $this->input->post('cat_id'),
 				'content'         => $this->input->post('content'),
 				'add_date'        => time(),
+				'sort_date'       => time(),
 				'author_id'       => $this->data['user_info']['id'],
 				'status'          => 0,
 				'type_commission' => '',
@@ -691,13 +693,13 @@ class Profile extends CI_Controller {
 				->get()
 				->row_array();
 			if (empty($product_file)) {
-				show_404();
+				custom_404();
 			}
 
 			if ($product_file['type'] == 'licenses') {
 				$file_ids = explode(',', $product_file['file_ids']);
 				if (empty($file_ids) || !in_array($id, $file_ids)) {
-					show_404();
+					custom_404();
 				}
 			}
 		}
@@ -764,12 +766,12 @@ class Profile extends CI_Controller {
 		}
 		$id = intval($id);
 		if (empty($id)) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['order_info'] = $this->db->where(array('id' => $id, 'user_id' => $this->data['user_info']['id']))->get('shop_orders')->row_array();
 		if (empty($this->data['order_info'])) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['title'] = $this->data['header'] = lang('order').' №'.$this->data['order_info']['id'];
@@ -839,12 +841,12 @@ class Profile extends CI_Controller {
 	function do_payment($id = false) {
 		$id = intval($id);
 		if (empty($id)) {
-			show_404();
+			custom_404();
 		}
 
 		$order_info = $this->db->where(array('id' => $id, 'user_id' => $this->data['user_info']['id']))->get('shop_orders')->row_array();
 		if (empty($order_info)) {
-			show_404();
+			custom_404();
 		}
 
 		if ($order_info['status']) {

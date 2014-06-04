@@ -29,7 +29,7 @@ class Shop_controller extends CI_Controller {
 	}
 
 	public function index() {
-		show_404();
+		custom_404();
 		$this->data['title'] = 'Main_page';
 
 		load_views();
@@ -37,13 +37,13 @@ class Shop_controller extends CI_Controller {
 
 	public function category($name = false) {
 		if (empty($name)) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['category_info'] = $this->shop_model->get_category_info($name);
 
 		if (empty($this->data['category_info'])) {
-			show_404();
+			custom_404();
 		}
 
 		$view_mode = $this->input->cookie('view_mode');
@@ -92,7 +92,7 @@ class Shop_controller extends CI_Controller {
 
 	public function product($id = false, $name = false) {
 		if (empty($id)) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['product_info'] = $this->db
@@ -106,18 +106,18 @@ class Shop_controller extends CI_Controller {
 			->row_array();
 
 		if (empty($this->data['product_info'])) {
-			show_404();
+			custom_404();
 		}
 
 		if (!$this->ion_auth->is_admin()) {
 			$empty_amount = ($this->data['product_info']['unlimited'] == 0 && $this->data['product_info']['amount'] == 0);
 			if (!$this->ion_auth->logged_in() && ($this->data['product_info']['status'] != 1 || $empty_amount)) {
-				show_404();
+				custom_404();
 			} elseif ($this->ion_auth->logged_in()) {
 				if($this->data['product_info']['author_id'] != $this->data['user_info']['id'] && (!$this->data['product_info']['status'] || $empty_amount)) {
-					show_404();
+					custom_404();
 				} elseif ($this->data['product_info']['status'] > 2) {
-					show_404();
+					custom_404();
 				}
 			}
 		}
@@ -187,7 +187,7 @@ class Shop_controller extends CI_Controller {
 		);
 		$this->data['cur_step'] = $step;
 		if (!isset($this->data['links'][$step])) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['title'] = $this->data['name'] = $this->data['links'][$step];
@@ -545,44 +545,82 @@ class Shop_controller extends CI_Controller {
 	}
 
 	private function pay_service($id = false, $type = 'lift_up') {
-
 		$prices = array(
 			'lift_up'  => LIFT_UP_PRICE,
 			'mark'     => MARK_PRICE,
 			'make_vip' => VIP_PRICE,
 		);
+
+		$duration = array(
+			'lift_up'  => lang('unlimited'),
+			'mark'     => MARK_DAYS.' '.lang('days'),
+			'make_vip' => VIP_DAYS.' '.lang('days'),
+		);
+
 		if (empty($id) || !isset($prices[$type])) {
-			show_404();
+			custom_404();
 		}
 
 		$this->data['product_info'] = $this->db->from('shop_products')->where('id', $id)->get()->row_array();
 		if (empty($this->data['product_info'])) {
-			show_404();
+			custom_404();
 		}
 
+		if ($this->input->is_ajax_request() && !isset($_POST['pay'])) {
+			$this->data['title'] = $this->data['header'] = lang('facilities_pay_header').' "'.lang('finance_'.$type).'"';
+			$payment_info = array(
+				'price' => $prices[$type].' $',
+				'days'  => $duration[$type],
+			);
+			$this->data['center_block'] = $this->special_model->get_spec_content('facilities_info', $payment_info);
+			$this->load->library('form');
+			$this->data['center_block'] .= $this->form
+				->btn(array('name' => 'cancel', 'value' => lang('cancel'), 'class' => 'btn-default', 'modal' => 'close'))
+				->btn(array('name' => 'pay', 'value' => lang('pay'), 'class' => 'btn-danger'))
+				->create(array('action' => current_url(), 'btn_offset' => 3));
+			echo $this->load->view('ajax', $this->data, true);
+			exit;
+		}
+
+
 		if (empty($this->data['user_info']['is_seller'])) {
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
 		if (!defined('LIFT_UP_PRICE') || LIFT_UP_PRICE <= 0) {
 			$this->session->set_flashdata('danger', lang('facilities_disabled'));
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
 		if (!$this->ion_auth->logged_in()) {
 			$this->session->set_flashdata('danger', lang('need_auth'));
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 		$this->data['user_info'] = $this->ion_auth->user()->row_array();
 
 		if ($this->data['user_info']['id'] != $this->data['product_info']['author_id']) {
 			$this->session->set_flashdata('danger', lang('product_not_yours'));
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
 		$user_balance = $this->shop_model->get_user_balance($this->data['user_info']['id']);
 		if ($user_balance[0]['amount'] < $prices[$type]) {
 			$this->session->set_flashdata('danger', lang('finance_no_money_message').' $'.$prices[$type]);
+			if ($this->input->is_ajax_request()) {
+				echo 'refresh';exit;
+			}
 			redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 		}
 
@@ -599,6 +637,9 @@ class Shop_controller extends CI_Controller {
 		$this->db->trans_commit();
 
 		$this->session->set_flashdata('success', lang('facilities_paid'));
+		if ($this->input->is_ajax_request()) {
+			echo 'refresh';exit;
+		}
 		redirect(product_url($id, $this->data['product_info']['name']), 'refresh');
 
 	}
