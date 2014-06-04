@@ -31,9 +31,9 @@
 			<div class="action">
 				<?php if (isset($user_info['id']) && $user_info['id'] == $item['author_id']) {?>
 				<div class="controls">
-					<a href="<?php echo site_url('lift_up/'.$item['id'])?>"><i class="c_icon_up"></i></a>
-					<a href="<?php echo site_url('mark/'.$item['id'])?>"><i class="c_icon_edit"></i></a>
-					<a href="<?php echo site_url('make_vip/'.$item['id'])?>"><i class="c_icon_star"></i></a>
+					<a data-toggle="modal" data-target="#ajaxModal" href="<?php echo site_url('lift_up/'.$item['id'])?>"><i class="c_icon_up"></i></a>
+					<a data-toggle="modal" data-target="#ajaxModal" href="<?php echo site_url('mark/'.$item['id'])?>"><i class="c_icon_edit"></i></a>
+					<a data-toggle="modal" data-target="#ajaxModal" href="<?php echo site_url('make_vip/'.$item['id'])?>"><i class="c_icon_star"></i></a>
 				</div>
 				<?php }?>
 				<button class="orange_btn add_to_cart"
