@@ -13,18 +13,21 @@
 	<div class="item_container">
 		<?php if (!empty($products)) {
 		foreach ($products as $item) {
+			$item['name'] = 'test test test test test test test testtest test test test test test test testtest test test test test test test test';
 		$marked = (!defined('MARK_DAYS') || !MARK_DAYS || ($item['marked_date'] + MARK_DAYS * 86400) > time()) ? ' marked' : '';
 		if ($view_mode == 'default') {?>
 		<div class="item horizontal<?php echo $marked?>">
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">
 				<div class="image"<?php echo !empty($item['file_name']) ? 'style="border:0;background:none;"' : '' ?>>
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
+					<?php /*
 					<div class="bg"></div>
 					<div class="bg_text"><?php echo lang('read_more')?></div>
+					*/ ?>
 				</div>
 			</a>
 			<div class="info">
-				<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
+				<h4 class="name" title="<?php echo $item['name']?>"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 				<small><?php echo date('d.m.Y, H:i', $item['add_date'])?></small>
 				<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 			</div>
@@ -46,12 +49,14 @@
 		</div>
 		<?php } elseif ($view_mode == 'gallery') {?>
 		<div class="item<?php echo $marked?>">
-			<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
+			<h4 class="name" title="<?php echo $item['name']?>"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">
 				<div class="image"<?php echo !empty($item['file_name']) ? 'style="border:0;background:none;"' : '' ?>>
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
+					<?php /*
 					<div class="bg"></div>
 					<div class="bg_text"><?php echo lang('read_more')?></div>
+					*/ ?>
 				</div>
 			</a>
 			<div class="action">
@@ -65,7 +70,7 @@
 		</div>
 		<?php } else {?>
 		<div class="item list<?php echo $marked?>">
-			<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
+			<h4 class="name" title="<?php echo $item['name']?>"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 			<div class="price"><i class="c_icon_label"></i><?php echo floatval($item['price']).' '.$item['symbol']?></div>
 			<button class="orange_btn add_to_cart"
 				data-name="<?php echo $item['name']?>"

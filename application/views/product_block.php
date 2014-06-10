@@ -16,8 +16,10 @@
 				<a href="<?php echo product_url($item['id'], $item['name'])?>">
 					<div class="image"<?php echo !empty($item['file_name']) ? 'style="border:0;background:none;"' : '' ?>>
 						<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
+						<?php /*
 						<div class="bg"></div>
 						<div class="bg_text"><?php echo lang('read_more')?></div>
+						*/ ?>
 					</div>
 				</a>
 				<div class="action">
