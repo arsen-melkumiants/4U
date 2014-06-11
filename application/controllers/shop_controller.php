@@ -154,6 +154,8 @@ class Shop_controller extends CI_Controller {
 			redirect('product/'.$id.'/'.$alias, 'refresh');
 		}
 
+		$this->db->query('UPDATE shop_products SET views = views + 1 WHERE id = '.$id);
+
 		$this->data['categories'] = $this->shop_model->parent_categories($this->data['product_info']['cat_id']);
 		$this->data['images'] = $this->shop_model->get_product_images($id);
 
