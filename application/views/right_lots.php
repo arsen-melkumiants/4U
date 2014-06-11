@@ -5,7 +5,7 @@
 	<?php if (!empty($products)) {
 	foreach ($products as $item) {?>
 	<div class="item">
-		<h4 class="name"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
+		<h4 class="name" title="<?php echo $item['name']?>"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 		<a href="<?php echo product_url($item['id'], $item['name'])?>">
 			<div class="image"<?php echo !empty($item['file_name']) ? 'style="border:0;background:none;"' : '' ?>>
 				<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
