@@ -181,6 +181,8 @@ $lang['mark_till']                                   = 'Marked till';
 $lang['pay']                                         = 'Pay';
 $lang['unlimited']                                   = 'Unlimited';
 $lang['days']                                        = 'days';
+$lang['file_uploaded']                               = 'File uploaded';
+$lang['error']                                       = 'Error';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

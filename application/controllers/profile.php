@@ -611,6 +611,7 @@ class Profile extends CI_Controller {
 				'deleteUrl'    => site_url('profile/delete_'.$type.'/'.$file_id),
 				'deleteType'   => 'POST',
 				'error'        => null,
+				'success'      => true,
 			);
 		}
 

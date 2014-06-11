@@ -181,6 +181,8 @@ $lang['mark_till']                                   = 'Выделено до';
 $lang['pay']                                         = 'Оплатить';
 $lang['unlimited']                                   = 'Неограничено';
 $lang['days']                                        = 'дней';
+$lang['file_uploaded']                               = 'Файл загружен';
+$lang['error']                                       = 'Ошибка';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

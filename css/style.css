@@ -327,6 +327,7 @@ dt, dd {line-height: 2.5;}
 .product_list h4 a {font-size: 18px;}
 .product_list h4 .orange_btn {font-size: 14px;}
 table.gallery .preview img {max-width: 80px;}
+table.gallery .label {font-size: 80%;}
 
 
 .steps_block {float: right;position: relative;background: #edeae4;height: 10px;border-top: 1px solid #d3d0cb;border-radius: 16px;margin-top: 25px;margin-right: 10px;}

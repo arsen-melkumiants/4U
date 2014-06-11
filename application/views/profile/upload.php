@@ -208,6 +208,9 @@ window.onload = function() {
 				{% if (file.error) { %}
 					<div><span class="label label-danger"><?php echo lang('error')?></span> {%=file.error%}</div>
 					{% } %}
+				{% if (file.success) { %}
+					<div><span class="label label-success"><?php echo lang('file_uploaded')?></span></div>
+					{% } %}
 				{% if (file.sold) { %}
 					<div><span class="label label-warning"><?php echo lang('sold')?></span></div>
 					{% } %}
