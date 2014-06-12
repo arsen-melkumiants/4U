@@ -679,28 +679,62 @@ class Profile extends CI_Controller {
 		$this->image_lib->resize();
 	}
 
-	function get_media_file($id = false) {
+	function get_media_file($id = false, $type = false) {
 		$id = intval($id);
-		$product_file = $this->shop_model->get_file_by_user($id);
-		if (empty($product_file)) {
-			$product_file = $this->db
-				->select('f.*, p.type, p.file_ids, o.status, o.user_id')
-				->from('shop_product_media_files as f')
-				->join('shop_order_products as p', 'p.product_id = f.product_id')
-				->join('shop_orders as o', 'p.order_id = o.id')
-				->where('f.id', $id)
-				->where('o.user_id', $this->data['user_info']['id'])
-				->where('o.status', 1)
-				->get()
+		if ($type == 'archive') {
+			$product_archive = $this->db
+				->where(array(
+					'id'        => $id,
+					'author_id' => $this->data['user_info']['id'],
+					'status <'  => 3,
+					'type !='   => 'licenses',
+				))
+				->get('shop_products')
 				->row_array();
-			if (empty($product_file)) {
-				custom_404();
+			if (empty($product_archive)) {
+				$product_archive = $this->db
+					->select('p.*, o.status, o.user_id')
+					->from('shop_order_products as p')
+					->join('shop_orders as o', 'p.order_id = o.id')
+					->where('p.product_id', $id)
+					->where('o.user_id', $this->data['user_info']['id'])
+					->where('o.status', 1)
+					->get()
+					->row_array();
+				if (empty($product_archive )) {
+					custom_404();
+				}
 			}
 
-			if ($product_file['type'] == 'licenses') {
-				$file_ids = explode(',', $product_file['file_ids']);
-				if (empty($file_ids) || !in_array($id, $file_ids)) {
+			$product_file['folder']    = $id.'/';
+			$product_file['file_name'] = $id.'.zip';
+			$archive_path = FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name'];
+			echo $archive_path;
+			if (!file_exists($archive_path)) {
+				custom_404();
+			}
+		} else {
+			$product_file = $this->shop_model->get_file_by_user($id);
+			if (empty($product_file)) {
+				$product_file = $this->db
+					->select('f.*, p.type, p.file_ids, o.status, o.user_id')
+					->from('shop_product_media_files as f')
+					->join('shop_order_products as p', 'p.product_id = f.product_id')
+					->join('shop_orders as o', 'p.order_id = o.id')
+					->where('f.id', $id)
+					->where('o.user_id', $this->data['user_info']['id'])
+					->where('o.status', 1)
+					->get()
+					->row_array();
+				if (empty($product_file)) {
 					custom_404();
+				}
+
+				if ($product_file['type'] == 'licenses') {
+					$file_ids = explode(',', $product_file['file_ids']);
+					if (empty($file_ids) || !in_array($id, $file_ids)) {
+						custom_404();
+					}
 				}
 			}
 		}
