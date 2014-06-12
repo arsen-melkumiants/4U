@@ -266,11 +266,12 @@ class Profile extends CI_Controller {
 			load_views();
 		} else {
 			$info = array(
-				'name'      => $this->input->post('name'),
-				'price'     => $this->input->post('price'),
-				'cat_id'    => $this->input->post('cat_id'),
-				'content'   => $this->input->post('content'),
-				'author_id' => $this->data['user_info']['id'],
+				'name'             => $this->input->post('name'),
+				'price'            => $this->input->post('price'),
+				'cat_id'           => $this->input->post('cat_id'),
+				'content'          => $this->input->post('content'),
+				'author_id'        => $this->data['user_info']['id'],
+				'last_update_date' => time(),
 			);
 
 			if ($product_info['type'] == 'media') {
@@ -855,7 +856,7 @@ class Profile extends CI_Controller {
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				return $CI->db
-					->select('op.*, p.amount, c.symbol, c.code, i.file_name, i.folder')
+					->select('op.*, p.amount, p.last_update_date, c.symbol, c.code, i.file_name, i.folder')
 					->from('shop_order_products as op')
 					->join('shop_products as p', 'p.id = op.product_id')
 					->join('shop_currencies as c', 'p.currency = c.id')

@@ -184,6 +184,7 @@ $lang['days']                                        = 'days';
 $lang['file_uploaded']                               = 'File uploaded';
 $lang['error']                                       = 'Error';
 $lang['file_in_arc']                                 = 'All files in archive';
+$lang['new']                                         = 'New';
 
 
 $lang['vip_lots']                                    = 'VIP lots';

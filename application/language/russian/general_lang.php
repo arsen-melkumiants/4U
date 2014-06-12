@@ -184,6 +184,7 @@ $lang['days']                                        = 'дней';
 $lang['file_uploaded']                               = 'Файл загружен';
 $lang['error']                                       = 'Ошибка';
 $lang['file_in_arc']                                 = 'Все файлы в архиве';
+$lang['new']                                         = 'Новый';
 
 
 $lang['vip_lots']                                    = 'VIP лоты';

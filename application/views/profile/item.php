@@ -18,8 +18,10 @@
 	<?php if (!empty($files_list)) {?>
 	<div class="files_list">
 		<?php foreach ($files_list as $item) {
-		$ext = strtolower(end(explode('.', $item['file_name'])));?>
-		<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('media_files/'.$item['id'])?>"><?php echo $item['file_name']?></a></li>
+		$ext = strtolower(end(explode('.', $item['file_name'])));
+		$new = $last_update_date - 86400 < $item['add_date'] ? '<span class="new">'.lang('new').'</span>' : '';
+		?>
+			<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('media_files/'.$item['id'])?>"><?php echo $item['file_name']?></a><?php echo $new?></li>
 		<?php }?>
 		<?php if (file_exists(FCPATH.'media_files/'.$id.'/'.$id.'.zip')) {?>
 		<div class="archive_link"><i><span>zip</span></i><a href="<?php echo base_url('media_files/'.$id.'/archive')?>"><?php echo lang('file_in_arc')?></a></div>

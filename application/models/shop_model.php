@@ -289,6 +289,7 @@ class Shop_model extends CI_Model {
 		$insert_array = array(
 			'product_id' => $product_id,
 			'file_name'  => $data['file_name'],
+			'add_date'   => time(),
 		);
 		if (isset($data['folder'])) {
 			$insert_array['folder'] = $data['folder'];
@@ -360,6 +361,7 @@ class Shop_model extends CI_Model {
 			$update_array = array('status' => 0);
 		}
 
+		$update_array['last_update_date'] = time();
 		$update_array = array_merge($update_array, (array)$add_params);
 		$this->db
 			->where(array('id' => $product_id))
@@ -381,6 +383,7 @@ class Shop_model extends CI_Model {
 		$insert_array = array(
 			'product_id' => $product_id,
 			'file_name'  => $data['file_name'],
+			'add_date'   => time(),
 		);
 		if (isset($data['folder'])) {
 			$insert_array['folder'] = $data['folder'];
