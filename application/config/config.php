@@ -70,7 +70,7 @@ $config['url_suffix'] = '.html';
 |
 */
 
-if (strpos($_SERVER['QUERY_STRING'], '4U') !== false) {
+if (isset($_SERVER['QUERY_STRING']) && strpos($_SERVER['QUERY_STRING'], '4U') !== false) {
 	$config['language']	= 'russian';
 	$config['lang_abbr'] = 'ru';
 } else {

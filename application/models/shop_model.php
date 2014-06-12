@@ -351,7 +351,7 @@ class Shop_model extends CI_Model {
 
 	//MEDIA FILES
 
-	function refresh_product($product_id) {
+	function refresh_product($product_id, $add_params = array()) {
 		$product_info = $this->db->where('id', $product_id)->get('shop_products')->row_array();
 		if ($product_info['type'] == 'licenses') {
 			$amount = $this->get_license_amount($product_id);
@@ -359,6 +359,8 @@ class Shop_model extends CI_Model {
 		} else {
 			$update_array = array('status' => 0);
 		}
+
+		$update_array = array_merge($update_array, (array)$add_params);
 		$this->db
 			->where(array('id' => $product_id))
 			->update('shop_products', $update_array);
@@ -389,7 +391,7 @@ class Shop_model extends CI_Model {
 		$this->db->insert('shop_product_media_files', $insert_array);
 		$file_id = $this->db->insert_id();
 
-		$this->refresh_product($product_id);
+		$this->refresh_product($product_id, array('zip_date' => 0));
 		return $file_id;
 	}
 
@@ -432,7 +434,7 @@ class Shop_model extends CI_Model {
 				$this->db
 					->where('id', $id)
 					->delete('shop_product_media_files');
-				$this->refresh_product($info['product_id']);
+				$this->refresh_product($info['product_id'], array('zip_date' => 0));
 			}
 		}
 		return $success;

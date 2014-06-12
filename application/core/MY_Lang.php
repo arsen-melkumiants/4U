@@ -40,7 +40,7 @@ class MY_Lang extends CI_Lang {
 		/* get the language abbreviation from uri */
 		$uri_abbr = $URI->segment(1);
 
-		if (strpos($URI->uri_string, '4U') !== false) {
+		if (strpos($URI->uri_string, '4U') !== false || strpos($URI->uri_string, 'cli_tools') !== false) {
 			return true;
 		}
 		
