@@ -13,7 +13,6 @@
 	<div class="item_container">
 		<?php if (!empty($products)) {
 		foreach ($products as $item) {
-			$item['name'] = 'test test test test test test test testtest test test test test test test testtest test test test test test test test';
 		$marked = (!defined('MARK_DAYS') || !MARK_DAYS || ($item['marked_date'] + MARK_DAYS * 86400) > time()) ? ' marked' : '';
 		if ($view_mode == 'default') {?>
 		<div class="item horizontal<?php echo $marked?>">

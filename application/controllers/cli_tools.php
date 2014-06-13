@@ -32,7 +32,8 @@ class Cli_tools extends CI_Controller {
 		$media_folder = FCPATH.'media_files/';
 		foreach ($result as $item) {
 			$product_folder = $media_folder.$item['id'].'/';
-			shell_exec('cd '.$product_folder.' && zip -r '.$item['id'].'.zip ./ -x "'.$item['id'].'.zip'.'"  > /dev/null 2 > /dev/null &');
+			$run = 'cd '.$product_folder.' && zip -r '.$item['id'].'.zip ./ -x "'.$item['id'].'.zip'.'"  > /dev/null 2 > /dev/null &';
+			shell_exec($run);
 			$this->db->where('id', $item['id'])->update('shop_products', array('zip_date' => time()));
 		}
 	}
