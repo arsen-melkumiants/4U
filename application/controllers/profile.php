@@ -856,7 +856,7 @@ class Profile extends CI_Controller {
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				return $CI->db
-					->select('op.*, p.amount, p.last_update_date, c.symbol, c.code, i.file_name, i.folder')
+					->select('op.*, p.amount, p.last_update_date, p.add_date, c.symbol, c.code, i.file_name, i.folder')
 					->from('shop_order_products as op')
 					->join('shop_products as p', 'p.id = op.product_id')
 					->join('shop_currencies as c', 'p.currency = c.id')
