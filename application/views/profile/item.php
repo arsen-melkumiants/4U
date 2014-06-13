@@ -19,7 +19,7 @@
 	<div class="files_list">
 		<?php foreach ($files_list as $item) {
 		$ext = strtolower(end(explode('.', $item['file_name'])));
-		$new = $last_update_date - 86400 < $item['add_date'] ? '<span class="new">'.lang('new').'</span>' : '';
+		$new = $last_update_date - 86400 < $item['add_date'] && $add_date + 86400 < $item['add_date'] ? '<span class="new">'.lang('new').'</span>' : '';
 		?>
 			<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('media_files/'.$item['id'])?>"><?php echo $item['file_name']?></a><?php echo $new?></li>
 		<?php }?>
