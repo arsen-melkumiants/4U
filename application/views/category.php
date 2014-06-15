@@ -17,7 +17,7 @@
 		if ($view_mode == 'default') {?>
 		<div class="item horizontal<?php echo $marked?>">
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">
-				<div class="image"<?php echo !empty($item['file_name']) ? 'style="border:0;background:none;"' : '' ?>>
+				<div class="image"<?php echo !empty($item['file_name']) ? ' style="border:0;background:none;"' : '' ?>>
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
 					<?php /*
 					<div class="bg"></div>
@@ -50,7 +50,7 @@
 		<div class="item<?php echo $marked?>">
 			<h4 class="name" title="<?php echo $item['name']?>"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">
-				<div class="image"<?php echo !empty($item['file_name']) ? 'style="border:0;background:none;"' : '' ?>>
+				<div class="image"<?php echo !empty($item['file_name']) ? ' style="border:0;background:none;"' : '' ?>>
 					<?php echo !empty($item['file_name']) ? '<img src="/uploads/gallery/'.$item['folder'].'small_thumb/'.$item['file_name'].'" />' : '';?>
 					<?php /*
 					<div class="bg"></div>

@@ -1,5 +1,5 @@
 <a href="<?php echo product_url($id, $name)?>">
-	<div class="image"<?php echo empty($file_name) ? 'style="min-height: 90px;"' : ''?>>
+	<div class="image"<?php echo empty($file_name) ? ' style="min-height: 90px;"' : ''?>>
 		<?php echo !empty($file_name) ? '<img src="/uploads/gallery/'.$folder.'small_thumb/'.$file_name.'" />' : '';?>
 	</div>
 </a>
