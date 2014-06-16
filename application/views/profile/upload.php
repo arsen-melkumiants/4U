@@ -97,7 +97,9 @@
 					</span>
 					<span data-ng-switch-default>{{file.name}}</span>
 					</p>
-					<strong data-ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+					<div data-ng-show="file.error"><span class="label label-danger"><?php echo lang('error')?></span> {{file.error}}</div>
+					<div data-ng-show="file.success"><span class="label label-success"><?php echo lang('file_uploaded')?> {{file.success}}</span></div>
+					<div data-ng-show="file.sold"><span class="label label-warning"><?php echo lang('sold')?></span></div>
 				</td>
 				<td>
 					<p class="size">{{file.size | formatFileSize}}</p>
