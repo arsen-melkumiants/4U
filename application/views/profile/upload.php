@@ -1,5 +1,4 @@
-<!-- The Templates plugin is included to render the upload/download listings -->
-<?php after_load('js', '/js/upload/vendor/tmpl.min.js');?>
+<?php after_load('js', '//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js');?>
 <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 <?php after_load('js', '/js/upload/vendor/load-image.min.js');?>
 <!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -22,55 +21,17 @@
 <?php after_load('js', '/js/upload/jquery.fileupload-video.js');?>
 <!-- The File Upload validation plugin -->
 <?php after_load('js', '/js/upload/jquery.fileupload-validate.js');?>
-<!-- The File Upload user interface plugin -->
-<?php after_load('js', '/js/upload/jquery.fileupload-ui.js');?>
-<script>
-window.onload = function() {
-	'use strict';
-	var order = 0;
-
-	// Initialize the jQuery File Upload widget:
-	$('#fileupload').fileupload({
-		// Uncomment the following to send cross-domain cookies:
-		//xhrFields: {withCredentials: true},
-		url: '<?php echo $upload_url?>',
-		formData: {order: order}
-	});
-
-	// Enable iframe cross-domain access via redirect option:
-	$('#fileupload').fileupload(
-		'option',
-		'redirect',
-		window.location.href.replace(
-			/\/[^\/]*$/,
-			'/cors/result.html?%s'
-		)
-	);
-
-	$('#fileupload').bind('fileuploadsubmit', function (e, data) {
-		order++;
-		data.formData = {order: order};
-	});
-
-	$('#fileupload').addClass('fileupload-processing');
-	$.ajax({
-		// Uncomment the following to send cross-domain cookies:
-		//xhrFields: {withCredentials: true},
-		url: $('#fileupload').fileupload('option', 'url'),
-			dataType: 'json',
-			context: $('#fileupload')[0]
-	}).always(function () {
-		$(this).removeClass('fileupload-processing');
-	}).done(function (result) {
-		if (typeof result['order'] !== 'undefined') {
-			order = result['order'];
-		}
-
-		$(this).fileupload('option', 'done')
-			.call(this, $.Event('done'), {result: result});
-	});
-
+<!-- The File Upload Angular JS module -->
+<?php after_load('js', '/js/upload/jquery.fileupload-angular.js');?>
+<?php after_load('js', '/js/upload/app.js');?>
+<style>
+/* Hide Angular JS elements before initializing */
+.ng-cloak {
+    display: none;
 }
+</style>
+<script>
+	var upload_url = '<?php echo $upload_url?>';
 </script>
 <?php after_load('css', '/js/upload/blueimp-gallery.min.css');?>
 <?php after_load('css', '/js/upload/jquery.fileupload.css');?>
@@ -86,44 +47,79 @@ window.onload = function() {
 			</ul>
 		</div>
 		<div class="clear"></div>
-		<div class="descr"><?php echo $descr?></div>	
+		<div class="descr"><?php echo $descr?></div>
 	</div>
-	<form id="fileupload" class="file_upload" action="<?php echo $upload_url?>" method="POST" enctype="multipart/form-data">
-		<!-- Redirect browsers with JavaScript disabled to the origin page -->
-		<noscript><input type="hidden" name="redirect" value="<?php echo $upload_url?>"></noscript>
-		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-		<div class="row fileupload-buttonbar">
-			<div class="col-lg-12">
-				<!-- The fileinput-button span is used to style the file input field as button -->
-				<span class="btn btn-success fileinput-button">
-					<i class="glyphicon glyphicon-plus"></i>
-					<span><?php echo lang('add_files')?>...</span>
-					<input type="file" name="userfile" multiple>
-				</span>
-				<button type="submit" class="btn btn-primary start">
-					<i class="glyphicon glyphicon-upload"></i>
-					<span><?php echo lang('start')?></span>
-				</button>
-				<button type="reset" class="btn btn-warning cancel">
-					<i class="glyphicon glyphicon-ban-circle"></i>
-					<span><?php echo lang('cancel')?></span>
-				</button>
-				<!-- The global file processing state -->
-				<span class="fileupload-process"></span>
-			</div>
-			<!-- The global progress state -->
-			<div class="col-lg-5 fileupload-progress fade">
-				<!-- The global progress bar -->
-				<div class="progress" aria-valuemin="0" aria-valuemax="100">
-					<div class="progress-bar" style="width:0%;"></div>
-				</div>
-				<!-- The extended global progress state -->
-				<div class="progress-extended">&nbsp;</div>
-			</div>
-		</div>
-		<!-- The table listing the files available for upload/download -->
-		<table role="presentation" class="table table-striped gallery"><tbody class="files"></tbody></table>
-	</form>
+	<form id="fileupload" class="file_upload" action="<?php echo $upload_url?>" method="POST" enctype="multipart/form-data" data-ng-app="demo" data-ng-controller="DemoFileUploadController" data-file-upload="options" data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+        <!-- Redirect browsers with JavaScript disabled to the origin page -->
+        <noscript><input type="hidden" name="redirect" value="<?php echo $upload_url?>"></noscript>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="col-lg-12">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span><?php echo lang('add_files')?>...</span>
+                    <input type="file" name="userfile" multiple>
+                </span>
+                <button type="button" class="btn btn-primary start" data-ng-click="submit()">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span><?php echo lang('start')?></span>
+                </button>
+                <button type="button" class="btn btn-warning cancel" data-ng-click="cancel()">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span><?php echo lang('cancel')?></span>
+                </button>
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fade fileupload-progress" data-ng-class="{in: active()}">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" data-file-upload-progress="progress()"><div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div></div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <!-- The table listing the files available for upload/download -->
+		<table class="table table-striped files gallery ng-cloak">
+			<tr data-ng-repeat="file in queue" data-ng-class="{'processing': file.$processing()}">
+				<td data-ng-switch data-on="!!file.thumbnailUrl">
+					<div class="preview" data-ng-switch-when="true">
+						<a data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+					</div>
+					<div class="preview" data-ng-switch-default data-file-upload-preview="file"></div>
+				</td>
+				<td>
+					<p class="name" data-ng-switch data-on="!!file.url">
+					<span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+						<a data-ng-switch-when="true" data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+						<a data-ng-switch-default data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+					</span>
+					<span data-ng-switch-default>{{file.name}}</span>
+					</p>
+					<strong data-ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+				</td>
+				<td>
+					<p class="size">{{file.size | formatFileSize}}</p>
+					<div class="progress progress-striped active fade" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()"><div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div></div>
+				</td>
+				<td>
+					<button type="button" class="btn btn-primary start" data-ng-click="file.$submit()" data-ng-hide="!file.$submit || options.autoUpload" data-ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'">
+						<i class="glyphicon glyphicon-upload"></i>
+						<span><?php echo lang('start')?></span>
+					</button>
+					<button type="button" class="btn btn-warning cancel" data-ng-click="file.$cancel()" data-ng-hide="!file.$cancel">
+						<i class="glyphicon glyphicon-ban-circle"></i>
+						<span><?php echo lang('cancel')?></span>
+					</button>
+					<button data-ng-controller="FileDestroyController" type="button" class="btn btn-danger destroy" data-ng-click="file.$destroy()" data-ng-hide="!file.$destroy">
+						<i class="glyphicon glyphicon-trash"></i>
+						<span><?php echo lang('delete')?></span>
+					</button>
+				</td>
+			</tr>
+		</table>
+    </form>
 	<br>
 	<!-- The blueimp Gallery widget -->
 	<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
@@ -155,82 +151,4 @@ window.onload = function() {
 	<?php } ?>
 </div>
 <!-- The template to display files available for upload -->
-<script id="template-upload" type="text/x-tmpl">
-	{% for (var i=0, file; file=o.files[i]; i++) { %}
-		<tr class="template-upload fade">
-			<td>
-				<span class="preview"></span>
-			</td>
-			<td>
-				<p class="name">{%=file.name%}</p>
-				<strong class="error text-danger"></strong>
-			</td>
-			<td>
-				<p class="size">Processing...</p>
-			</td>
-			<td>
-				{% if (!i && !o.options.autoUpload) { %}
-					<button class="btn btn-primary start" disabled>
-						<i class="glyphicon glyphicon-upload"></i>
-						<span><?php echo lang('start')?></span>
-					</button>
-					{% } %}
-				{% if (!i) { %}
-					<button class="btn btn-warning cancel">
-						<i class="glyphicon glyphicon-ban-circle"></i>
-						<span><?php echo lang('cancel')?></span>
-					</button>
-					{% } %}
-				<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar" style="width:0%;"></div></div>
-			</td>
-		</tr>
-		{% } %}
-</script>
 <!-- The template to display files available for download -->
-<script id="template-download" type="text/x-tmpl">
-	{% for (var i=0, file; file=o.files[i]; i++) { %}
-		<tr class="template-download fade">
-			<td>
-				<span class="preview">
-					{% if (file.thumbnailUrl) { %}
-						<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-						{% } %}
-				</span>
-			</td>
-			<td>
-				<p class="name">
-				{% if (file.url) { %}
-					<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-					{% } else { %}
-					<span>{%=file.name%}</span>
-					{% } %}
-				</p>
-				{% if (file.error) { %}
-					<div><span class="label label-danger"><?php echo lang('error')?></span> {%=file.error%}</div>
-					{% } %}
-				{% if (file.success) { %}
-					<div><span class="label label-success"><?php echo lang('file_uploaded')?> {%=file.success%}</span></div>
-					{% } %}
-				{% if (file.sold) { %}
-					<div><span class="label label-warning"><?php echo lang('sold')?></span></div>
-					{% } %}
-			</td>
-			<td>
-				<span class="size">{%=o.formatFileSize(file.size)%}</span>
-			</td>
-			<td>
-				{% if (file.deleteUrl) { %}
-					<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-						<i class="glyphicon glyphicon-trash"></i>
-						<span><?php echo lang('delete')?></span>
-					</button>
-					{% } else { %}
-					<button class="btn btn-warning cancel">
-						<i class="glyphicon glyphicon-ban-circle"></i>
-						<span><?php echo lang('cancel')?></span>
-					</button>
-					{% } %}
-			</td>
-		</tr>
-		{% } %}
-</script>
