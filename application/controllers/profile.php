@@ -42,7 +42,7 @@ class Profile extends CI_Controller {
 		$user_id = $this->data['user_info']['id'];
 
 		$sold_stats = $this->db
-			->select('SUM(op.qty) as amount, SUM(op.qty * op.price) as price')	
+			->select('SUM(op.qty) as amount, SUM(op.qty * op.price) as price')
 			->from('shop_order_products as op')
 			->join('shop_products as p', 'p.id = op.product_id')
 			->join('shop_orders as o', 'o.id = op.order_id')
@@ -52,7 +52,7 @@ class Profile extends CI_Controller {
 			->row_array();
 
 		$bought_stats = $this->db
-			->select('SUM(op.qty) as amount, SUM(op.qty * op.price) as price')	
+			->select('SUM(op.qty) as amount, SUM(op.qty * op.price) as price')
 			->from('shop_order_products as op')
 			->join('shop_orders as o', 'o.id = op.order_id')
 			->where('o.status', 1)
@@ -296,7 +296,7 @@ class Profile extends CI_Controller {
 					$this->session->set_flashdata('success', lang('product_add_message_success'));
 				}
 			}
-			
+
 			if ($this->input->post('next_step')) {
 				redirect('profile/product_gallery/'.$product_info['id'], 'refresh');
 			}
