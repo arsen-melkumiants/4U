@@ -532,6 +532,8 @@ class Profile extends CI_Controller {
 			$config['max_size']      = '10000000000';
 		}
 		@mkdir($config['upload_path'], 0777, true);
+		@chmod($config['upload_path'], 0777);
+
 		//$config['file_name'] = !empty($_FILES['userfile']) ? $_FILES['userfile']['size'] : false;
 
 		$this->load->helper('file');
@@ -668,6 +670,7 @@ class Profile extends CI_Controller {
 		$prep_height = round($origin_height/$prep_width);
 
 		@mkdir($data['file_path'].$dir.'/', 0777, true);
+		@chmod($data['file_path'].$dir.'/', 0777);
 		$config['image_library']  = 'gd2';
 		$config['source_image']   = $data['full_path'];
 		$config['new_image']      = $data['file_path'].$dir.'/'.$data['file_name'];
@@ -708,12 +711,12 @@ class Profile extends CI_Controller {
 			}
 
 			$product_file['folder']    = $id.'/';
-			$product_file['file_name'] = $id.'.zip';
-			$archive_path = FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name'];
-			echo $archive_path;
-			if (!file_exists($archive_path)) {
+			$product_file['file_name'] = $id.'-*.zip';
+			$archive_path = glob(FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name']);
+			if (empty($archive_path[0])) {
 				custom_404();
 			}
+			$product_file['file_name'] = basename($archive_path[0]);
 		} else {
 			$product_file = $this->shop_model->get_file_by_user($id);
 			if (empty($product_file)) {

@@ -14,16 +14,16 @@
 	<div><?php echo !empty($facilities) ? $facilities : ''?></div>
 
 	<?php echo !empty($is_vip) ? '<div><i class="c_icon_star"></i></div>' : '' ?>
-
 	<?php if (!empty($files_list)) {?>
 	<div class="files_list">
 		<?php foreach ($files_list as $item) {
 		$ext = strtolower(end(explode('.', $item['file_name'])));
 		$new = $last_update_date - 86400 < $item['add_date'] && $add_date + 86400 < $item['add_date'] ? '<span class="new">'.lang('new').'</span>' : '';
 		?>
-			<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('media_files/'.$item['id'])?>"><?php echo $item['file_name']?></a><?php echo $new?></li>
+		<li><i><span><?php echo $ext?></span></i><a href="<?php echo base_url('media_files/'.$item['id'])?>"><?php echo $item['file_name']?></a><?php echo $new?></li>
 		<?php }?>
-		<?php if (file_exists(FCPATH.'media_files/'.$id.'/'.$id.'.zip')) {?>
+		<?php $archive_file = glob(FCPATH.'media_files/'.$id.'/'.$id.'-*.zip');
+		if (!empty($archive_file[0])) {?>
 		<div class="archive_link"><i><span>zip</span></i><a href="<?php echo base_url('media_files/'.$id.'/archive')?>"><?php echo lang('file_in_arc')?></a></div>
 		<?php }?>
 	</div>
