@@ -387,7 +387,7 @@ class Profile extends CI_Controller {
 				))
 				->text('amount', array(
 					'group_class' => 'amount_field',
-					'value'       => 0,
+					'value'       => 1,
 					'valid_rules' => 'trim|xss_clean|is_natural',
 					'label'       => lang('product_amount'),
 				));

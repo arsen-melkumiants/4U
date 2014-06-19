@@ -66,6 +66,12 @@ window.onload = function() {
 <div class="custom_block">
 	<div class="title">
 		<h2><?php echo $name?></h2>
+		<?php $archive_file = glob(FCPATH.'media_files/'.$id.'/'.$id.'-*.zip');
+		if (!empty($archive_file[0])) {?>
+		<br />
+		<div class="archive_link"><a class="btn btn-success" href="<?php echo base_url($this->MAIN_URL.'media_file/'.$id.'/archive')?>"><i class="icon-download-alt"></i> <?php echo lang('file_in_arc')?></a></div>
+		<br />
+		<?php }?>
 		<div class="clear"></div>
 	</div>
 	<form id="fileupload" class="file_upload" action="<?php echo $upload_url?>" method="POST" enctype="multipart/form-data">

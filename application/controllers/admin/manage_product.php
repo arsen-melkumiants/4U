@@ -172,7 +172,7 @@ class Manage_product extends CI_Controller {
 		} else {
 			if (isset($_POST['status']) && $_POST['status'] != $product_info['status']) {
 				if ($_POST['status'] == 1) {
-					$this->shop_model->send_mail($product_info['email'], 'mail_product_moderation', 'product_moderated', $product_info);	
+					$this->shop_model->send_mail($product_info['email'], 'mail_product_moderation', 'product_moderated', $product_info);
 				}
 				elseif ($_POST['status'] == 2) {
 					$this->shop_model->send_mail($product_info['email'], 'mail_product_no_moderation', 'product_no_moderated', $product_info);
@@ -395,20 +395,41 @@ class Manage_product extends CI_Controller {
 			$this->output
 				->set_content_type('application/json')
 				->set_output(json_encode(array('files' => $files)));
-		}	
+		}
 	}
 
-	function media_file($id = false) {
+	function media_file($id = false, $type = false) {
 		$id = intval($id);
-		$product_file = $this->db
-			->select('f.*')
-			->from('shop_product_media_files as f')
-			->where('f.id', $id)
-			->get()
-			->row_array();
+		if ($type == 'archive') {
+			$product_archive = $this->db
+				->where(array(
+					'id'        => $id,
+					'type !='   => 'licenses',
+				))
+				->get('shop_products')
+				->row_array();
+			if (empty($product_archive)) {
+				custom_404();
+			}
 
-		if (empty($product_file)) {
-			show_404();
+			$product_file['folder']    = $id.'/';
+			$product_file['file_name'] = $id.'-*.zip';
+			$archive_path = glob(FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name']);
+			if (empty($archive_path[0])) {
+				custom_404();
+			}
+			$product_file['file_name'] = basename($archive_path[0]);
+		} else {
+			$product_file = $this->db
+				->select('f.*')
+				->from('shop_product_media_files as f')
+				->where('f.id', $id)
+				->get()
+				->row_array();
+
+			if (empty($product_file)) {
+				show_404();
+			}
 		}
 
 		header('X-Sendfile: '.FCPATH.'media_files/'.$product_file['folder'].$product_file['file_name']);
