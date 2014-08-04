@@ -184,6 +184,7 @@ class Shop_model extends CI_Model {
 			->or_like('p.content', $query)
 			->order_by('p.sort_date', 'desc')
 			->order_by('p.id', 'desc')
+			->group_by('p.id')
 			->having('p.status = 1')
 			->having('(p.unlimited = 1 OR (p.unlimited = 0 AND p.amount > 0))')
 			;
@@ -221,6 +222,7 @@ class Shop_model extends CI_Model {
 			->where('p.status', 1)
 			->order_by('p.sort_date', 'desc')
 			->order_by('p.id', 'desc')
+			->group_by('p.id')
 			;
 	}
 
@@ -246,6 +248,7 @@ class Shop_model extends CI_Model {
 		if (is_array($id)) {
 			return $this->db
 				->where_in('p.id', $id)
+				->group_by('p.id')
 				->get()
 				->result_array();
 		} elseif (intval($id)) {
@@ -255,6 +258,7 @@ class Shop_model extends CI_Model {
 				->row_array();
 		} else {
 			return $this->db
+				->group_by('p.id')
 				->get()
 				->result_array();
 		}
