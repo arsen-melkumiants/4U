@@ -75,13 +75,13 @@ ul {padding-left: 0;}
 .top_block .menu {padding: 0;margin: 0;float: right;}
 .top_block .menu ul {padding: 0;margin: 0;}
 .top_block .menu li {list-style: none;float: left;border-right: 1px solid #e44436;}
-.top_block .menu li a {display: block;padding: 19px;color: #fff;border-right: 1px solid #ffac93;}
+.top_block .menu li a {display: block;padding: 19px 15px;color: #fff;border-right: 1px solid #ffac93;}
 .top_block .menu li:first-child {border-left: 1px solid #ffac93;}
 .top_block .menu li:first-child a {border-left: 1px solid #e44436;}
 .top_block .menu li a:hover {text-decoration: none;background: #e44436;border-color: #e44436;}
 
 [class^="c_icon_"],
-[class*="c_icon_"] {display: inline-block;width: 26px;height: 23px;background-image: url(../img/menu_icons.png);background-repeat: no-repeat;margin-bottom: -20px;margin-right: 10px;position: relative;top: -15px;} 
+[class*="c_icon_"] {display: inline-block;width: 26px;height: 23px;background-image: url(../img/menu_icons.png);background-repeat: no-repeat;margin-bottom: -20px;margin-right: 10px;position: relative;top: -15px;}
 .c_icon_home {background-position: 0px 0px;}
 .c_icon_phone {background-position: -24px 0px;width: 19px;}
 .c_icon_key {background-position: -44px 0px;}
