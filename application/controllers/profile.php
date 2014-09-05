@@ -866,6 +866,7 @@ class Profile extends CI_Controller {
 					->join('shop_product_images as i', 'p.id = i.product_id AND i.main = 1', 'left')
 					->where('op.order_id', $CI->data['order_info']['id'])
 					->order_by('op.id', 'desc')
+					->group_by('op.id')
 					->get();
 			}, array('no_header' => 1, 'class' => 'table product_list orders'));
 
