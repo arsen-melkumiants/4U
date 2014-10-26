@@ -830,6 +830,8 @@ class Profile extends CI_Controller {
 							$row['files_list'] = $CI->db->where(array('product_id' => $row['id'], 'status' => 0))->order_by('file_name', 'asc')->get('shop_product_media_files')->result_array();
 						}
 					}
+
+					$row['no_show_commission'] = true;
 					return $CI->load->view('profile/item', $row, true);
 				}
 		))
@@ -848,7 +850,7 @@ class Profile extends CI_Controller {
 				}
 		))
 			->btn(array('func' => function($row, $params, $html, $that, $CI) {
-				if ($row['amount'] < $row['qty'] && $CI->data['order_info']['status'] == 0) {
+				if ($row['amount'] < $row['qty'] && empty($row['unlimited']) && $CI->data['order_info']['status'] == 0) {
 					$CI->data['right_amount'] = false;
 					set_alert(lang('orders_danger_message_can_not_pay_part1').' "'.$row['name'].'" '.lang('orders_danger_message_can_not_pay_part2').' '.$row['qty'], false, 'danger');
 					return '<span class="label label-danger">'.lang('orders_message_no_product_in_amount').' '.$row['qty'].'</span>';
@@ -859,7 +861,7 @@ class Profile extends CI_Controller {
 		$this->data['center_block'] = $this->table
 			->create(function($CI) {
 				return $CI->db
-					->select('op.*, p.amount, p.last_update_date, p.add_date, c.symbol, c.code, i.file_name, i.folder')
+					->select('op.*, p.amount, p.unlimited, p.last_update_date, p.add_date, c.symbol, c.code, i.file_name, i.folder')
 					->from('shop_order_products as op')
 					->join('shop_products as p', 'p.id = op.product_id')
 					->join('shop_currencies as c', 'p.currency = c.id')

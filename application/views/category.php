@@ -14,6 +14,8 @@
 		<?php if (!empty($products)) {
 		foreach ($products as $item) {
 		$marked = (!defined('MARK_DAYS') || !MARK_DAYS || ($item['marked_date'] + MARK_DAYS * 86400) > time()) ? ' marked' : '';
+		$item['price'] += $this->shop_model->product_commission($item);
+
 		if ($view_mode == 'default') {?>
 		<div class="item horizontal<?php echo $marked?>">
 			<a href="<?php echo product_url($item['id'], $item['name'])?>">

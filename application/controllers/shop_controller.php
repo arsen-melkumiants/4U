@@ -211,6 +211,7 @@ class Shop_controller extends CI_Controller {
 						'title' => 'Name',
 						'width' => '60%',
 						'func'  => function($row, $params, $that, $CI) {
+							$row['no_show_commission'] = true;
 							return $CI->load->view('profile/item', $row, true);
 						}
 				))
@@ -218,6 +219,7 @@ class Shop_controller extends CI_Controller {
 						'title' => 'Price',
 						'width' => '20%',
 						'func'  => function($row, $params, $that, $CI) {
+							$row['price'] += $CI->shop_model->product_commission($row);
 							return '<div class="count">
 								<span class="minus none">–</span>
 								<input data-id="'.$CI->data['order_items'][$row['id']]['rowid'].'" data-price="'.$row['price'].'" type="text" value="'.$CI->data['order_items'][$row['id']]['qty'].'"/>
@@ -228,7 +230,8 @@ class Shop_controller extends CI_Controller {
 					->text('price', array(
 						'title' => 'Price',
 						'width' => '20%',
-						'func'  => function($row, $params) {
+						'func'  => function($row, $params, $that, $CI) {
+							$row['price'] += $CI->shop_model->product_commission($row);
 							return '<div class="price"><i class="c_icon_label"></i>'.floatval($row['price']).' '.$row['symbol'].'</div>';
 						}
 				))
@@ -379,7 +382,7 @@ class Shop_controller extends CI_Controller {
 		$data = array(
 			'id'      => $id,
 			'qty'     => $count,
-			'price'   => $product_info['price'],
+			'price'   => $product_info['price'] + $this->shop_model->product_commission($product_info),
 			'name'    => $id,
 			'options' => array(),
 		);

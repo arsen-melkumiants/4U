@@ -8,6 +8,8 @@
 		$count = count($products) - 1;
 		$i = 1;
 		foreach ($products as $key => $item) {
+		$item['price'] += $this->shop_model->product_commission($item);
+
 		if ($i == 1) {?>
 		<div class="slide_item">
 			<?php } ?>

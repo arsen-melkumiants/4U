@@ -8,8 +8,8 @@
 	<span><?php echo !empty($add_date) ? date('d.m.Y', $add_date) : ''?></span>
 	<div><?php echo !empty($sold_qty) ? lang('sold_products_amount').': '.$sold_qty : ''?></div>
 
-	<?php if (!empty($commission)) {?>
-	<div><?php echo lang('commission').': '.-$commission.' $'?></div>
+	<?php if (!empty($commission) && empty($no_show_commission)) {?>
+	<div><?php echo lang('commission').': '.$commission.' $'?></div>
 	<?php }?>
 	<div><?php echo !empty($facilities) ? $facilities : ''?></div>
 
