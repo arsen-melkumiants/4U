@@ -3,7 +3,9 @@
 		<h2><?php echo $name?></h2>
 	</div>
 	<?php if (!empty($products)) {
-	foreach ($products as $item) {?>
+	foreach ($products as $item) {
+		$item['price'] += $this->shop_model->product_commission($item);?>
+
 	<div class="item">
 		<h4 class="name" title="<?php echo $item['name']?>"><a href="<?php echo product_url($item['id'], $item['name'])?>"><?php echo $item['name']?></a></h4>
 		<a href="<?php echo product_url($item['id'], $item['name'])?>">
