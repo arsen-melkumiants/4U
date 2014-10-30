@@ -566,7 +566,7 @@ class Profile extends CI_Controller {
 						if ($type == 'image') {
 							$thumbnail = $upload_path_url.'small_thumb/'.$item['file_name'];
 						} else {
-							$thumbnail = $upload_path_url.$item['id'];
+							$thumbnail = $upload_path_url.$item['id'].'/thumb';
 						}
 					}
 					$files[] = array(
@@ -588,24 +588,23 @@ class Profile extends CI_Controller {
 				$data['order'] = intval($_POST['order']);
 			}
 			$data['folder'] = $folder.'/';
+
 			if ($type == 'image') {
 				$file_id = $this->shop_model->add_product_image($id, $data);
-				$this->load->library('image_lib');
-				if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
-					$this->resize_image($data, $new_width = 250, 'small_thumb');
-				}
 			} else {
 				$file_id = $this->shop_model->add_product_file($id, $data);
 			}
 
 			$thumbnail = '';
 			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $data['file_name'])) {
+				$this->resize_image($data, $new_width = 250, 'small_thumb');
 				if ($type == 'image') {
 					$thumbnail = $upload_path_url.'small_thumb/'.$data['file_name'];
 				} else {
-					$thumbnail = $upload_path_url.$file_id;
+					$thumbnail = $upload_path_url.$file_id.'/thumb';
 				}
 			}
+
 
 			$files[] = array(
 				'name'         => $data['file_name'],
@@ -679,6 +678,7 @@ class Profile extends CI_Controller {
 		$config['height']         = $prep_height;
 		$config['maintain_ratio'] = true;
 
+		$this->load->library('image_lib');
 		$this->image_lib->initialize($config);
 		$this->image_lib->resize();
 	}
@@ -739,6 +739,12 @@ class Profile extends CI_Controller {
 					if (empty($file_ids) || !in_array($id, $file_ids)) {
 						custom_404();
 					}
+				}
+			}
+
+			if ($type == 'thumb' && preg_match('/\.(jpg|jpeg|png|gif)/iu', $product_file['file_name'])) {
+				if (file_exists(FCPATH.'media_files/'.$product_file['folder'].'small_thumb/'.$product_file['file_name'])) {
+					$product_file['file_name'] = 'small_thumb/'.$product_file['file_name'];
 				}
 			}
 		}

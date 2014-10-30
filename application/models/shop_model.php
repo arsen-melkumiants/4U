@@ -436,6 +436,9 @@ class Shop_model extends CI_Model {
 		if (!empty($info) && !$info['is_locked']) {
 			$success = true;
 			@unlink(FCPATH.'media_files/'.$info['folder'].$info['file_name']);
+			if (preg_match('/\.(jpg|jpeg|png|gif)/iu', $info['file_name'])) {
+				@unlink(FCPATH.'media_files/'.$info['folder'].'small_thumb/'.$info['file_name']);
+			}
 
 			if ($success) {
 				$this->db
