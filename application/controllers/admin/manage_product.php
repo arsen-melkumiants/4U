@@ -379,7 +379,7 @@ class Manage_product extends CI_Controller {
 				if ($type == 'image') {
 					$thumbnail = $upload_path_url.'small_thumb/'.$item['file_name'];
 				} else {
-					$thumbnail = $upload_path_url.$item['id'];
+					$thumbnail = $upload_path_url.$item['id'].'/thumb';
 				}
 			}
 			$files[] = array(
@@ -429,6 +429,12 @@ class Manage_product extends CI_Controller {
 
 			if (empty($product_file)) {
 				show_404();
+			}
+
+			if ($type == 'thumb' && preg_match('/\.(jpg|jpeg|png|gif)/iu', $product_file['file_name'])) {
+				if (file_exists(FCPATH.'media_files/'.$product_file['folder'].'small_thumb/'.$product_file['file_name'])) {
+					$product_file['file_name'] = 'small_thumb/'.$product_file['file_name'];
+				}
 			}
 		}
 
